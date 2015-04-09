@@ -75,7 +75,7 @@ public class MailAccount {
     //Fonction membre public
     
     /**
-     * Modifie les données du compte courriel
+     * Modifie les données du compte courriel (A mettre ne hashmap)
      * @param data données du compte courriel
      * @return Si la mise à jours des données est correct
      */

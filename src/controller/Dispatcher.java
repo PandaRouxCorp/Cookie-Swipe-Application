@@ -11,9 +11,10 @@ import java.awt.event.ActionListener;
 
 /**
  * Classe permetant d'attribuer les action déclancher par l'interface utilisateur à des traitements
- * @author Lucas
+ * Doit être un singleton
+ * @author Mary
  */
-public class Dispacher {
+public class Dispatcher {
     
     public ActionListener getListener(){
         return new ActionListener() {

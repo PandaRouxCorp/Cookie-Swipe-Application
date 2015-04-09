@@ -6,7 +6,7 @@
 
 package cookie.swipe.application;
 
-import controller.Dispacher;
+import controller.Dispatcher;
 import interfaces.IJFrame;
 import module.ActionManageCSAccount;
 import module.ActionManageEchange;
@@ -26,11 +26,11 @@ public class CookieSwipeApplication {
         // TODO code application logic here
          
         IJFrame j = new TestJFrame();
-        Dispacher dispacher = new Dispacher();
+        Dispatcher dispatcher = new Dispatcher();
         j.setVisible(true);
-        ActionManageCSAccount CSAccount = new ActionManageCSAccount(j, dispacher);
-        ActionManageMailAccount mailAccount = new ActionManageMailAccount(j, dispacher);
-        ActionManageEchange echange = new ActionManageEchange(j, dispacher);
+        ActionManageCSAccount CSAccount = new ActionManageCSAccount(j, dispatcher);
+        ActionManageMailAccount mailAccount = new ActionManageMailAccount(j, dispatcher);
+        ActionManageEchange echange = new ActionManageEchange(j, dispatcher);
         
     }
     

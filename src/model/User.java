@@ -72,7 +72,7 @@ public class User {
     }
     
     /**
-     * Renvoie les toutes données de l'utilisateur
+     * Renvoie les toutes données de l'utilisateur (A mettre ne hashmap)
      * @return tableau contenant toutes les données utilisateur
      */
     public String[] getDataUser(){
@@ -81,12 +81,17 @@ public class User {
     }
     
     /**
-     * Change les informations utilisateur
+     * Change les informations utilisateur (A mettre ne hashmap)
      * @param data tableau contenant toute les données utilisateur
      * @return Si la mise à jour des données à été correct
      */
     public boolean updateData(String ... data){
         return false;
+    }
+    
+    public String[] getData(){
+        
+        return null;
     }
     
     /***
@@ -122,15 +127,6 @@ public class User {
      * @return Si l'adresse à bien été retirée de la liste noire
      */
     public boolean removeBlackListSender(String sender){
-        return false;
-    }
-    
-    /**
-     * A confirmer si on passe par l'utilisateur ou par le comtpe courriel
-     * @param mail courriel à supprimé du compte courriel
-     * @return Si le courriel à bien été supprimé ou non
-     */
-    public boolean deleteMail(Mail mail){
         return false;
     }
 

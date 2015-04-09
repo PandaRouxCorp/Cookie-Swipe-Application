@@ -42,8 +42,8 @@ public class Mail {
      * Constructeur à utilsier pour répondre ou transférer un courriel
      * @param mail courriel que l'ont transfert ou que l'ont répond
      */
-    public Mail(Mail mail){
-        
+    public Mail(Mail mail, String to){
+        this.to = to;
     }
 
     /**

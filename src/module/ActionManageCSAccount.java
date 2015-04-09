@@ -6,7 +6,7 @@
 
 package module;
 
-import controller.Dispacher;
+import controller.Dispatcher;
 import interfaces.IJFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -20,14 +20,14 @@ import javax.swing.JMenuItem;
 
 public class ActionManageCSAccount {
     
-    private Dispacher dispacher;
+    private Dispatcher dispacher;
     
     /**
      * Constructeur de la classe permetant de s'intégrer dans l'application
      * @param frame fenêtre accèsible par notre action
      * @param dispacher classe à utiliser afin d'excécuter les traitements
      */
-    public ActionManageCSAccount(IJFrame frame, Dispacher dispacher){
+    public ActionManageCSAccount(IJFrame frame, Dispatcher dispacher){
     
         this.dispacher = dispacher;
         JMenuBar menubar = frame.getJMenuBar();

@@ -6,7 +6,7 @@
 
 package module;
 
-import controller.Dispacher;
+import controller.Dispatcher;
 import interfaces.IJFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -18,16 +18,16 @@ import javax.swing.JMenuItem;
  */
 public class ActionManageMailAccount{
 
-    private Dispacher dispacher;
+    private Dispatcher dispatcher;
     
     /**
      * Constructeur de la classe permetant de s'intégrer dans l'application
      * @param frame fenêtre accèsible par notre action
      * @param dispacher classe à utiliser afin d'excécuter les traitements
      */
-    public ActionManageMailAccount(IJFrame frame, Dispacher dispacher){
+    public ActionManageMailAccount(IJFrame frame, Dispatcher dispacher){
         
-        this.dispacher = dispacher;
+        this.dispatcher = dispacher;
         JMenuBar menubar = frame.getJMenuBar();
         JMenu menuManageMailAccount = new JMenu("Gèrer compte courriel");
         

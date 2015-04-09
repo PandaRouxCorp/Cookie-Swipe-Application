@@ -6,7 +6,7 @@
 
 package module;
 
-import controller.Dispacher;
+import controller.Dispatcher;
 import interfaces.IJFrame;
 import javax.swing.JButton;
 import javax.swing.JMenuBar;
@@ -17,16 +17,16 @@ import javax.swing.JMenuBar;
  */
 public class ActionManageEchange {
     
-    private Dispacher dispacher;
+    private Dispatcher dispatcher;
     
     /**
      * Constructeur de la classe permetant de s'intégrer dans l'application
      * @param frame fenêtre accèsible par notre action
      * @param dispacher classe à utiliser afin d'excécuter les traitements
      */
-    public ActionManageEchange(IJFrame frame, Dispacher dispacher){
+    public ActionManageEchange(IJFrame frame, Dispatcher dispacher){
         
-        this.dispacher = dispacher;
+        this.dispatcher = dispacher;
         JMenuBar menubar = frame.getJMenuBar();
         
         JButton send = new JButton("Nouveau courriel");
