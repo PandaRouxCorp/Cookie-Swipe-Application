@@ -7,6 +7,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Utilisateur de l'application Cookie Swipe 
@@ -59,7 +60,7 @@ public class User {
      * Ser à créer un utilisateur dans le registre CS
      * @return l'utilisateur créé
      */
-    public User creaUser(){
+    public User create(){
         return this;
     }
     
@@ -67,31 +68,26 @@ public class User {
      * Sert à connecter un utilisateur à l'application CS
      * @return Utilisateur connecté
      */
-    public User connectUser(){
+    public User connect(){
         return this;
     }
     
     /**
-     * Renvoie les toutes données de l'utilisateur (A mettre ne hashmap)
-     * @return tableau contenant toutes les données utilisateur
+     * Renvoie les toutes données de l'utilisateur
+     * @return table de hash contenant toutes les données utilisateur
      */
-    public String[] getDataUser(){
+    public HashMap<String, Object> getData(){
        
         return null;
     }
     
     /**
      * Change les informations utilisateur (A mettre ne hashmap)
-     * @param data tableau contenant toute les données utilisateur
+     * @param data table de hash contenant toute les données utilisateur
      * @return Si la mise à jour des données à été correct
      */
-    public boolean updateData(String ... data){
+    public boolean updateData(HashMap<String, Object> data){
         return false;
-    }
-    
-    public String[] getData(){
-        
-        return null;
     }
     
     /***

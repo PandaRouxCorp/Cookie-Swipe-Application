@@ -13,6 +13,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 /**
+ * Doit être transformer en singleton
  * Gestion de l'affichage du cas d'utilisation "Gestion des échanges"
  * @author Mary
  */
@@ -23,25 +24,25 @@ public class ActionManageMailAccount{
     /**
      * Constructeur de la classe permetant de s'intégrer dans l'application
      * @param frame fenêtre accèsible par notre action
-     * @param dispacher classe à utiliser afin d'excécuter les traitements
+     * @param dispatcher classe à utiliser afin d'excécuter les traitements
      */
-    public ActionManageMailAccount(IJFrame frame, Dispatcher dispacher){
+    public ActionManageMailAccount(IJFrame frame, Dispatcher dispatcher){
         
-        this.dispatcher = dispacher;
+        this.dispatcher = dispatcher;
         JMenuBar menubar = frame.getJMenuBar();
         JMenu menuManageMailAccount = new JMenu("Gèrer compte courriel");
         
         JMenuItem addMailAccount = new JMenuItem("Ajouter un comtpe courriel");
         addMailAccount.setActionCommand("addMailAccount");
-        addMailAccount.addActionListener(dispacher.getListener());
+        addMailAccount.addActionListener(dispatcher.getListener());
         
         JMenuItem updateMailAccount = new JMenuItem("Modifier un compte courriel");
         updateMailAccount.setActionCommand("updateMailAccount");
-        updateMailAccount.addActionListener(dispacher.getListener());
+        updateMailAccount.addActionListener(dispatcher.getListener());
         
         JMenuItem deleteMaiLAccount = new JMenuItem("Supprimer un comtpe courriel");
         deleteMaiLAccount.setActionCommand("deleteMailAccount");
-        deleteMaiLAccount.addActionListener(dispacher.getListener());
+        deleteMaiLAccount.addActionListener(dispatcher.getListener());
         
         menuManageMailAccount.add(addMailAccount);
         menuManageMailAccount.add(updateMailAccount);

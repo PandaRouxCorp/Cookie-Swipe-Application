@@ -13,6 +13,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 /**
+ * Doit être transformer en singleton
  * Gestion de l'affichage du cas d'utilisation "Gestion du compte Cookie Swipe"
  * @author Mary
  */
@@ -20,25 +21,25 @@ import javax.swing.JMenuItem;
 
 public class ActionManageCSAccount {
     
-    private Dispatcher dispacher;
+    private Dispatcher dispatcher;
     
     /**
      * Constructeur de la classe permetant de s'intégrer dans l'application
      * @param frame fenêtre accèsible par notre action
-     * @param dispacher classe à utiliser afin d'excécuter les traitements
+     * @param dispatcher classe à utiliser afin d'excécuter les traitements
      */
-    public ActionManageCSAccount(IJFrame frame, Dispatcher dispacher){
+    public ActionManageCSAccount(IJFrame frame, Dispatcher dispatcher){
     
-        this.dispacher = dispacher;
+        this.dispatcher = dispatcher;
         JMenuBar menubar = frame.getJMenuBar();
         JMenu menuManageCSAccount = new JMenu("Mon compte");
         
         JMenuItem updateCSAccount = new JMenuItem("Modifier mon compte");
-        updateCSAccount.addActionListener(dispacher.getListener());
+        updateCSAccount.addActionListener(dispatcher.getListener());
         updateCSAccount.setActionCommand("updateCSAccount");
         
         JMenuItem logout = new JMenuItem("Me deconnecter");
-        logout.addActionListener(dispacher.getListener());
+        logout.addActionListener(dispatcher.getListener());
         logout.setActionCommand("logout");
         
         menuManageCSAccount.add(updateCSAccount);

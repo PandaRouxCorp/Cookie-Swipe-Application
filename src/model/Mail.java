@@ -31,8 +31,8 @@ public class Mail {
     }
     
     /**
-     * Constrcteur à utiliser pour créer un courriel basique
-     * @param to 
+     * Constructeur à utiliser pour créer un courriel basique
+     * @param to adresse courriel destinataire du courriel
      */
     public Mail(String to) {
         this.to = to;
@@ -41,6 +41,8 @@ public class Mail {
     /**
      * Constructeur à utilsier pour répondre ou transférer un courriel
      * @param mail courriel que l'ont transfert ou que l'ont répond
+     * @param to adresse courriel destinataire du courriel
+
      */
     public Mail(Mail mail, String to){
         this.to = to;

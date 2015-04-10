@@ -8,6 +8,7 @@ package model;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -75,11 +76,20 @@ public class MailAccount {
     //Fonction membre public
     
     /**
-     * Modifie les données du compte courriel (A mettre ne hashmap)
-     * @param data données du compte courriel
+     * Renvoie les toutes données du compte courriel
+     * @return table de hash contenant toutes les données du compte courriel
+     */
+    public HashMap<String, Object> getData(){
+       
+        return null;
+    }
+    
+    /**
+     * Modifie les données du compte courrie
+     * @param data table de hash contenant les données du compte courriel
      * @return Si la mise à jours des données est correct
      */
-    public boolean updateMailAccount(String ... data){
+    public boolean updateData(HashMap<String, Object> data){
         return false;
     }
     

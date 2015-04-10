@@ -57,33 +57,18 @@ public class Domain {
         return domain;
     }
 
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
-
     public String getPopAddress() {
         return popAddress;
-    }
-
-    public void setPopAddress(String popAddress) {
-        this.popAddress = popAddress;
     }
 
     public String getSmtpAddress() {
         return smtpAddress;
     }
 
-    public void setSmtpAddress(String smtpAddress) {
-        this.smtpAddress = smtpAddress;
-    }
-
     public String getPort() {
         return port;
     }
 
-    public void setPort(String port) {
-        this.port = port;
-    }
     
     //Equals & hashCode
     

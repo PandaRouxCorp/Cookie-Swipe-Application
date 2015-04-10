@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JMenuBar;
 
 /**
+ * Doit être transformer en singleton
  * Gestion de l'affichage du cas d'utilisation "Gestion des échanges" 
  * @author Mary
  */
@@ -22,15 +23,15 @@ public class ActionManageEchange {
     /**
      * Constructeur de la classe permetant de s'intégrer dans l'application
      * @param frame fenêtre accèsible par notre action
-     * @param dispacher classe à utiliser afin d'excécuter les traitements
+     * @param dispatcher classe à utiliser afin d'excécuter les traitements
      */
-    public ActionManageEchange(IJFrame frame, Dispatcher dispacher){
+    public ActionManageEchange(IJFrame frame, Dispatcher dispatcher){
         
-        this.dispatcher = dispacher;
+        this.dispatcher = dispatcher;
         JMenuBar menubar = frame.getJMenuBar();
         
         JButton send = new JButton("Nouveau courriel");
-        send.addActionListener(dispacher.getListener());
+        send.addActionListener(dispatcher.getListener());
         send.setActionCommand("newMail");
         menubar.add(send);
         
