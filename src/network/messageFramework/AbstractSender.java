@@ -16,17 +16,17 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractSender<T> {
     
-    private final String id;
+    private final int id;
     private static Logger LOGGER;
     
-    public AbstractSender(String id) { //Attention id doit etre unique
-        this.id = id;
+    public AbstractSender() { //Attention id doit etre unique
+        this.id = hashCode();
         if(LOGGER == null) {
             LOGGER = Logger.getLogger(AbstractSender.class.getName());
         }
     }
     
-    public String getSenderId() {
+    public int getSenderId() {
         return id;
     }
     
@@ -36,7 +36,7 @@ public abstract class AbstractSender<T> {
      *
      * @param receivedMessage
      */
-    public void onGenericMessageReceived(Future<Object> receivedMessage) {
+    public void onGenericMessageReceived(Future<?> receivedMessage) {
         try {
             Future<T> specifiedMessage = (Future<T>) receivedMessage;
             onMessageReceived(specifiedMessage);

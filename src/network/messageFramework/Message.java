@@ -13,13 +13,13 @@ import java.util.concurrent.Callable;
  */
 public abstract class Message<T> implements Callable<T>{
 
-    private final String senderId;
+    private final int senderId;
     
-    public Message(String senderId) {
+    public Message(int senderId) {
         this.senderId = senderId;
     }
     
-    public String getSender() {
+    public int getSender() {
         return this.senderId;
     }
 }

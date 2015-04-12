@@ -20,37 +20,44 @@ import java.util.logging.Logger;
  *
  * @author mickx
  */
-public class RequestLauncher {
+public class DeliverySystem {
 
     
     
-    private static RequestLauncher INSTANCE;
+    private static final DeliverySystem INSTANCE;
     private final Logger LOGGER;
-    private volatile CompletionService<Object> completionService;
-    private final ConcurrentLinkedQueue<Future<Object>> futures;
-    private volatile Executor slaveExecutor;
-    private volatile Executor masterExecutor;
-    private final Map<Future,Message<Object>> matcher;
+    private final CompletionService<Object> completionService;
+    private final ConcurrentLinkedQueue<Future<?>> futures;
+    private final Executor slaveExecutor;
+    private Executor masterExecutor;
+    private final Map<Future,Message<?>> matcher;
+    private volatile boolean isLaunched;
+    private volatile boolean shouldStop;
+    
+    
+    static {
+        INSTANCE = new DeliverySystem();
+    }
 
-    private RequestLauncher() {
-        LOGGER = Logger.getLogger(RequestLauncher.class.getName());
+    private DeliverySystem() {
+        LOGGER = Logger.getLogger(DeliverySystem.class.getName());
         slaveExecutor = Executors.newFixedThreadPool(4);
         completionService = new ExecutorCompletionService<>(slaveExecutor);
         futures = new ConcurrentLinkedQueue<>();
         matcher = new HashMap<>();
     }
     
-    private void link(Message<Object> callable, Future f) {
+    private void link(Message<?> callable, Future f) {
         matcher.put(f, callable);
     }
 
-    private void addTask(Message<Object> callable) {
-        Future f = completionService.submit(callable);
+    private void addTask(Message<?> callable) {
+        Future f = completionService.submit((Message<Object>)callable);
         link(callable, f);
         futures.add(f);
     }
     
-    private void onRecieveResponse(Future<Object> f) {
+    private void onRecieveResponse(Future<?> f) {
         futures.remove(f);
         Postman.sendResponse(matcher.get(f).getSender(),f);
         matcher.remove(f);
@@ -59,29 +66,52 @@ public class RequestLauncher {
     private void launchListener() {
         masterExecutor = Executors.newSingleThreadExecutor();
         masterExecutor.execute(() -> {
-            while (true) {
+            shouldStop = false;
+            isLaunched = true;
+            while (!shouldStop) {
                 try {
                     if (!futures.isEmpty()) {
                         onRecieveResponse(completionService.take());
+                    }
+                    else {
+                        try {
+                            Thread.sleep(100);
+                        }
+                        catch(InterruptedException e) {
+                            break;
+                        }
                     }
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Erreur :", e);
                 }
             }
+            isLaunched = false;
         });
     }
     
+    private int getTaskNumber() {
+        return futures.size();
+    }
+    
+    private boolean isActived() {
+        return isLaunched;
+    }
+    
     private void hardStop() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        shouldStop = true;
     }
 
     private void safeStop() {
         saveState();
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        hardStop();
     }
 
     private void saveState() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // TODO
+    }
+    
+    public static boolean isLaunched() {
+        return INSTANCE.isActived();
     }
     
     public static void stop() {
@@ -95,12 +125,15 @@ public class RequestLauncher {
             INSTANCE.hardStop();
         }
     }
+    
+    static int getCurrentTaskNumber() {
+        return INSTANCE.getTaskNumber();
+    }
 
-    static void launch(Message<Object> message) { // Droit package ... Passer par Postman
-        if (INSTANCE == null) {
-            INSTANCE = new RequestLauncher();
+    static void launch(Message<?> message) { // Droit package ... Passer par Postman
+        if (INSTANCE.isActived() == false) {
             INSTANCE.launchListener();
         }
-        INSTANCE.addTask(message);
+        INSTANCE.addTask((Message<Object>) message);
     }
 }
