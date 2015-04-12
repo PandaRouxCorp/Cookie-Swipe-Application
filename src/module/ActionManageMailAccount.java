@@ -32,7 +32,7 @@ public class ActionManageMailAccount{
         JMenuBar menubar = frame.getJMenuBar();
         JMenu menuManageMailAccount = new JMenu("Gèrer compte courriel");
         
-        JMenuItem addMailAccount = new JMenuItem("Ajouter un comtpe courriel");
+        JMenuItem addMailAccount = new JMenuItem("Ajouter un compte courriel");
         addMailAccount.setActionCommand("addMailAccount");
         addMailAccount.addActionListener(dispatcher.getListener());
         
@@ -40,7 +40,7 @@ public class ActionManageMailAccount{
         updateMailAccount.setActionCommand("updateMailAccount");
         updateMailAccount.addActionListener(dispatcher.getListener());
         
-        JMenuItem deleteMaiLAccount = new JMenuItem("Supprimer un comtpe courriel");
+        JMenuItem deleteMaiLAccount = new JMenuItem("Supprimer un compte courriel");
         deleteMaiLAccount.setActionCommand("deleteMailAccount");
         deleteMaiLAccount.addActionListener(dispatcher.getListener());
         
