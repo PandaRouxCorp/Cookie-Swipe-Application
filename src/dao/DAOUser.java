@@ -27,8 +27,8 @@ public class DAOUser {
     
      /**
      * Connecte l'utilisateur si il existe en persistance
-     * @param user utilsiateur qui tente de se connecter
-     *@return si la conenction de l'utilsiateur a réussi
+     * @param user utilisateur qui tente de se connecter
+     *@return si la conenction de l'utilisateur a réussi
      */
     public static boolean connectUser(User user){
         
