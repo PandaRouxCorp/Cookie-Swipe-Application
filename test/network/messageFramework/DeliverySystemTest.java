@@ -21,6 +21,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.ClassRule;
+import org.junit.Rule;
 
 /**
  *
@@ -31,16 +33,82 @@ public class DeliverySystemTest {
     public DeliverySystemTest() {
     }
     
+    public static Method isActived;
+    public static Method hardStop;
+    public static Method safeStop;
+    public static Method addTask;
+    public static Method launchListener;
+    public static AbstractSender sender;
+
     @BeforeClass
     public static void setUpClass() {
+        try {
+            isActived = DeliverySystem.class.getDeclaredMethod("isActived");
+            hardStop = DeliverySystem.class.getDeclaredMethod("hardStop");
+            safeStop = DeliverySystem.class.getDeclaredMethod("safeStop");
+            addTask = DeliverySystem.class.getDeclaredMethod("addTask", Message.class);
+            launchListener = DeliverySystem.class.getDeclaredMethod("launchListener");
+            
+            addTask.setAccessible(true);
+            isActived.setAccessible(true);
+            launchListener.setAccessible(true);
+            safeStop.setAccessible(true);
+            hardStop.setAccessible(true);
+            
+            sender = new AbstractSender() {
+                @Override
+                public void onMessageReceived(Future receivedMessage) {
+                    
+                }
+            };
+            
+            Postman.registerSender(sender);
+            
+        } catch (IllegalArgumentException
+                |SecurityException
+                |NoSuchMethodException ex) {
+            Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @AfterClass
     public static void tearDownClass() {
+        try {
+            Field field = Postman.class.getDeclaredField("INSTANCE");
+            field.setAccessible(true);
+            Postman postman = (Postman) field.get(null);
+            postman = null;
+        } catch (IllegalArgumentException
+                |NoSuchFieldException
+                |SecurityException
+                |IllegalAccessException ex) {
+            Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+    
+    public DeliverySystem deliverySystem;
+    public ConcurrentLinkedQueue<Future<?>> futures;
     
     @Before
     public void setUp() {
+        try {    
+            Constructor<DeliverySystem> constructor;
+            constructor = DeliverySystem.class.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            deliverySystem = constructor.newInstance();
+            
+            Field field = DeliverySystem.class.getDeclaredField("futures");
+            field.setAccessible(true);
+            futures = (ConcurrentLinkedQueue<Future<?>>) field.get(deliverySystem);        
+        } catch (IllegalAccessException
+                |IllegalArgumentException
+                |InvocationTargetException
+                |NoSuchFieldException
+                |SecurityException
+                |NoSuchMethodException
+                |InstantiationException ex) {
+            Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @After
@@ -52,14 +120,35 @@ public class DeliverySystemTest {
      */
     @Test
     public void testStop() {
-        System.out.println("stop");
-        DeliverySystem.stop();
         try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
+            
+            System.out.println("stop");
+            
+            launchListener.invoke(deliverySystem);
+            
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            assertTrue("RequestLauncher should be launched", (boolean)isActived.invoke(deliverySystem));
+            
+            safeStop.invoke(deliverySystem);
+            
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            assertTrue("RequestLauncher should be stoped", !(boolean)isActived.invoke(deliverySystem));
+        
+        } catch (IllegalAccessException 
+                |IllegalArgumentException 
+                |InvocationTargetException ex) {
             Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        assertTrue("RequestLauncher should be stoped", !DeliverySystem.isLaunched());
     }
 
     /**
@@ -67,14 +156,35 @@ public class DeliverySystemTest {
      */
     @Test
     public void testKill() {
-        System.out.println("kill");
-        DeliverySystem.kill();
         try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
+            
+            System.out.println("kill");
+            
+            launchListener.invoke(deliverySystem);
+            
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            assertTrue("RequestLauncher should be launched", (boolean)isActived.invoke(deliverySystem));
+            
+            hardStop.invoke(deliverySystem);
+            
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            assertTrue("RequestLauncher should be stoped", !(boolean)isActived.invoke(deliverySystem));
+        
+        } catch (IllegalAccessException 
+                |IllegalArgumentException 
+                |InvocationTargetException ex) {
             Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        assertTrue("RequestLauncher should be stoped", !DeliverySystem.isLaunched());
     }
 
     /**
@@ -83,26 +193,36 @@ public class DeliverySystemTest {
     @Test
     public void testLaunch() {
         System.out.println("launch");
-        Message<Integer> message = new Message<Integer>(1) {
+        try {
             
-            @Override
-            public Integer call() throws Exception {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        };
-        DeliverySystem.launch(message);
-        assertTrue("RequestLauncher should be launched", DeliverySystem.isLaunched());
+            Message<Integer> message = new Message<Integer>(1) {
+            
+                @Override
+                public Integer call() throws Exception {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+            };
+            
+            DeliverySystem.launch(message);            
+            DeliverySystem.kill();
+
+            assertTrue("RequestLauncher should be launched", DeliverySystem.isLaunched());
+            
+        } catch (SecurityException ex) {
+            Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Test 
     public void consomationTest() {
+        System.out.println("consomationTest");
         try {
             
             int messageDuration = 100;
             
             List<Message<Integer>> messages = new ArrayList<>();
             for(int i = 0; i < 10; i++) {
-                messages.add(new Message<Integer>(i) {
+                messages.add(new Message<Integer>(sender.getSenderId()) {
                     @Override
                     public Integer call() throws Exception {
                         Thread.sleep(messageDuration);
@@ -111,42 +231,25 @@ public class DeliverySystemTest {
                 });
             }
             
-            Method launchListener = DeliverySystem.class.getDeclaredMethod("launchListener");
-            launchListener.setAccessible(true);
-            
-            Method addTask = DeliverySystem.class.getDeclaredMethod("addTask", Message.class);
-            addTask.setAccessible(true);
-            
-            Constructor<DeliverySystem> constructor = DeliverySystem.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            Object launcher = constructor.newInstance();
-            
-            Field field = DeliverySystem.class.getDeclaredField("futures");
-            field.setAccessible(true);
-            ConcurrentLinkedQueue<Future<?>> futures = (ConcurrentLinkedQueue<Future<?>>) field.get(launcher);
-            
             assertTrue("Il n'y a aucun future en début de test " + futures.size(), futures.isEmpty());
             
             for(Message<?> m : messages) {
-                addTask.invoke(launcher, m);
+                addTask.invoke(deliverySystem, m);
             }
             
             assertTrue(messages.size() + "future(s) ajoutés", futures.size() == messages.size());
             
-            launchListener.invoke(launcher);
+            launchListener.invoke(deliverySystem);
             
-            Thread.sleep((messageDuration + 1)*messages.size());
+            Thread.sleep((messageDuration + 1)*messages.size()/2);
             
             assertTrue(messages.size() + "future(s) ajoutés", futures.isEmpty());
             
         } catch (IllegalAccessException
                 |IllegalArgumentException
                 |InvocationTargetException
-                |NoSuchFieldException
                 |SecurityException
-                |NoSuchMethodException
-                |InterruptedException
-                |InstantiationException ex) {
+                |InterruptedException ex) {
             Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

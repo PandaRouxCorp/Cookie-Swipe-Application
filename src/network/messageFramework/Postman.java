@@ -8,6 +8,8 @@ package network.messageFramework;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,10 +17,13 @@ import java.util.concurrent.Future;
  */
 public class Postman {
     
+    
     private static Postman INSTANCE;
     private final Map<Integer, AbstractSender<?>> senders;
+    private final Logger LOGGER;
     
     private Postman() {
+        LOGGER = Logger.getLogger(DeliverySystem.class.getName());
         senders = new HashMap<>();
     }
     
@@ -27,7 +32,13 @@ public class Postman {
     }
     
     private void relayResponse(int senderID, Future<?> response) {
-        senders.get(senderID).onGenericMessageReceived(response);
+        AbstractSender s = senders.get(senderID);
+        if(s != null) {
+            s.onGenericMessageReceived(response);
+        }
+        else {
+            LOGGER.log(Level.WARNING, "Unknow sender " + senderID + ". Message response not relay");
+        }
     }
     
     private void registerSender(int id, AbstractSender sender) {
@@ -43,14 +54,23 @@ public class Postman {
     }
     
     public static void registerSender(AbstractSender sender) {
+        if(INSTANCE == null) {
+            INSTANCE = new Postman();
+        }
         INSTANCE.registerSender(sender.getSenderId(), sender);
     }
     
     public static void unregisterSender(AbstractSender sender) {
+        if(INSTANCE == null) {
+            INSTANCE = new Postman();
+        }
         INSTANCE.unregisterSender(sender.getSenderId());
     }
     
     public static boolean isSenderRegistered(AbstractSender sender) {
+        if(INSTANCE == null) {
+            INSTANCE = new Postman();
+        }
         return INSTANCE.isSenderRegistered(sender.getSenderId());
     }
     
