@@ -5,13 +5,14 @@
  */
 package network.messageFramework;
 
+import java.io.Serializable;
 import java.util.concurrent.Callable;
 
 /**
  *
  * @author mickx
  */
-public abstract class Message<T> implements Callable<T>{
+public abstract class Message<T> implements Callable<T>, Serializable {
 
     private final int senderId;
     

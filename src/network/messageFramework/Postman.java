@@ -5,7 +5,15 @@
  */
 package network.messageFramework;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -17,7 +25,7 @@ import java.util.logging.Logger;
  */
 public class Postman {
     
-    
+    public static final String COOKIE_SWIPE_DIR = System.getProperty("user.dir") + "/CSstate.tmp";
     private static Postman INSTANCE;
     private final Map<Integer, AbstractSender<?>> senders;
     private final Logger LOGGER;
@@ -82,9 +90,79 @@ public class Postman {
     }
 
     static void sendResponse(int senderID, Future<?> response) {
-        if(INSTANCE == null) {
+        if(INSTANCE != null) {
+            INSTANCE.relayResponse(senderID, response);
+        }
+        else {
             throw new UnsupportedOperationException("Postman instance null");
         }
-        INSTANCE.relayResponse(senderID, response);
+    }
+    
+    static void serializeMessages(List<Message> messages) {
+        if(INSTANCE != null) {
+            INSTANCE.serialize(messages);
+        }
+        else {
+            throw new UnsupportedOperationException("Postman instance null");
+        }
+    }
+    
+    static void retreiveSavedMessages() {
+        if(INSTANCE == null) {
+            INSTANCE = new Postman();
+        }
+        INSTANCE.deserializedMessages();
+    }
+
+    private void serialize(List<Message> messages) {
+        try {
+            File file = new File(COOKIE_SWIPE_DIR);
+            if(file.exists()) {
+                file.delete();
+                file.createNewFile();
+            }
+            FileOutputStream fout = new FileOutputStream(file);
+            try (ObjectOutputStream oos = new ObjectOutputStream(fout)) {
+                Map<Message,AbstractSender> mapToSerialized = new HashMap<>();
+                messages.stream().forEach((m) -> {
+                    AbstractSender sender = senders.get(m.getSender());
+                    if(sender != null) {
+                        mapToSerialized.put(m,sender);
+                    }
+                    else {
+                        Logger.getLogger(DeliverySystem.class.getName())
+                                .log(Level.SEVERE,
+                                        "Serialisation error: sender have been unregistered. Message is lost");
+                    }
+                });
+                oos.writeObject(mapToSerialized);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(DeliverySystem.class.getName()).log(Level.SEVERE, "Serialisation error", ex);
+        }
+    }
+    
+    private void deserializedMessages() {
+        try {
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(COOKIE_SWIPE_DIR);
+            }
+            catch(FileNotFoundException e) {}
+            if(fis != null) {
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                Map<Message,AbstractSender> map = (Map<Message,AbstractSender>) ois.readObject();
+                map.keySet().stream().forEach((m) -> {
+                    if(!isSenderRegistered(m.getSender())) {
+                        registerSender(map.get(m));
+                    }
+                    sendMessage(m);
+                });
+            }
+        } catch (IOException
+                |ClassNotFoundException
+                |ClassCastException ex) {
+            Logger.getLogger(DeliverySystem.class.getName()).log(Level.SEVERE, "Serialisation error", ex);
+        }
     }
 }

@@ -5,6 +5,7 @@
  */
 package network.messageFramework;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -15,14 +16,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static network.messageFramework.Postman.COOKIE_SWIPE_DIR;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.ClassRule;
-import org.junit.Rule;
 
 /**
  *
@@ -38,6 +38,8 @@ public class DeliverySystemTest {
     public static Method safeStop;
     public static Method addTask;
     public static Method launchListener;
+    public static Method saveState;
+    public static Method retreiveState;
     public static AbstractSender sender;
 
     @BeforeClass
@@ -48,21 +50,23 @@ public class DeliverySystemTest {
             safeStop = DeliverySystem.class.getDeclaredMethod("safeStop");
             addTask = DeliverySystem.class.getDeclaredMethod("addTask", Message.class);
             launchListener = DeliverySystem.class.getDeclaredMethod("launchListener");
+            saveState = DeliverySystem.class.getDeclaredMethod("saveState");
+            retreiveState = DeliverySystem.class.getDeclaredMethod("retreiveState");
             
             addTask.setAccessible(true);
             isActived.setAccessible(true);
             launchListener.setAccessible(true);
             safeStop.setAccessible(true);
             hardStop.setAccessible(true);
+            saveState.setAccessible(true);
+            retreiveState.setAccessible(true);
             
-            sender = new AbstractSender() {
-                @Override
-                public void onMessageReceived(Future receivedMessage) {
-                    
-                }
-            };
+            sender = new TestSender();
             
             Postman.registerSender(sender);
+            
+            File f = new File(COOKIE_SWIPE_DIR);
+            if(f.exists()) f.delete();
             
         } catch (IllegalArgumentException
                 |SecurityException
@@ -91,64 +95,26 @@ public class DeliverySystemTest {
     
     @Before
     public void setUp() {
-        try {    
-            Constructor<DeliverySystem> constructor;
-            constructor = DeliverySystem.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            deliverySystem = constructor.newInstance();
+        try {           
+            Field field3 = DeliverySystem.class.getDeclaredField("INSTANCE");
+            field3.setAccessible(true);
+            deliverySystem = (DeliverySystem) field3.get(null);
             
             Field field = DeliverySystem.class.getDeclaredField("futures");
             field.setAccessible(true);
             futures = (ConcurrentLinkedQueue<Future<?>>) field.get(deliverySystem);        
         } catch (IllegalAccessException
                 |IllegalArgumentException
-                |InvocationTargetException
                 |NoSuchFieldException
-                |SecurityException
-                |NoSuchMethodException
-                |InstantiationException ex) {
+                |SecurityException ex) {
             Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     @After
     public void tearDown() {
-    }
-
-    /**
-     * Test of stop method, of class DeliverySystem.
-     */
-    @Test
-    public void testStop() {
-        try {
-            
-            System.out.println("stop");
-            
-            launchListener.invoke(deliverySystem);
-            
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            assertTrue("RequestLauncher should be launched", (boolean)isActived.invoke(deliverySystem));
-            
-            safeStop.invoke(deliverySystem);
-            
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            assertTrue("RequestLauncher should be stoped", !(boolean)isActived.invoke(deliverySystem));
-        
-        } catch (IllegalAccessException 
-                |IllegalArgumentException 
-                |InvocationTargetException ex) {
-            Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        File f = new File(COOKIE_SWIPE_DIR);
+        if(f.exists()) f.delete();
     }
 
     /**
@@ -158,7 +124,7 @@ public class DeliverySystemTest {
     public void testKill() {
         try {
             
-            System.out.println("kill");
+            System.out.println("kill test");
             
             launchListener.invoke(deliverySystem);
             
@@ -192,43 +158,38 @@ public class DeliverySystemTest {
      */
     @Test
     public void testLaunch() {
-        System.out.println("launch");
+        System.out.println("launch test");
         try {
             
-            Message<Integer> message = new Message<Integer>(1) {
+            Message<Integer> message = new TestMessage(sender.getSenderId(),100);
             
-                @Override
-                public Integer call() throws Exception {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
-            };
+            DeliverySystem.launch(message);
             
-            DeliverySystem.launch(message);            
-            DeliverySystem.kill();
+            Thread.sleep(200);
 
             assertTrue("RequestLauncher should be launched", DeliverySystem.isLaunched());
             
-        } catch (SecurityException ex) {
+            DeliverySystem.kill();
+            
+            Thread.sleep(200);
+            
+            assertTrue("RequestLauncher should be stoped", !DeliverySystem.isLaunched());
+            
+        } catch (SecurityException | InterruptedException ex) {
             Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     @Test 
     public void consomationTest() {
-        System.out.println("consomationTest");
+        System.out.println("consomation test");
         try {
             
             int messageDuration = 100;
             
             List<Message<Integer>> messages = new ArrayList<>();
             for(int i = 0; i < 10; i++) {
-                messages.add(new Message<Integer>(sender.getSenderId()) {
-                    @Override
-                    public Integer call() throws Exception {
-                        Thread.sleep(messageDuration);
-                        return getSender();
-                    }
-                });
+                messages.add(new TestMessage(sender.getSenderId(), messageDuration));
             }
             
             assertTrue("Il n'y a aucun future en début de test " + futures.size(), futures.isEmpty());
@@ -254,4 +215,76 @@ public class DeliverySystemTest {
         }
     }
     
+    @Test
+    public void stateTest() {
+
+        System.out.println("Retrieve state test");
+        
+        int nbMessage = 10;
+        int time = 100;
+        
+        List<Message<Integer>> messages = new ArrayList<>();
+        for(int i = 0; i < nbMessage; i++) {
+            messages.add(new TestMessage(sender.getSenderId(),time));
+        }
+        
+        try {
+            
+            Field field = DeliverySystem.class.getDeclaredField("futures");
+            field.setAccessible(true);
+            futures = (ConcurrentLinkedQueue<Future<?>>) field.get(deliverySystem);
+            
+            for(Message<?> m : messages) {
+                addTask.invoke(deliverySystem, m);
+            }
+            
+            assertTrue("Number of message receive is " + messages.size(), futures.size() == messages.size());
+            
+            isActived.invoke(deliverySystem);
+            launchListener.invoke(deliverySystem);
+            
+            Thread.sleep(100);
+            
+            assertTrue("DeliverySystem is launched", (boolean)isActived.invoke(deliverySystem));
+            
+            safeStop.invoke(deliverySystem);
+            
+            Thread.sleep(500);
+            
+            assertTrue("DeliverySystem is stoped", !(boolean)isActived.invoke(deliverySystem));
+            File f = new File(COOKIE_SWIPE_DIR);
+            assertTrue("State file exist", f.exists());
+            
+            System.out.println("    Begin retrive ...");
+            
+            int nbTaskUndone = futures.size();
+                        
+            Field field3 = DeliverySystem.class.getDeclaredField("INSTANCE");
+            field3.setAccessible(true);
+            deliverySystem = (DeliverySystem) field3.get(null);
+            
+            Field field2 = DeliverySystem.class.getDeclaredField("futures");
+            field2.setAccessible(true);
+            futures = (ConcurrentLinkedQueue<Future<?>>) field2.get(deliverySystem);
+            
+            assertTrue("Have retreive all task. Expected " + nbTaskUndone + " Received " 
+                    + futures.size() , nbTaskUndone == futures.size());
+            
+            launchListener.invoke(deliverySystem);
+            
+            Thread.sleep(nbMessage*time);
+            
+            hardStop.invoke(deliverySystem);
+            
+            System.out.println("    Retreive done");
+            
+        } catch (IllegalAccessException
+                |IllegalArgumentException
+                |InvocationTargetException
+                |SecurityException
+                |InterruptedException
+                |NoSuchFieldException ex) {
+            Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

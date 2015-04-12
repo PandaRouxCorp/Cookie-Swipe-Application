@@ -5,6 +5,7 @@
  */
 package network.messageFramework;
 
+import java.io.Serializable;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
  * @author mickx
  * @param <T>
  */
-public abstract class AbstractSender<T> {
+public abstract class AbstractSender<T> implements Serializable {
     
     private final int id;
     private static Logger LOGGER;

@@ -5,7 +5,9 @@
  */
 package network.messageFramework;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -22,19 +24,17 @@ import java.util.logging.Logger;
  */
 public class DeliverySystem {
 
-    
-    
     private static final DeliverySystem INSTANCE;
     private final Logger LOGGER;
     private final CompletionService<Object> completionService;
     private final ConcurrentLinkedQueue<Future<?>> futures;
     private final Executor slaveExecutor;
     private Executor masterExecutor;
-    private final Map<Future,Message<?>> matcher;
+    private final Map<Future, Message<?>> matcher;
     private volatile boolean isLaunched;
     private volatile boolean shouldStop;
-    
-    
+    private volatile boolean safeStop;
+
     static {
         INSTANCE = new DeliverySystem();
     }
@@ -45,39 +45,39 @@ public class DeliverySystem {
         completionService = new ExecutorCompletionService<>(slaveExecutor);
         futures = new ConcurrentLinkedQueue<>();
         matcher = new HashMap<>();
+        retreiveState();
     }
-    
+
     private void link(Message<?> callable, Future f) {
         matcher.put(f, callable);
     }
 
     private void addTask(Message<?> callable) {
-        Future f = completionService.submit((Message<Object>)callable);
+        Future f = completionService.submit((Message<Object>) callable);
         link(callable, f);
         futures.add(f);
     }
-    
+
     private void onRecieveResponse(Future<?> f) {
         futures.remove(f);
-        Postman.sendResponse(matcher.get(f).getSender(),f);
+        Postman.sendResponse(matcher.get(f).getSender(), f);
         matcher.remove(f);
     }
-    
+
     private void launchListener() {
         masterExecutor = Executors.newSingleThreadExecutor();
         masterExecutor.execute(() -> {
+            safeStop = false;
             shouldStop = false;
             isLaunched = true;
             while (!shouldStop) {
                 try {
                     if (!futures.isEmpty()) {
                         onRecieveResponse(completionService.take());
-                    }
-                    else {
+                    } else {
                         try {
                             Thread.sleep(100);
-                        }
-                        catch(InterruptedException e) {
+                        } catch (InterruptedException e) {
                             break;
                         }
                     }
@@ -85,47 +85,58 @@ public class DeliverySystem {
                     LOGGER.log(Level.SEVERE, "Erreur :", e);
                 }
             }
+            if (safeStop) {
+                saveState();
+            }
             isLaunched = false;
         });
     }
-    
-    private int getTaskNumber() {
+
+    public int getTaskNumber() {
         return futures.size();
     }
-    
+
     private boolean isActived() {
         return isLaunched;
     }
-    
+
     private void hardStop() {
         shouldStop = true;
     }
 
     private void safeStop() {
-        saveState();
-        hardStop();
+        safeStop = true;
+        shouldStop = true;
     }
 
     private void saveState() {
-        // TODO
+        List<Message> messages = new ArrayList<>();
+        futures.stream().map((f) -> matcher.get(f)).forEach((m) -> {
+            messages.add(m);
+        });
+        Postman.serializeMessages(messages);
     }
-    
+
+    private void retreiveState() {
+        Postman.retreiveSavedMessages();
+    }
+
     public static boolean isLaunched() {
         return INSTANCE.isActived();
     }
-    
+
     public static void stop() {
         if (INSTANCE != null) {
             INSTANCE.safeStop();
         }
     }
-    
+
     public static void kill() {
         if (INSTANCE != null) {
             INSTANCE.hardStop();
         }
     }
-    
+
     static int getCurrentTaskNumber() {
         return INSTANCE.getTaskNumber();
     }
