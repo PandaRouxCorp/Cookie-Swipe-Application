@@ -13,6 +13,7 @@ import java.util.concurrent.CompletionService;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -26,10 +27,10 @@ public class DeliverySystem {
 
     private static final DeliverySystem INSTANCE;
     private final Logger LOGGER;
-    private final CompletionService<Object> completionService;
+    private ExecutorCompletionService<Object> completionService;
     private final ConcurrentLinkedQueue<Future<?>> futures;
-    private final Executor slaveExecutor;
-    private Executor masterExecutor;
+    private ExecutorService slaveExecutor;
+    private ExecutorService masterExecutor;
     private final Map<Future, Message<?>> matcher;
     private volatile boolean isLaunched;
     private volatile boolean shouldStop;
@@ -52,7 +53,11 @@ public class DeliverySystem {
         matcher.put(f, callable);
     }
 
-    private void addTask(Message<?> callable) {
+    private void addTask(Message<?> callable) {     
+        if(slaveExecutor.isShutdown()) {
+            slaveExecutor = Executors.newFixedThreadPool(4);
+            completionService = new ExecutorCompletionService<>(slaveExecutor);
+        }
         Future f = completionService.submit((Message<Object>) callable);
         link(callable, f);
         futures.add(f);
@@ -90,6 +95,8 @@ public class DeliverySystem {
             }
             isLaunched = false;
         });
+        slaveExecutor.shutdown();
+        masterExecutor.shutdown();
     }
 
     public int getTaskNumber() {
