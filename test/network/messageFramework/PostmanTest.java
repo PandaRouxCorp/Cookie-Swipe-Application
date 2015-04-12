@@ -80,7 +80,7 @@ public class PostmanTest {
     @Test
     public void testSendResponse() {
 	System.out.println("sendResponse");
-	String senderID = "";
+	int senderID = 0;
 	Future<Object> response = null;
 	Postman.sendResponse(senderID, response);
 	// TODO review the generated test code and remove the default call to fail.

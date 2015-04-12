@@ -46,7 +46,7 @@ public class AbstractSenderTest {
 	System.out.println("getSenderId");
 	AbstractSender instance = null;
 	String expResult = "";
-	String result = instance.getSenderId();
+	int result = instance.getSenderId();
 	assertEquals(expResult, result);
 	// TODO review the generated test code and remove the default call to fail.
 	fail("The test case is a prototype.");
@@ -93,11 +93,13 @@ public class AbstractSenderTest {
     public class AbstractSenderImpl extends AbstractSender {
 
 	public AbstractSenderImpl() {
-	    super("");
+	    super();
 	}
 
-	public void onMessageReceived(Future<T> receivedMessage) {
-	}
+        @Override
+        public void onMessageReceived(Future receivedMessage) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
     
 }

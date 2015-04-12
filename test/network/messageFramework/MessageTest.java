@@ -45,7 +45,7 @@ public class MessageTest {
 	System.out.println("getSender");
 	Message instance = null;
 	String expResult = "";
-	String result = instance.getSender();
+	int result = instance.getSender();
 	assertEquals(expResult, result);
 	// TODO review the generated test code and remove the default call to fail.
 	fail("The test case is a prototype.");
@@ -54,8 +54,13 @@ public class MessageTest {
     public class MessageImpl extends Message {
 
 	public MessageImpl() {
-	    super("");
+	    super(0);
 	}
+
+        @Override
+        public Object call() throws Exception {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
     
 }
