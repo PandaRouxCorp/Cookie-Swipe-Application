@@ -115,6 +115,7 @@ public class Postman {
     }
 
     private void serialize(List<Message> messages) {
+        ObjectOutputStream oos = null;
         try {
             File file = new File(COOKIE_SWIPE_DIR);
             if(file.exists()) {
@@ -122,35 +123,40 @@ public class Postman {
                 file.createNewFile();
             }
             FileOutputStream fout = new FileOutputStream(file);
-            try (ObjectOutputStream oos = new ObjectOutputStream(fout)) {
-                Map<Message,AbstractSender> mapToSerialized = new HashMap<>();
-                messages.stream().forEach((m) -> {
-                    AbstractSender sender = senders.get(m.getSender());
-                    if(sender != null) {
-                        mapToSerialized.put(m,sender);
-                    }
-                    else {
-                        Logger.getLogger(DeliverySystem.class.getName())
-                                .log(Level.SEVERE,
-                                        "Serialisation error: sender have been unregistered. Message is lost");
-                    }
-                });
-                oos.writeObject(mapToSerialized);
-            }
+            oos = new ObjectOutputStream(fout);
+            Map<Message,AbstractSender> mapToSerialized = new HashMap<>();
+            messages.stream().forEach((m) -> {
+                AbstractSender sender = senders.get(m.getSender());
+                if(sender != null && m.shouldBeSavedIfNotExecuted()) {
+                    mapToSerialized.put(m,sender);
+                }
+                else {
+                    Logger.getLogger(DeliverySystem.class.getName())
+                            .log(Level.SEVERE,
+                                    "Serialisation error: sender have been unregistered. Message is lost");
+                }
+            });
+            oos.writeObject(mapToSerialized);
         } catch (IOException ex) {
             Logger.getLogger(DeliverySystem.class.getName()).log(Level.SEVERE, "Serialisation error", ex);
+        } finally {
+            if(oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Postman.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
     
     private void deserializedMessages() {
+        File file = new File(COOKIE_SWIPE_DIR);
+        ObjectInputStream ois = null;
         try {
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(COOKIE_SWIPE_DIR);
-            }
-            catch(FileNotFoundException e) {}
-            if(fis != null) {
-                ObjectInputStream ois = new ObjectInputStream(fis);
+            if(file.exists()) {
+                FileInputStream fis = new FileInputStream(file);
+                ois = new ObjectInputStream(fis);
                 Map<Message,AbstractSender> map = (Map<Message,AbstractSender>) ois.readObject();
                 map.keySet().stream().forEach((m) -> {
                     if(!isSenderRegistered(m.getSender())) {
@@ -162,7 +168,16 @@ public class Postman {
         } catch (IOException
                 |ClassNotFoundException
                 |ClassCastException ex) {
-            Logger.getLogger(DeliverySystem.class.getName()).log(Level.SEVERE, "Serialisation error", ex);
+            Logger.getLogger(DeliverySystem.class.getName()).log(Level.SEVERE, "Deserialisation error", ex);
+        } finally {
+            if(ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Postman.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            file.delete();
         }
     }
 }

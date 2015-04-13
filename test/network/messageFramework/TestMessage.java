@@ -22,4 +22,9 @@ public class TestMessage extends Message<Integer> {
         Thread.sleep(messageDuration);
         return getSender();
     }
+    
+    @Override
+    boolean shouldBeSavedIfNotExecuted() {
+        return true;
+    }
 }

@@ -23,4 +23,8 @@ public abstract class Message<T> implements Callable<T>, Serializable {
     public int getSender() {
         return this.senderId;
     }
+
+    boolean shouldBeSavedIfNotExecuted() {
+        return false;
+    }
 }
