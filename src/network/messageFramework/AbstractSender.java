@@ -37,7 +37,7 @@ public abstract class AbstractSender<T> implements Serializable {
      *
      * @param receivedMessage
      */
-    public final void onGenericMessageReceived(Future<?> receivedMessage) {
+    void onGenericMessageReceived(Future<?> receivedMessage) {
         try {
             Future<T> specifiedMessage = (Future<T>) receivedMessage;
             onMessageReceived(specifiedMessage);

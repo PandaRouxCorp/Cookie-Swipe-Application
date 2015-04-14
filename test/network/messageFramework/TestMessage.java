@@ -5,21 +5,29 @@
  */
 package network.messageFramework;
 
+import model.Mail;
+
 /**
  *
  * @author mickx
  */
-public class TestMessage extends Message<Integer> {
+public class TestMessage extends Message<Mail> {
     int messageDuration;
+    Mail m;
 
     public TestMessage(int messageDuration) {
         this.messageDuration = messageDuration;
     }
+    
+    public TestMessage(int messageDuration, Mail m) {
+        this.messageDuration = messageDuration;
+        this.m = m;
+    }
 
     @Override
-    public Integer call() throws Exception {
+    public Mail call() throws Exception {
         Thread.sleep(messageDuration);
-        return getSender();
+        return m;
     }
     
     @Override

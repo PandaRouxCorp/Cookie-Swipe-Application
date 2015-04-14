@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Mail;
 import static network.messageFramework.Postman.COOKIE_SWIPE_DIR;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -166,7 +167,7 @@ public class DeliverySystemTest {
         System.out.println("launch test");
         try {
             
-            Message<Integer> message = new TestMessage(100);
+            TestMessage message = new TestMessage(100);
             message.setSenderId(sender.getSenderId());
             DeliverySystem.launch(message);
             
@@ -192,7 +193,7 @@ public class DeliverySystemTest {
             
             int messageDuration = 100;
             
-            List<Message<Integer>> messages = new ArrayList<>();
+            List<TestMessage> messages = new ArrayList<>();
             for(int i = 0; i < 10; i++) {
                 messages.add(new TestMessage(messageDuration));
             }
@@ -229,7 +230,7 @@ public class DeliverySystemTest {
         int nbMessage = 10;
         int time = 100;
         
-        List<Message<Integer>> messages = new ArrayList<>();
+        List<TestMessage> messages = new ArrayList<>();
         for(int i = 0; i < nbMessage; i++) {
             messages.add(new TestMessage(time));
         }
