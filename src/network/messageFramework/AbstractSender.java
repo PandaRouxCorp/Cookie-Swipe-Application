@@ -23,11 +23,11 @@ public abstract class AbstractSender<T> implements Serializable {
     public AbstractSender() { //Attention id doit etre unique
         this.id = hashCode();
         if(LOGGER == null) {
-            LOGGER = Logger.getLogger(AbstractSender.class.getName());
+            LOGGER = Logger.getLogger(this.getClass().getName());
         }
     }
     
-    public int getSenderId() {
+    public final int getSenderId() {
         return id;
     }
     
@@ -37,7 +37,7 @@ public abstract class AbstractSender<T> implements Serializable {
      *
      * @param receivedMessage
      */
-    public void onGenericMessageReceived(Future<?> receivedMessage) {
+    public final void onGenericMessageReceived(Future<?> receivedMessage) {
         try {
             Future<T> specifiedMessage = (Future<T>) receivedMessage;
             onMessageReceived(specifiedMessage);
@@ -47,7 +47,8 @@ public abstract class AbstractSender<T> implements Serializable {
         }
     }
     
-    public void sendMessage(Message sentMessage) {
+    public final void sendMessage(Message sentMessage) {
+        sentMessage.setSenderId(getSenderId());
         Postman.sendMessage(sentMessage);
     };
 }

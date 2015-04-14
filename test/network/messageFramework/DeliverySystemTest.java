@@ -6,7 +6,6 @@
 package network.messageFramework;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -113,8 +112,14 @@ public class DeliverySystemTest {
     
     @After
     public void tearDown() {
-        File f = new File(COOKIE_SWIPE_DIR);
-        if(f.exists()) f.delete();
+        try {
+            safeStop.invoke(deliverySystem);
+            Thread.sleep(500);
+            File f = new File(COOKIE_SWIPE_DIR);
+            if(f.exists()) f.delete();
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InterruptedException ex) {
+            Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -129,7 +134,7 @@ public class DeliverySystemTest {
             launchListener.invoke(deliverySystem);
             
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -139,7 +144,7 @@ public class DeliverySystemTest {
             hardStop.invoke(deliverySystem);
             
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -161,17 +166,17 @@ public class DeliverySystemTest {
         System.out.println("launch test");
         try {
             
-            Message<Integer> message = new TestMessage(sender.getSenderId(),100);
-            
+            Message<Integer> message = new TestMessage(100);
+            message.setSenderId(sender.getSenderId());
             DeliverySystem.launch(message);
             
-            Thread.sleep(200);
+            Thread.sleep(500);
 
             assertTrue("RequestLauncher should be launched", DeliverySystem.isLaunched());
             
             DeliverySystem.kill();
             
-            Thread.sleep(200);
+            Thread.sleep(500);
             
             assertTrue("RequestLauncher should be stoped", !DeliverySystem.isLaunched());
             
@@ -189,12 +194,13 @@ public class DeliverySystemTest {
             
             List<Message<Integer>> messages = new ArrayList<>();
             for(int i = 0; i < 10; i++) {
-                messages.add(new TestMessage(sender.getSenderId(), messageDuration));
+                messages.add(new TestMessage(messageDuration));
             }
             
             assertTrue("Il n'y a aucun future en début de test " + futures.size(), futures.isEmpty());
             
             for(Message<?> m : messages) {
+                m.setSenderId(sender.getSenderId());
                 addTask.invoke(deliverySystem, m);
             }
             
@@ -225,7 +231,7 @@ public class DeliverySystemTest {
         
         List<Message<Integer>> messages = new ArrayList<>();
         for(int i = 0; i < nbMessage; i++) {
-            messages.add(new TestMessage(sender.getSenderId(),time));
+            messages.add(new TestMessage(time));
         }
         
         try {
@@ -235,6 +241,7 @@ public class DeliverySystemTest {
             futures = (ConcurrentLinkedQueue<Future<?>>) field.get(deliverySystem);
             
             for(Message<?> m : messages) {
+                m.setSenderId(sender.getSenderId());
                 addTask.invoke(deliverySystem, m);
             }
             
@@ -243,7 +250,7 @@ public class DeliverySystemTest {
             isActived.invoke(deliverySystem);
             launchListener.invoke(deliverySystem);
             
-            Thread.sleep(100);
+            Thread.sleep(200);
             
             assertTrue("DeliverySystem is launched", (boolean)isActived.invoke(deliverySystem));
             

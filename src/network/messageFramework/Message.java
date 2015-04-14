@@ -14,9 +14,9 @@ import java.util.concurrent.Callable;
  */
 public abstract class Message<T> implements Callable<T>, Serializable {
 
-    private final int senderId;
+    private int senderId;
     
-    public Message(int senderId) {
+    public void setSenderId(int senderId) {
         this.senderId = senderId;
     }
     
@@ -24,7 +24,7 @@ public abstract class Message<T> implements Callable<T>, Serializable {
         return this.senderId;
     }
 
-    boolean shouldBeSavedIfNotExecuted() {
+    public boolean shouldBeSavedIfNotExecuted() {
         return false;
     }
 }

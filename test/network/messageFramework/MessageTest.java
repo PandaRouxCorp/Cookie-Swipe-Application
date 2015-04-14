@@ -52,11 +52,6 @@ public class MessageTest {
     }
 
     public class MessageImpl extends Message {
-
-	public MessageImpl() {
-	    super(0);
-	}
-
         @Override
         public Object call() throws Exception {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

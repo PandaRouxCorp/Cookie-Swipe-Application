@@ -12,8 +12,7 @@ package network.messageFramework;
 public class TestMessage extends Message<Integer> {
     int messageDuration;
 
-    public TestMessage(int senderId, int messageDuration) {
-        super(senderId);
+    public TestMessage(int messageDuration) {
         this.messageDuration = messageDuration;
     }
 
@@ -24,7 +23,7 @@ public class TestMessage extends Message<Integer> {
     }
     
     @Override
-    boolean shouldBeSavedIfNotExecuted() {
+    public boolean shouldBeSavedIfNotExecuted() {
         return true;
     }
 }

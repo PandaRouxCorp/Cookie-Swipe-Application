@@ -7,7 +7,6 @@ package network.messageFramework;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -45,7 +44,7 @@ public class Postman {
             s.onGenericMessageReceived(response);
         }
         else {
-            LOGGER.log(Level.WARNING, "Unknow sender " + senderID + ". Message response not relay");
+            LOGGER.log(Level.WARNING, "Unknow sender {0}. Message response not relay", senderID);
         }
     }
     
