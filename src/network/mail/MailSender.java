@@ -5,6 +5,7 @@
  */
 package network.mail;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -12,14 +13,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Mail;
 import network.messageFramework.AbstractSender;
-import network.messageFramework.Message;
 import network.messageFramework.Postman;
+import network.messageFramework.SerializableSender;
 
 /**
  *
  * @author mickx
  */
-public class MailSender extends AbstractSender<Mail> {
+public class MailSender extends AbstractSender<Mail> implements SerializableSender {
     
     private static MailSender INSTANCE;    
     private final ConcurrentLinkedQueue<Mail> mails;
@@ -46,6 +47,35 @@ public class MailSender extends AbstractSender<Mail> {
     private void add(Mail m) {
         mails.add(m);
         sendMessage(new MailMessage(m));
+    }
+    
+    @Override
+    public void beforeSerialisation() {
+        
+    }
+
+    @Override
+    public void afterDeserialisation() {
+        
+    }
+    
+    @Override
+    public Object getPendingAction() {
+        return mails;
+    }
+    
+    @Override
+    public void setPendingAction(Object pendingActions) {
+        mails.addAll((ConcurrentLinkedQueue<Mail>)pendingActions);
+    }
+
+
+    @Override
+    public AbstractSender getSingletonSender() {
+        if(INSTANCE == null) {
+            INSTANCE = new MailSender();
+        }
+        return INSTANCE;
     }
     
     public static void send(Mail m) {

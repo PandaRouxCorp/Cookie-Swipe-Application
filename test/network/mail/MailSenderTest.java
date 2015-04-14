@@ -5,6 +5,7 @@
  */
 package network.mail;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Mail;
 import network.messageFramework.DeliverySystem;
+import network.messageFramework.Postman;
+import static network.messageFramework.Postman.COOKIE_SWIPE_DIR;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -58,50 +61,14 @@ public class MailSenderTest {
     
     @After
     public void tearDown() {
+        File f = new File(COOKIE_SWIPE_DIR);
+        if(f.exists()) f.delete();
     }
-
-//    /**
-//     * Test of onMessageReceived method, of class MailSender.
-//     */
-//    @Test
-//    public void testOnMessageReceived() {
-//        System.out.println("onMessageReceived");
-//        Future<Mail> receivedMessage = null;
-//        MailSender instance = null;
-//        instance.onMessageReceived(receivedMessage);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of add method, of class MailSender.
-//     */
-//    @Test
-//    public void testAdd() {
-//        System.out.println("add");
-//        Mail m = null;
-//        MailSender instance = null;
-//        instance.add(m);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of send method, of class MailSender.
-//     */
-//    @Test
-//    public void testSend() {
-//        System.out.println("send");
-//        Mail m = null;
-//        MailSender.send(m);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
     
-    @Test
+    @Test // send one mail and receive the acknowledment
     public void simpleCommunicationTest() {
         try {
-            System.out.println("Simple communication test: send one mail and receive the acknowledment");
+            System.out.println("Simple communication test");
             Mail m = new Mail();
             MailSender.send(m);
             MailSender mailSender = (MailSender) instanceField.get(null);
@@ -114,4 +81,28 @@ public class MailSenderTest {
         }
     }
     
+    @Test // send mails, interrupt the communication, restart it and try to receive acknowledments
+    public void interruptedCommunicationTest() {
+        try {
+            System.out.println("Interrupted communication test");
+            Mail m = new Mail();
+            MailSender.send(m);
+            MailSender mailSender = (MailSender) instanceField.get(null);
+            ConcurrentLinkedQueue<Mail> mailsList = (ConcurrentLinkedQueue<Mail>) mails.get(mailSender);
+            assertTrue("Mail is being sent", mailsList.contains(m));
+            DeliverySystem.stop();
+            Thread.sleep(500);
+            assertTrue("DeliverySystem is down", !DeliverySystem.isLaunched());
+            Postman.sendMessage(null);
+            Thread.sleep(500);
+            assertTrue("DeliverySystem is up", DeliverySystem.isLaunched());
+            Thread.sleep(2000);
+            mailSender = (MailSender) instanceField.get(null);
+            mailsList = (ConcurrentLinkedQueue<Mail>) mails.get(mailSender);
+            Thread.sleep(5000);
+            assertTrue("Mail have been sent " + mailsList.size(), !mailsList.contains(m));
+        } catch (IllegalArgumentException | IllegalAccessException | InterruptedException ex) {
+            Logger.getLogger(MailSenderTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

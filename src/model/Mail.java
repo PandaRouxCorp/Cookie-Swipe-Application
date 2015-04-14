@@ -7,13 +7,14 @@
 package model;
 
 import java.io.File;
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  *
  * @author Mary
  */
-public class Mail {
+public class Mail implements Serializable {
     
     //Variable membre
     private int id;

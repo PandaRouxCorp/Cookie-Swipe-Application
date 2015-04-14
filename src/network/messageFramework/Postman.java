@@ -127,7 +127,10 @@ public class Postman {
             messages.stream().forEach((m) -> {
                 AbstractSender sender = senders.get(m.getSender());
                 if(sender != null && m.shouldBeSavedIfNotExecuted()) {
-                    mapToSerialized.put(m,sender);
+                    if(sender instanceof SerializableSender) {
+                        ((SerializableSender)sender).beforeSerialisation();
+                        mapToSerialized.put(m,sender);
+                    }
                 }
                 else {
                     Logger.getLogger(DeliverySystem.class.getName())
@@ -158,6 +161,11 @@ public class Postman {
                 ois = new ObjectInputStream(fis);
                 Map<Message,AbstractSender> map = (Map<Message,AbstractSender>) ois.readObject();
                 map.keySet().stream().forEach((m) -> {
+                    AbstractSender sender = (AbstractSender) map.get(m);
+                    Object pendingActions = ((SerializableSender)sender).getPendingAction();
+                    sender = ((SerializableSender)sender).getSingletonSender();
+                    ((SerializableSender)sender).setPendingAction(pendingActions);
+                    ((SerializableSender)sender).afterDeserialisation();
                     if(!isSenderRegistered(m.getSender())) {
                         registerSender(map.get(m));
                     }

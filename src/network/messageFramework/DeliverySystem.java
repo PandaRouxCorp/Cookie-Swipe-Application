@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class DeliverySystem {
 
-    private static final DeliverySystem INSTANCE;
+    private static DeliverySystem INSTANCE;
     private final Logger LOGGER;
     private ExecutorCompletionService<Object> completionService;
     private final ConcurrentLinkedQueue<Future<?>> futures;
@@ -56,9 +56,11 @@ public class DeliverySystem {
             slaveExecutor = Executors.newFixedThreadPool(4);
             completionService = new ExecutorCompletionService<>(slaveExecutor);
         }
-        Future f = completionService.submit((Message<Object>) callable);
-        link(callable, f);
-        futures.add(f);
+        if(callable != null) {
+            Future f = completionService.submit((Message<Object>) callable);
+            link(callable, f);
+            futures.add(f);
+        }
     }
 
     private void onRecieveResponse(Future<?> f) {
@@ -147,6 +149,9 @@ public class DeliverySystem {
     }
 
     static void launch(Message<?> message) { // Droit package ... Passer par Postman
+        if(INSTANCE == null) {
+            INSTANCE = new DeliverySystem();
+        }
         if (INSTANCE.isActived() == false) {
             INSTANCE.launchListener();
         }

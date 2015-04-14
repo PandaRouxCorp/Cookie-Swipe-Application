@@ -15,7 +15,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Mail;
 import static network.messageFramework.Postman.COOKIE_SWIPE_DIR;
 import org.junit.After;
 import org.junit.AfterClass;
