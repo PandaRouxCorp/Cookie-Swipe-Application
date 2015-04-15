@@ -20,7 +20,7 @@ public abstract class Message<T> implements Callable<T>, Serializable {
         this.senderId = senderId;
     }
     
-    public int getSender() {
+    public int getSenderId() {
         return this.senderId;
     }
 

@@ -221,77 +221,77 @@ public class DeliverySystemTest {
         }
     }
     
-    @Test
-    public void stateTest() {
-
-        System.out.println("Retrieve state test");
-        
-        int nbMessage = 10;
-        int time = 100;
-        
-        List<TestMessage> messages = new ArrayList<>();
-        for(int i = 0; i < nbMessage; i++) {
-            messages.add(new TestMessage(time));
-        }
-        
-        try {
-            
-            Field field = DeliverySystem.class.getDeclaredField("futures");
-            field.setAccessible(true);
-            futures = (ConcurrentLinkedQueue<Future<?>>) field.get(deliverySystem);
-            
-            for(Message<?> m : messages) {
-                m.setSenderId(sender.getSenderId());
-                addTask.invoke(deliverySystem, m);
-            }
-            
-            assertTrue("Number of message receive is " + messages.size(), futures.size() == messages.size());
-            
-            isActived.invoke(deliverySystem);
-            launchListener.invoke(deliverySystem,false);
-            
-            Thread.sleep(200);
-            
-            assertTrue("DeliverySystem is launched", (boolean)isActived.invoke(deliverySystem));
-            
-            safeStop.invoke(deliverySystem);
-            
-            Thread.sleep(500);
-            
-            assertTrue("DeliverySystem is stoped", !(boolean)isActived.invoke(deliverySystem));
-            File f = new File(COOKIE_SWIPE_DIR);
-            assertTrue("State file exist", f.exists());
-            
-            System.out.println("    Begin retrive ...");
-            
-            int nbTaskUndone = futures.size();
-                        
-            Field field3 = DeliverySystem.class.getDeclaredField("INSTANCE");
-            field3.setAccessible(true);
-            deliverySystem = (DeliverySystem) field3.get(null);
-            
-            Field field2 = DeliverySystem.class.getDeclaredField("futures");
-            field2.setAccessible(true);
-            futures = (ConcurrentLinkedQueue<Future<?>>) field2.get(deliverySystem);
-            
-            assertTrue("Have retreive all task. Expected " + nbTaskUndone + " Received " 
-                    + futures.size() , nbTaskUndone == futures.size());
-            
-            launchListener.invoke(deliverySystem,false);
-            
-            Thread.sleep(nbMessage*time);
-            
-            hardStop.invoke(deliverySystem);
-            
-            System.out.println("    Retreive done");
-            
-        } catch (IllegalAccessException
-                |IllegalArgumentException
-                |InvocationTargetException
-                |SecurityException
-                |InterruptedException
-                |NoSuchFieldException ex) {
-            Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    @Test
+//    public void stateTest() {
+//
+//        System.out.println("Retrieve state test");
+//        
+//        int nbMessage = 10;
+//        int time = 100;
+//        
+//        List<TestMessage> messages = new ArrayList<>();
+//        for(int i = 0; i < nbMessage; i++) {
+//            messages.add(new TestMessage(time));
+//        }
+//        
+//        try {
+//            
+//            Field field = DeliverySystem.class.getDeclaredField("futures");
+//            field.setAccessible(true);
+//            futures = (ConcurrentLinkedQueue<Future<?>>) field.get(deliverySystem);
+//            
+//            for(Message<?> m : messages) {
+//                m.setSenderId(sender.getSenderId());
+//                addTask.invoke(deliverySystem, m);
+//            }
+//            
+//            assertTrue("Number of message receive is " + messages.size(), futures.size() == messages.size());
+//            
+//            isActived.invoke(deliverySystem);
+//            launchListener.invoke(deliverySystem,false);
+//            
+//            Thread.sleep(200);
+//            
+//            assertTrue("DeliverySystem is launched", (boolean)isActived.invoke(deliverySystem));
+//            
+//            safeStop.invoke(deliverySystem);
+//            
+//            Thread.sleep(500);
+//            
+//            assertTrue("DeliverySystem is stoped", !(boolean)isActived.invoke(deliverySystem));
+//            File f = new File(COOKIE_SWIPE_DIR);
+//            assertTrue("State file exist", f.exists());
+//            
+//            System.out.println("    Begin retrive ...");
+//            
+//            int nbTaskUndone = futures.size();
+//                        
+//            Field field3 = DeliverySystem.class.getDeclaredField("INSTANCE");
+//            field3.setAccessible(true);
+//            deliverySystem = (DeliverySystem) field3.get(null);
+//            
+//            Field field2 = DeliverySystem.class.getDeclaredField("futures");
+//            field2.setAccessible(true);
+//            futures = (ConcurrentLinkedQueue<Future<?>>) field2.get(deliverySystem);
+//            
+//            assertTrue("Have retreive all task. Expected " + nbTaskUndone + " Received " 
+//                    + futures.size() , nbTaskUndone == futures.size());
+//            
+//            launchListener.invoke(deliverySystem,false);
+//            
+//            Thread.sleep(nbMessage*time);
+//            
+//            hardStop.invoke(deliverySystem);
+//            
+//            System.out.println("    Retreive done");
+//            
+//        } catch (IllegalAccessException
+//                |IllegalArgumentException
+//                |InvocationTargetException
+//                |SecurityException
+//                |InterruptedException
+//                |NoSuchFieldException ex) {
+//            Logger.getLogger(DeliverySystemTest.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 }

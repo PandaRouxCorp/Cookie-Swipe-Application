@@ -127,7 +127,7 @@ public class Postman {
             oos = new ObjectOutputStream(fout);
             Map<Message,AbstractSender> mapToSerialized = new HashMap<>();
             messages.stream().forEach((m) -> {
-                AbstractSender sender = senders.get(m.getSender());
+                AbstractSender sender = senders.get(m.getSenderId());
                 if(sender != null && m.shouldBeSavedIfNotExecuted() && sender instanceof AbstractSerializableSender) {
                     ((AbstractSerializableSender)sender).beforeSerialisation();
                     mapToSerialized.put(m,sender);
@@ -155,23 +155,25 @@ public class Postman {
     private void deserializedMessages() {
         File file = new File(COOKIE_SWIPE_DIR);
         ObjectInputStream ois = null;
+        
+        if(!file.exists()) return;
+        
         try {
-            if(file.exists()) {
-                FileInputStream fis = new FileInputStream(file);
-                ois = new ObjectInputStream(fis);
-                Map<Message,AbstractSender> map = (Map<Message,AbstractSender>) ois.readObject();
-                map.keySet().stream().forEach((m) -> {
-                    AbstractSerializableSender sender = (AbstractSerializableSender) map.get(m);
-                    Object pendingActions = sender.getPendingAction();
-                    sender = sender.getSingletonSender();
-                    sender.setPendingAction(pendingActions);
-                    sender.afterDeserialisation();
-                    if(!isSenderRegistered(m.getSender())) {
-                        registerSender(map.get(m));
-                    }
-                    sendMessage(m);
-                });
-            }
+            FileInputStream fis = new FileInputStream(file);
+            ois = new ObjectInputStream(fis);
+            Map<Message,AbstractSender> map = (Map<Message,AbstractSender>) ois.readObject();
+            map.keySet().stream().forEach((m) -> {
+                AbstractSerializableSender sender = (AbstractSerializableSender) map.get(m);
+                Object pendingActions = sender.getPendingAction();
+                sender = sender.getSingletonSender();
+                sender.setPendingAction(pendingActions);
+                sender.afterDeserialisation();
+                if(!isSenderRegistered(m.getSenderId())) {
+                    registerSender(map.get(m));
+                }
+                sendMessage(m);
+            });
+            file.delete();
         } catch (IOException
                 |ClassNotFoundException
                 |ClassCastException ex) {
@@ -184,7 +186,6 @@ public class Postman {
                     Logger.getLogger(Postman.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            file.delete();
         }
     }
 }

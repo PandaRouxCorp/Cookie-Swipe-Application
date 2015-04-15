@@ -25,7 +25,7 @@ import static network.messageFramework.Postman.COOKIE_SWIPE_DIR;
  */
 public class DeliverySystem {
 
-    private static DeliverySystem INSTANCE;
+    private static final DeliverySystem INSTANCE;
     private final Logger LOGGER;
     private ExecutorCompletionService<Object> completionService;
     private final ConcurrentLinkedQueue<Future<?>> futures;
@@ -67,7 +67,7 @@ public class DeliverySystem {
 
     private void onRecieveResponse(Future<?> f) {
         futures.remove(f);
-        Postman.sendResponse(matcher.get(f).getSender(), f);
+        Postman.sendResponse(matcher.get(f).getSenderId(), f);
         matcher.remove(f);
     }
 
