@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Mail;
-import network.messageFramework.AbstractSender;
 import network.messageFramework.AbstractSerializableSender;
 import network.messageFramework.Postman;
 

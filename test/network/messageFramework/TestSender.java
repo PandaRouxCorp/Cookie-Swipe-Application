@@ -5,19 +5,50 @@
  */
 package network.messageFramework;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 
 /**
  *
  * @author mickx
  */
-class TestSender extends AbstractSender {
+class TestSender extends AbstractSerializableSender {
 
-    public TestSender() {
+    private static TestSender INSTANCE;
+    private final ConcurrentLinkedQueue<Object> objects;
+    
+    private TestSender() {
+        objects = new ConcurrentLinkedQueue<>();
+        Postman.registerSender(this);
     }
     
     @Override
     public void onMessageReceived(Future receivedMessage) {
-        
+        System.out.println("Receive acknowledgement");
+    }
+
+    @Override
+    public AbstractSerializableSender getSingletonSender() {
+        if(INSTANCE == null) {
+            INSTANCE = new TestSender();
+        }
+        return INSTANCE;
+    }
+
+    @Override
+    public Object getPendingAction() {
+        return objects;
+    }
+
+    @Override
+    public void setPendingAction(Object pendingActions) {
+        this.objects.addAll((ConcurrentLinkedQueue<Object>)pendingActions);
+    }
+    
+    public static TestSender getSender() {
+        if(INSTANCE == null) {
+            INSTANCE = new TestSender();
+        }
+        return INSTANCE;
     }
 }

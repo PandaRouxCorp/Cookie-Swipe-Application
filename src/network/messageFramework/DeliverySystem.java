@@ -5,7 +5,7 @@
  */
 package network.messageFramework;
 
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +17,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static network.messageFramework.Postman.COOKIE_SWIPE_DIR;
 
 /**
  *
@@ -25,7 +24,7 @@ import static network.messageFramework.Postman.COOKIE_SWIPE_DIR;
  */
 public class DeliverySystem {
 
-    private static final DeliverySystem INSTANCE;
+    private static DeliverySystem INSTANCE;
     private final Logger LOGGER;
     private ExecutorCompletionService<Object> completionService;
     private final ConcurrentLinkedQueue<Future<?>> futures;
@@ -46,7 +45,6 @@ public class DeliverySystem {
         completionService = new ExecutorCompletionService<>(slaveExecutor);
         futures = new ConcurrentLinkedQueue<>();
         matcher = new HashMap<>();
-        retreiveState();
     }
 
     private void link(Message<?> callable, Future f) {
@@ -71,10 +69,7 @@ public class DeliverySystem {
         matcher.remove(f);
     }
 
-    private void launchListener(Boolean shouldRetreiveState) {
-        if(shouldRetreiveState) {
-            retreiveState();
-        }
+    private void launchListener() {
         masterExecutor = Executors.newSingleThreadExecutor();
         masterExecutor.execute(() -> {
             safeStop = false;
@@ -130,10 +125,7 @@ public class DeliverySystem {
     }
 
     private void retreiveState() {
-        File file = new File(COOKIE_SWIPE_DIR);
-        if(file.exists()) {
-            Postman.retreiveSavedMessages();
-        }
+        Postman.retreiveSavedMessages();
     }
 
     public static boolean isLaunched() {
@@ -158,14 +150,12 @@ public class DeliverySystem {
 
     static void launch(Message<?> message) { // Droit package ... Passer par Postman
         if (INSTANCE.isActived() == false) {
-            INSTANCE.launchListener(false);
+            INSTANCE.launchListener();
         }
         INSTANCE.addTask((Message<Object>) message);
     }
     
-    static void launch() { // Droit package ... Passer par Postman
-        if (INSTANCE.isActived() == false) {
-            INSTANCE.launchListener(true);
-        }
+    static void init() {
+        INSTANCE.retreiveState();
     }
 }

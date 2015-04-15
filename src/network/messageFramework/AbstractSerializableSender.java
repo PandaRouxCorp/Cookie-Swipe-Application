@@ -5,11 +5,13 @@
  */
 package network.messageFramework;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mickx
  */
-public abstract class AbstractSerializableSender<T> extends AbstractSender<T> {
+public abstract class AbstractSerializableSender<T> extends AbstractSender<T> implements Serializable {
     
     public void beforeSerialisation() {
         

@@ -35,9 +35,7 @@ public class Postman {
     }
     
     private void relayMessage(Message<?> message) {
-        if(message == null) DeliverySystem.launch();
-        else
-            DeliverySystem.launch(message);
+        DeliverySystem.launch(message);
     }
     
     private void relayResponse(int senderID, Future<?> response) {
