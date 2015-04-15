@@ -5,6 +5,7 @@
  */
 package network.messageFramework;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static network.messageFramework.Postman.COOKIE_SWIPE_DIR;
 
 /**
  *
@@ -69,7 +71,10 @@ public class DeliverySystem {
         matcher.remove(f);
     }
 
-    private void launchListener() {
+    private void launchListener(Boolean shouldRetreiveState) {
+        if(shouldRetreiveState) {
+            retreiveState();
+        }
         masterExecutor = Executors.newSingleThreadExecutor();
         masterExecutor.execute(() -> {
             safeStop = false;
@@ -125,7 +130,10 @@ public class DeliverySystem {
     }
 
     private void retreiveState() {
-        Postman.retreiveSavedMessages();
+        File file = new File(COOKIE_SWIPE_DIR);
+        if(file.exists()) {
+            Postman.retreiveSavedMessages();
+        }
     }
 
     public static boolean isLaunched() {
@@ -149,12 +157,15 @@ public class DeliverySystem {
     }
 
     static void launch(Message<?> message) { // Droit package ... Passer par Postman
-        if(INSTANCE == null) {
-            INSTANCE = new DeliverySystem();
-        }
         if (INSTANCE.isActived() == false) {
-            INSTANCE.launchListener();
+            INSTANCE.launchListener(false);
         }
         INSTANCE.addTask((Message<Object>) message);
+    }
+    
+    static void launch() { // Droit package ... Passer par Postman
+        if (INSTANCE.isActived() == false) {
+            INSTANCE.launchListener(true);
+        }
     }
 }

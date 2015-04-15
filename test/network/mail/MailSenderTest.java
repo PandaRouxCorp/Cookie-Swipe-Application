@@ -6,11 +6,11 @@
 package network.mail;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Mail;
@@ -36,6 +36,8 @@ public class MailSenderTest {
     public static Field instanceField;
     public static Field mails;
     public static Method add;
+    public static Constructor mailSenderConstructor;
+    public static Constructor deliveryConstructor;
     
     @BeforeClass
     public static void setUpClass() {
@@ -43,6 +45,8 @@ public class MailSenderTest {
             instanceField = MailSender.class.getDeclaredField("INSTANCE");
             add = MailSender.class.getDeclaredMethod("add", Mail.class);
             mails = MailSender.class.getDeclaredField("mails");
+            mailSenderConstructor = MailSender.class.getDeclaredConstructor();
+            //deliveryConstructor = DeliverySystem.class
         } catch (NoSuchFieldException | SecurityException | NoSuchMethodException ex) {
             Logger.getLogger(MailSenderTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -57,6 +61,7 @@ public class MailSenderTest {
         instanceField.setAccessible(true);
         add.setAccessible(true);
         mails.setAccessible(true);
+        mailSenderConstructor.setAccessible(true);
     }
     
     @After
@@ -93,15 +98,18 @@ public class MailSenderTest {
             DeliverySystem.stop();
             Thread.sleep(500);
             assertTrue("DeliverySystem is down", !DeliverySystem.isLaunched());
-            Postman.sendMessage(null);
-            Thread.sleep(500);
-            assertTrue("DeliverySystem is up", DeliverySystem.isLaunched());
-            Thread.sleep(2000);
+            
+            instanceField.set(null, mailSenderConstructor.newInstance());
             mailSender = (MailSender) instanceField.get(null);
             mailsList = (ConcurrentLinkedQueue<Mail>) mails.get(mailSender);
-            Thread.sleep(5000);
+            assertTrue("No mail", mailsList.isEmpty());
+            
+            Postman.sendMessage(null);
+//            assertTrue("Have mail", !mailsList.isEmpty());
+            Thread.sleep(3000);
             assertTrue("Mail have been sent " + mailsList.size(), !mailsList.contains(m));
-        } catch (IllegalArgumentException | IllegalAccessException | InterruptedException ex) {
+        } catch (IllegalArgumentException | IllegalAccessException | InterruptedException
+                | InstantiationException | InvocationTargetException ex) {
             Logger.getLogger(MailSenderTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

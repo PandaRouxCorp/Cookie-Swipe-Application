@@ -5,7 +5,6 @@
  */
 package network.mail;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -34,6 +33,7 @@ public class MailSender extends AbstractSender<Mail> implements SerializableSend
     public void onMessageReceived(Future<Mail> receivedMessage) {
         try {
             Mail mailAcknowledgment = receivedMessage.get();
+            System.out.println("Acknowlegment recieved");
             if(mails.remove(mailAcknowledgment) == false) {
                  Logger.getLogger(MailSender.class.getName())
                     .log(Level.SEVERE, "Erreur: Accusé de réception pour mail inconnu");
@@ -51,12 +51,12 @@ public class MailSender extends AbstractSender<Mail> implements SerializableSend
     
     @Override
     public void beforeSerialisation() {
-        
+        System.out.println("I'm serialized");
     }
 
     @Override
     public void afterDeserialisation() {
-        
+        System.out.println("I'm deserialized");
     }
     
     @Override

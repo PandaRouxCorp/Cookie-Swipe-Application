@@ -48,7 +48,7 @@ public class DeliverySystemTest {
             hardStop = DeliverySystem.class.getDeclaredMethod("hardStop");
             safeStop = DeliverySystem.class.getDeclaredMethod("safeStop");
             addTask = DeliverySystem.class.getDeclaredMethod("addTask", Message.class);
-            launchListener = DeliverySystem.class.getDeclaredMethod("launchListener");
+            launchListener = DeliverySystem.class.getDeclaredMethod("launchListener", Boolean.class);
             saveState = DeliverySystem.class.getDeclaredMethod("saveState");
             retreiveState = DeliverySystem.class.getDeclaredMethod("retreiveState");
             
@@ -131,7 +131,7 @@ public class DeliverySystemTest {
             
             System.out.println("kill test");
             
-            launchListener.invoke(deliverySystem);
+            launchListener.invoke(deliverySystem,true);
             
             try {
                 Thread.sleep(500);
@@ -206,7 +206,7 @@ public class DeliverySystemTest {
             
             assertTrue(messages.size() + "future(s) ajoutés", futures.size() == messages.size());
             
-            launchListener.invoke(deliverySystem);
+            launchListener.invoke(deliverySystem,false);
             
             Thread.sleep((messageDuration + 1)*messages.size()/2);
             
@@ -248,7 +248,7 @@ public class DeliverySystemTest {
             assertTrue("Number of message receive is " + messages.size(), futures.size() == messages.size());
             
             isActived.invoke(deliverySystem);
-            launchListener.invoke(deliverySystem);
+            launchListener.invoke(deliverySystem,false);
             
             Thread.sleep(200);
             
@@ -277,7 +277,7 @@ public class DeliverySystemTest {
             assertTrue("Have retreive all task. Expected " + nbTaskUndone + " Received " 
                     + futures.size() , nbTaskUndone == futures.size());
             
-            launchListener.invoke(deliverySystem);
+            launchListener.invoke(deliverySystem,false);
             
             Thread.sleep(nbMessage*time);
             
