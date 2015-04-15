@@ -36,7 +36,7 @@ public abstract class AbstractSender<T> {
      *
      * @param receivedMessage
      */
-    void onGenericMessageReceived(Future<?> receivedMessage) {
+    final void onGenericMessageReceived(Future<?> receivedMessage) {
         try {
             Future<T> specifiedMessage = (Future<T>) receivedMessage;
             onMessageReceived(specifiedMessage);

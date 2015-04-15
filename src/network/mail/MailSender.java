@@ -12,14 +12,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Mail;
 import network.messageFramework.AbstractSender;
+import network.messageFramework.AbstractSerializableSender;
 import network.messageFramework.Postman;
-import network.messageFramework.SerializableSender;
+
 
 /**
  *
  * @author mickx
  */
-public class MailSender extends AbstractSender<Mail> implements SerializableSender {
+public class MailSender extends AbstractSerializableSender<Mail> {
     
     private static MailSender INSTANCE;    
     private final ConcurrentLinkedQueue<Mail> mails;
@@ -71,7 +72,7 @@ public class MailSender extends AbstractSender<Mail> implements SerializableSend
 
 
     @Override
-    public AbstractSender getSingletonSender() {
+    public AbstractSerializableSender getSingletonSender() {
         if(INSTANCE == null) {
             INSTANCE = new MailSender();
         }

@@ -128,11 +128,9 @@ public class Postman {
             Map<Message,AbstractSender> mapToSerialized = new HashMap<>();
             messages.stream().forEach((m) -> {
                 AbstractSender sender = senders.get(m.getSender());
-                if(sender != null && m.shouldBeSavedIfNotExecuted()) {
-                    if(sender instanceof SerializableSender) {
-                        ((SerializableSender)sender).beforeSerialisation();
-                        mapToSerialized.put(m,sender);
-                    }
+                if(sender != null && m.shouldBeSavedIfNotExecuted() && sender instanceof AbstractSerializableSender) {
+                    ((AbstractSerializableSender)sender).beforeSerialisation();
+                    mapToSerialized.put(m,sender);
                 }
                 else {
                     Logger.getLogger(DeliverySystem.class.getName())
@@ -163,11 +161,11 @@ public class Postman {
                 ois = new ObjectInputStream(fis);
                 Map<Message,AbstractSender> map = (Map<Message,AbstractSender>) ois.readObject();
                 map.keySet().stream().forEach((m) -> {
-                    AbstractSender sender = (AbstractSender) map.get(m);
-                    Object pendingActions = ((SerializableSender)sender).getPendingAction();
-                    sender = ((SerializableSender)sender).getSingletonSender();
-                    ((SerializableSender)sender).setPendingAction(pendingActions);
-                    ((SerializableSender)sender).afterDeserialisation();
+                    AbstractSerializableSender sender = (AbstractSerializableSender) map.get(m);
+                    Object pendingActions = sender.getPendingAction();
+                    sender = sender.getSingletonSender();
+                    sender.setPendingAction(pendingActions);
+                    sender.afterDeserialisation();
                     if(!isSenderRegistered(m.getSender())) {
                         registerSender(map.get(m));
                     }
