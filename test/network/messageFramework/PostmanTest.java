@@ -43,48 +43,17 @@ public class PostmanTest {
      */
     @Test
     public void testRegisterSender() {
-	System.out.println("registerSender");
-	AbstractSender sender = null;
+	System.out.println("Register and unregister senders");
+	AbstractSender sender = new AbstractSender() {
+
+            @Override
+            public void onMessageReceived(Future receivedMessage) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
 	Postman.registerSender(sender);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of unregisterSender method, of class Postman.
-     */
-    @Test
-    public void testUnregisterSender() {
-	System.out.println("unregisterSender");
-	AbstractSender sender = null;
-	Postman.unregisterSender(sender);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of sendMessage method, of class Postman.
-     */
-    @Test
-    public void testSendMessage() {
-	System.out.println("sendMessage");
-	Message<Object> message = null;
-	Postman.sendMessage(message);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of sendResponse method, of class Postman.
-     */
-    @Test
-    public void testSendResponse() {
-	System.out.println("sendResponse");
-	String senderID = "";
-	Future<Object> response = null;
-	Postman.sendResponse(senderID, response);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-    
+        assertTrue("Sender is registered", Postman.isSenderRegistered(sender));
+        Postman.unregisterSender(sender);
+        assertTrue("Sender is registered", !Postman.isSenderRegistered(sender));
+    }    
 }

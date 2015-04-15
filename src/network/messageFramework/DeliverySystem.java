@@ -1,0 +1,171 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package network.messageFramework;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static network.messageFramework.Postman.COOKIE_SWIPE_DIR;
+
+/**
+ *
+ * @author mickx
+ */
+public class DeliverySystem {
+
+    private static DeliverySystem INSTANCE;
+    private final Logger LOGGER;
+    private ExecutorCompletionService<Object> completionService;
+    private final ConcurrentLinkedQueue<Future<?>> futures;
+    private ExecutorService slaveExecutor;
+    private ExecutorService masterExecutor;
+    private final Map<Future, Message<?>> matcher;
+    private volatile boolean isLaunched;
+    private volatile boolean shouldStop;
+    private volatile boolean safeStop;
+
+    static {
+        INSTANCE = new DeliverySystem();
+    }
+
+    private DeliverySystem() {
+        LOGGER = Logger.getLogger(DeliverySystem.class.getName());
+        slaveExecutor = Executors.newFixedThreadPool(4);
+        completionService = new ExecutorCompletionService<>(slaveExecutor);
+        futures = new ConcurrentLinkedQueue<>();
+        matcher = new HashMap<>();
+        retreiveState();
+    }
+
+    private void link(Message<?> callable, Future f) {
+        matcher.put(f, callable);
+    }
+
+    private void addTask(Message<?> callable) {     
+        if(slaveExecutor.isShutdown()) {
+            slaveExecutor = Executors.newFixedThreadPool(4);
+            completionService = new ExecutorCompletionService<>(slaveExecutor);
+        }
+        if(callable != null) {
+            Future f = completionService.submit((Message<Object>) callable);
+            link(callable, f);
+            futures.add(f);
+        }
+    }
+
+    private void onRecieveResponse(Future<?> f) {
+        futures.remove(f);
+        Postman.sendResponse(matcher.get(f).getSender(), f);
+        matcher.remove(f);
+    }
+
+    private void launchListener(Boolean shouldRetreiveState) {
+        if(shouldRetreiveState) {
+            retreiveState();
+        }
+        masterExecutor = Executors.newSingleThreadExecutor();
+        masterExecutor.execute(() -> {
+            safeStop = false;
+            shouldStop = false;
+            isLaunched = true;
+            while (!shouldStop) {
+                try {
+                    if (!futures.isEmpty()) {
+                        onRecieveResponse(completionService.take());
+                    } else {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "Erreur :", e);
+                }
+            }
+            if (safeStop) {
+                saveState();
+            }
+            isLaunched = false;
+            slaveExecutor.shutdown();
+            masterExecutor.shutdown();
+        });
+    }
+
+    public int getTaskNumber() {
+        return futures.size();
+    }
+
+    private boolean isActived() {
+        return isLaunched;
+    }
+
+    private void hardStop() {
+        shouldStop = true;
+    }
+
+    private void safeStop() {
+        safeStop = true;
+        shouldStop = true;
+    }
+
+    private void saveState() {
+        List<Message> messages = new ArrayList<>();
+        futures.stream().map((f) -> matcher.get(f)).forEach((m) -> {
+            messages.add(m);
+        });
+        Postman.serializeMessages(messages);
+    }
+
+    private void retreiveState() {
+        File file = new File(COOKIE_SWIPE_DIR);
+        if(file.exists()) {
+            Postman.retreiveSavedMessages();
+        }
+    }
+
+    public static boolean isLaunched() {
+        return INSTANCE.isActived();
+    }
+
+    public static void stop() {
+        if (INSTANCE != null) {
+            INSTANCE.safeStop();
+        }
+    }
+
+    public static void kill() {
+        if (INSTANCE != null) {
+            INSTANCE.hardStop();
+        }
+    }
+
+    static int getCurrentTaskNumber() {
+        return INSTANCE.getTaskNumber();
+    }
+
+    static void launch(Message<?> message) { // Droit package ... Passer par Postman
+        if (INSTANCE.isActived() == false) {
+            INSTANCE.launchListener(false);
+        }
+        INSTANCE.addTask((Message<Object>) message);
+    }
+    
+    static void launch() { // Droit package ... Passer par Postman
+        if (INSTANCE.isActived() == false) {
+            INSTANCE.launchListener(true);
+        }
+    }
+}

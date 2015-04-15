@@ -5,21 +5,26 @@
  */
 package network.messageFramework;
 
+import java.io.Serializable;
 import java.util.concurrent.Callable;
 
 /**
  *
  * @author mickx
  */
-public abstract class Message<T> implements Callable<T>{
+public abstract class Message<T> implements Callable<T>, Serializable {
 
-    private final String senderId;
+    private int senderId;
     
-    public Message(String senderId) {
+    public void setSenderId(int senderId) {
         this.senderId = senderId;
     }
     
-    public String getSender() {
+    public int getSender() {
         return this.senderId;
+    }
+
+    public boolean shouldBeSavedIfNotExecuted() {
+        return false;
     }
 }
