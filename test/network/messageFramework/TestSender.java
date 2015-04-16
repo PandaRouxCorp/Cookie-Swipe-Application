@@ -7,14 +7,17 @@ package network.messageFramework;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
+import model.Mail;
+import network.mail.MailSender;
 
 /**
  *
  * @author mickx
  */
-class TestSender extends AbstractSerializableSender {
+public class TestSender extends AbstractSerializableSender {
 
     private static TestSender INSTANCE;
+
     private final ConcurrentLinkedQueue<Object> objects;
     
     private TestSender() {
@@ -45,10 +48,22 @@ class TestSender extends AbstractSerializableSender {
         this.objects.addAll((ConcurrentLinkedQueue<Object>)pendingActions);
     }
     
+    public static void send(Mail m) {
+        if(INSTANCE == null) {
+            INSTANCE = new TestSender();
+        }
+        INSTANCE.add(m);
+    }
+    
     public static TestSender getSender() {
         if(INSTANCE == null) {
             INSTANCE = new TestSender();
         }
         return INSTANCE;
+    }
+
+    private void add(Mail m) {
+        this.objects.add(m);
+        sendMessage(new TestMessage(100, m));
     }
 }

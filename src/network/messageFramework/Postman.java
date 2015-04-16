@@ -166,9 +166,10 @@ public class Postman {
                 sender = sender.getSingletonSender();
                 sender.setPendingAction(pendingActions);
                 sender.afterDeserialisation();
-                if(!isSenderRegistered(m.getSenderId())) {
-                    registerSender(map.get(m));
+                if(!isSenderRegistered(sender.getSenderId())) {
+                    registerSender(sender);
                 }
+                m.setSenderId(sender.getSenderId());
                 sendMessage(m);
             });
             file.delete();

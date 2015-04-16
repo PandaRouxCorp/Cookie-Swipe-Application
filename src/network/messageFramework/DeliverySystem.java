@@ -94,8 +94,7 @@ public class DeliverySystem {
                 saveState();
             }
             isLaunched = false;
-            slaveExecutor.shutdown();
-            masterExecutor.shutdown();
+            slaveExecutor.shutdownNow();
         });
     }
 
@@ -155,7 +154,7 @@ public class DeliverySystem {
         INSTANCE.addTask((Message<Object>) message);
     }
     
-    static void init() {
+    public static void init() {
         INSTANCE.retreiveState();
     }
 }

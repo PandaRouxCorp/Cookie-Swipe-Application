@@ -34,7 +34,16 @@ public class MailSender extends AbstractSerializableSender<Mail> {
         try {
             Mail mailAcknowledgment = receivedMessage.get();
             System.out.println("Acknowlegment recieved");
-            if(mails.remove(mailAcknowledgment) == false) {
+            
+            Mail mailTodelete = null;
+            for(Mail m : mails) {
+                if(m.equals(mailAcknowledgment)) {
+                    mailTodelete = m;
+                    break;
+                }   
+            }
+            
+            if(mailTodelete == null || !mails.remove(mailTodelete)) {
                  Logger.getLogger(MailSender.class.getName())
                     .log(Level.SEVERE, "Erreur: Accusé de réception pour mail inconnu");
             }

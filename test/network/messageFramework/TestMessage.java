@@ -11,9 +11,9 @@ import model.Mail;
  *
  * @author mickx
  */
-public class TestMessage extends Message<Mail> {
+public class TestMessage extends Message<Object> {
     int messageDuration;
-    Mail m;
+    Object m;
 
     public TestMessage(int messageDuration) {
         this.messageDuration = messageDuration;
@@ -25,7 +25,7 @@ public class TestMessage extends Message<Mail> {
     }
 
     @Override
-    public Mail call() throws Exception {
+    public Object call() throws Exception {
         Thread.sleep(messageDuration);
         return m;
     }

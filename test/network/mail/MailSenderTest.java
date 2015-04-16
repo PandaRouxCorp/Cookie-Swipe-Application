@@ -90,24 +90,37 @@ public class MailSenderTest {
     public void interruptedCommunicationTest() {
         try {
             System.out.println("Interrupted communication test");
+            
+            MailSender mailSender = (MailSender) mailSenderConstructor.newInstance();
+            instanceField.set(null, mailSender);
+            Postman.registerSender(mailSender);
+            
             Mail m = new Mail();
+            m.setId(007);
             MailSender.send(m);
-            MailSender mailSender = (MailSender) instanceField.get(null);
+            
             ConcurrentLinkedQueue<Mail> mailsList = (ConcurrentLinkedQueue<Mail>) mails.get(mailSender);
             assertTrue("Mail is being sent", mailsList.contains(m));
+            
             DeliverySystem.stop();
-            Thread.sleep(500);
+            Thread.sleep(1000);
             assertTrue("DeliverySystem is down", !DeliverySystem.isLaunched());
             
-            instanceField.set(null, mailSenderConstructor.newInstance());
-            mailSender = (MailSender) instanceField.get(null);
+            Postman.unregisterSender(mailSender);
+            mailSender = (MailSender) mailSenderConstructor.newInstance();
+            instanceField.set(null, mailSender);
+            //Postman.registerSender(mailSender);
+            
             mailsList = (ConcurrentLinkedQueue<Mail>) mails.get(mailSender);
             assertTrue("No mail", mailsList.isEmpty());
             
-            Postman.sendMessage(null);
+            DeliverySystem.init();
 //            assertTrue("Have mail", !mailsList.isEmpty());
             Thread.sleep(3000);
-            assertTrue("Mail have been sent " + mailsList.size(), !mailsList.contains(m));
+            
+            mailsList = (ConcurrentLinkedQueue<Mail>) mails.get(mailSender);
+            
+            assertTrue("Mail have been sent " + mailsList.size(), mailsList.size() == 0);
         } catch (IllegalArgumentException | IllegalAccessException | InterruptedException
                 | InstantiationException | InvocationTargetException ex) {
             Logger.getLogger(MailSenderTest.class.getName()).log(Level.SEVERE, null, ex);
