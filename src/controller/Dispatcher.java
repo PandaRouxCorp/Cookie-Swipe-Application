@@ -27,5 +27,14 @@ public class Dispatcher {
     }
     public void sendAction(ActionEvent e){        
             System.out.println(e.getActionCommand());
+            
+            /*switch(action){
+                case ActionCommand.createAccount.toString() : 
+                    System.out.println(action); 
+                    break;
+                default :
+                    break;
+            }*/
     }
 }
+
