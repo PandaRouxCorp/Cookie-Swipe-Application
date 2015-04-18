@@ -6,6 +6,7 @@
 
 package module;
 
+import controller.ActionName;
 import controller.Dispatcher;
 import interfaces.IJFrame;
 import javax.swing.JMenu;
@@ -36,11 +37,11 @@ public class ActionManageCSAccount {
         
         JMenuItem updateCSAccount = new JMenuItem("Modifier mon compte");
         updateCSAccount.addActionListener(dispatcher.getListener());
-        updateCSAccount.setActionCommand("updateCSAccount");
+        updateCSAccount.setActionCommand(ActionName.updateAccount);
         
         JMenuItem logout = new JMenuItem("Me deconnecter");
         logout.addActionListener(dispatcher.getListener());
-        logout.setActionCommand("logout");
+        logout.setActionCommand(ActionName.logout);
         
         menuManageCSAccount.add(updateCSAccount);
         menuManageCSAccount.add(logout);

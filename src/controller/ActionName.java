@@ -10,25 +10,15 @@ package controller;
  *
  * @author Mary
  */
-public enum ActionName {
+public class ActionName {
     
-        createAccount,
-        logAccount,
-        updateAccount,
-        forgottenPassword,
-        forgottenLogin,
-        addMailAccount,
-        selectMailAccount,
-        udpateMailAccount,
-        deleteMailAccount,
-        writeMail,
-        readMail,
-        selectMail,
-        deleteMail,
-        addBlackListSender,
-        removeBlacklistSender,
-        answerMail,
-        forwardMail,
-        sendMail,
-        downloadPicture;  
+        public static final String createAccount = "createAccount", logAccount = "logAccount", 
+                updateAccount = "updateAccount", forgottenPassword = "forgottenPassword",
+                forgottenLogin = "forgottenLogin", addMailAccount = "addMailAccount",
+                selectMailAccount = "selectMailAccount", udpateMailAccount = "udpateMailAccount",
+                deleteMailAccount = "deleteMailAccount", writeMail = "writeMail",
+                readMail = "readMail", selectMail = "selectMail", deleteMail = "deleteMail",
+                addBlackListSender = "addBlackListSender", removeBlacklistSender = "removeBlacklistSender",
+                answerMail = "answerMail", forwardMail = "forwardMail", sendMail = "sendMail",
+                downloadPicture = "downloadPicture", logout = "logout";  
 }

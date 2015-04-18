@@ -6,6 +6,7 @@
 
 package module;
 
+import controller.ActionName;
 import controller.Dispatcher;
 import interfaces.IJFrame;
 import javax.swing.JMenu;
@@ -33,15 +34,15 @@ public class ActionManageMailAccount{
         JMenu menuManageMailAccount = new JMenu("Gèrer compte courriel");
         
         JMenuItem addMailAccount = new JMenuItem("Ajouter un compte courriel");
-        addMailAccount.setActionCommand("addMailAccount");
+        addMailAccount.setActionCommand(ActionName.addMailAccount);
         addMailAccount.addActionListener(dispatcher.getListener());
         
         JMenuItem updateMailAccount = new JMenuItem("Modifier un compte courriel");
-        updateMailAccount.setActionCommand("updateMailAccount");
+        updateMailAccount.setActionCommand(ActionName.udpateMailAccount);
         updateMailAccount.addActionListener(dispatcher.getListener());
         
         JMenuItem deleteMaiLAccount = new JMenuItem("Supprimer un compte courriel");
-        deleteMaiLAccount.setActionCommand("deleteMailAccount");
+        deleteMaiLAccount.setActionCommand(ActionName.deleteMailAccount);
         deleteMaiLAccount.addActionListener(dispatcher.getListener());
         
         menuManageMailAccount.add(addMailAccount);
