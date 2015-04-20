@@ -11,7 +11,7 @@ import interfaces.IJFrame;
 import module.ActionManageCSAccount;
 import module.ActionManageEchange;
 import module.ActionManageMailAccount;
-import view.TestJFrame;
+import view.MainJFrame;
 
 /**
  * Point de démarage de l'application servant de controlleur pour le moment
@@ -25,7 +25,7 @@ public class CookieSwipeApplication {
     public static void main(String[] args) {
         // TODO code application logic here
          
-        IJFrame j = new TestJFrame();
+        IJFrame j = new MainJFrame();
         Dispatcher dispatcher = new Dispatcher();
         j.setVisible(true);
         ActionManageCSAccount CSAccount = new ActionManageCSAccount(j, dispatcher);
