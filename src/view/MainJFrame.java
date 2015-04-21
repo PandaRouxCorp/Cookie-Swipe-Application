@@ -7,7 +7,13 @@
 package view;
 
 import interfaces.IJFrame;
+import java.util.HashMap;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenuBar;
+import javax.swing.JTextField;
+import javax.swing.JTree;
 
 /**
  * vu principale de l'application
@@ -20,6 +26,7 @@ public class MainJFrame extends javax.swing.JFrame implements IJFrame{
      */
     public MainJFrame() {
         initComponents();
+        hsJComponent.put("JMenuBarMainFrame", jMenuBar1);
         pack();
     }
 
@@ -157,11 +164,18 @@ public class MainJFrame extends javax.swing.JFrame implements IJFrame{
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
-
+    private HashMap<String, Object> hsJComponent = new HashMap<String, Object>();
+    
+    
     @Override
     public void refresh() {
         this.repaint();
         this.pack();
     }
-   
+
+    @Override
+    public HashMap<String, Object> getJComponent() {
+        return hsJComponent;
+    }
+       
 }

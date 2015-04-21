@@ -28,7 +28,7 @@ public class ActionManageEchange {
     public ActionManageEchange(IJFrame frame, Dispatcher dispatcher){
         
         this.dispatcher = dispatcher;
-        JMenuBar menubar = frame.getJMenuBar();
+        JMenuBar menubar = (JMenuBar) frame.getJComponent().get("JMenuBarMainFrame");
         
         JButton send = new JButton("Nouveau courriel");
         send.addActionListener(dispatcher.getListener());

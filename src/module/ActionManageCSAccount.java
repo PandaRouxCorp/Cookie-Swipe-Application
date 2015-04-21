@@ -32,7 +32,7 @@ public class ActionManageCSAccount {
     public ActionManageCSAccount(IJFrame frame, Dispatcher dispatcher){
     
         this.dispatcher = dispatcher;
-        JMenuBar menubar = frame.getJMenuBar();
+        JMenuBar menubar = (JMenuBar) frame.getJComponent().get("JMenuBarMainFrame");
         JMenu menuManageCSAccount = new JMenu("Mon compte");
         
         JMenuItem updateCSAccount = new JMenuItem("Modifier mon compte");

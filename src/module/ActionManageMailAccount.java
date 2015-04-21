@@ -21,6 +21,7 @@ import javax.swing.JMenuItem;
 public class ActionManageMailAccount{
 
     private Dispatcher dispatcher;
+    private IJFrame frame; 
     
     /**
      * Constructeur de la classe permetant de s'intégrer dans l'application
@@ -30,7 +31,8 @@ public class ActionManageMailAccount{
     public ActionManageMailAccount(IJFrame frame, Dispatcher dispatcher){
         
         this.dispatcher = dispatcher;
-        JMenuBar menubar = frame.getJMenuBar();
+        this.frame = frame;
+        JMenuBar menubar = (JMenuBar) frame.getJComponent().get("JMenuBarMainFrame");
         JMenu menuManageMailAccount = new JMenu("Gèrer compte courriel");
         
         JMenuItem addMailAccount = new JMenuItem("Ajouter un compte courriel");
@@ -51,5 +53,9 @@ public class ActionManageMailAccount{
         menubar.add(menuManageMailAccount);
         frame.refresh();
     }
- 
+
+    public void addMailAccount(){
+        
+    }
 }
+

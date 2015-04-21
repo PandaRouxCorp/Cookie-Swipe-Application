@@ -6,7 +6,13 @@
 
 package interfaces;
 
+import java.util.HashMap;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenuBar;
+import javax.swing.JTextField;
+import javax.swing.JTree;
 
 /**
  * Interface permetant de partager les composants d'une fenêtre et de la la rafraichir 
@@ -14,8 +20,9 @@ import javax.swing.JMenuBar;
  */
 public interface IJFrame {
     
-    public JMenuBar getJMenuBar(); 
-
+   
+    public HashMap<String, Object> getJComponent();
+    
     public void setVisible(boolean b);
     
     public void refresh();
