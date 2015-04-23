@@ -20,7 +20,7 @@ public class AddMailAccount extends javax.swing.JFrame implements IJFrame{
      */
     public AddMailAccount() {
         initComponents();
-        hsJComponent.put("jTextFieldMailAdress" )
+        hsJComponent.put("jTextFieldMailAdress",jTextFieldMailAdress );
         pack();
     }
 
