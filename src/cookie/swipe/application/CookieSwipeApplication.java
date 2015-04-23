@@ -25,13 +25,13 @@ public class CookieSwipeApplication {
     public static void main(String[] args) {
         // TODO code application logic here
          
-        IJFrame j = new MainJFrame();
-        Dispatcher dispatcher = new Dispatcher();
-        j.setVisible(true);
+        //IJFrame j = new MainJFrame();
+        Dispatcher dispatcher = Dispatcher.getInstance();
+        /*j.setVisible(true);
         ActionManageCSAccount CSAccount = new ActionManageCSAccount(dispatcher,j );
         ActionManageMailAccount mailAccount = new ActionManageMailAccount(j, dispatcher);
         ActionManageEchange echange = new ActionManageEchange(j, dispatcher);
-        
+        */
     }
     
     

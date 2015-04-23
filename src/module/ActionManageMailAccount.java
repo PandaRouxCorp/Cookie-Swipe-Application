@@ -37,25 +37,25 @@ public class ActionManageMailAccount{
         this.dispatcher = dispatcher;
         this.frame = frame;
         JMenuBar menubar = (JMenuBar) frame.getJComponent().get("JMenuBarMainFrame");
-        JMenu menuManageMailAccount = new JMenu("Gèrer compte courriel");
-        
-        JMenuItem addMailAccount = new JMenuItem("Ajouter un compte courriel");
-        addMailAccount.setActionCommand(ActionName.addMailAccount);
-        addMailAccount.addActionListener(dispatcher.getListener());
-        
-        JMenuItem updateMailAccount = new JMenuItem("Modifier un compte courriel");
-        updateMailAccount.setActionCommand(ActionName.udpateMailAccount);
-        updateMailAccount.addActionListener(dispatcher.getListener());
-        
-        JMenuItem deleteMaiLAccount = new JMenuItem("Supprimer un compte courriel");
-        deleteMaiLAccount.setActionCommand(ActionName.deleteMailAccount);
-        deleteMaiLAccount.addActionListener(dispatcher.getListener());
-        
-        menuManageMailAccount.add(addMailAccount);
-        menuManageMailAccount.add(updateMailAccount);
-        menuManageMailAccount.add(deleteMaiLAccount);
-        menubar.add(menuManageMailAccount);
-        frame.refresh();
+    JMenu menuManageMailAccount = new JMenu("Gèrer compte courriel");
+
+    JMenuItem addMailAccount = new JMenuItem("Ajouter un compte courriel");
+    addMailAccount.setActionCommand(ActionName.addMailAccount);
+    addMailAccount.addActionListener(dispatcher.getListener());
+
+    JMenuItem updateMailAccount = new JMenuItem("Modifier un compte courriel");
+    updateMailAccount.setActionCommand(ActionName.udpateMailAccount);
+    updateMailAccount.addActionListener(dispatcher.getListener());
+
+    JMenuItem deleteMaiLAccount = new JMenuItem("Supprimer un compte courriel");
+    deleteMaiLAccount.setActionCommand(ActionName.deleteMailAccount);
+    deleteMaiLAccount.addActionListener(dispatcher.getListener());
+
+    menuManageMailAccount.add(addMailAccount);
+    menuManageMailAccount.add(updateMailAccount);
+    menuManageMailAccount.add(deleteMaiLAccount);
+    menubar.add(menuManageMailAccount);
+    frame.refresh();
     }
 
     public void addMailAccount(IJFrame frame){
