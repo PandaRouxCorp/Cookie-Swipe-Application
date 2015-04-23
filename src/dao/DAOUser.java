@@ -28,7 +28,7 @@ public class DAOUser {
      * @return si la création de l'utilsiateur a réussi
      */
     
-    public static boolean createUser(User user) throws Exception{               
+    public static boolean createUser(User user){               
         
         BDDConnect bddInstance = null;
         Connection connectionInstance = null;
@@ -36,7 +36,11 @@ public class DAOUser {
         String encryptedPassword = null;
         
         try {
-            encryptedPassword = new Encryption().encrypt(user.getPassword());
+            try {
+                encryptedPassword = new Encryption().encrypt(user.getPassword());
+            } catch (Exception ex) {
+                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
             bddInstance = new BDDConnect();
             
             try {
