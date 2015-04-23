@@ -20,5 +20,5 @@ public class ActionName {
                 readMail = "readMail", selectMail = "selectMail", deleteMail = "deleteMail",
                 addBlackListSender = "addBlackListSender", removeBlacklistSender = "removeBlacklistSender",
                 answerMail = "answerMail", forwardMail = "forwardMail", sendMail = "sendMail",
-                downloadPicture = "downloadPicture", logout = "logout";  
+                downloadPicture = "downloadPicture", logout = "logout", createMailAccount = "createMailAccount";  
 }

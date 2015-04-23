@@ -9,6 +9,7 @@ package module;
 import controller.ActionName;
 import controller.Dispatcher;
 import interfaces.IJFrame;
+import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -23,6 +24,9 @@ public class ActionManageMailAccount{
     private Dispatcher dispatcher;
     private IJFrame frame; 
     
+    public ActionManageMailAccount(Dispatcher dispatcher){
+        this.dispatcher = dispatcher;
+    }
     /**
      * Constructeur de la classe permetant de s'intégrer dans l'application
      * @param frame fenêtre accèsible par notre action
@@ -54,7 +58,11 @@ public class ActionManageMailAccount{
         frame.refresh();
     }
 
-    public void addMailAccount(){
+    public void addMailAccount(IJFrame frame){
+        
+        JButton jButtonCreateMailAccount = (JButton) frame.getJComponent().get("jButtonCreateMailAccount");
+        jButtonCreateMailAccount.addActionListener(dispatcher.getListener());
+        jButtonCreateMailAccount.setActionCommand("createMailAccount");
         
     }
 }

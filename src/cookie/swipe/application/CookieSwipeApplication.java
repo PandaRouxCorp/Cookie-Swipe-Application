@@ -28,7 +28,7 @@ public class CookieSwipeApplication {
         IJFrame j = new MainJFrame();
         Dispatcher dispatcher = new Dispatcher();
         j.setVisible(true);
-        ActionManageCSAccount CSAccount = new ActionManageCSAccount(j, dispatcher);
+        ActionManageCSAccount CSAccount = new ActionManageCSAccount(dispatcher,j );
         ActionManageMailAccount mailAccount = new ActionManageMailAccount(j, dispatcher);
         ActionManageEchange echange = new ActionManageEchange(j, dispatcher);
         

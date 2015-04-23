@@ -9,6 +9,7 @@ package module;
 import controller.ActionName;
 import controller.Dispatcher;
 import interfaces.IJFrame;
+import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -23,16 +24,22 @@ import javax.swing.JMenuItem;
 public class ActionManageCSAccount {
     
     private Dispatcher dispatcher;
+    private IJFrame[] frames;
     
     /**
      * Constructeur de la classe permetant de s'intégrer dans l'application
-     * @param frame fenêtre accèsible par notre action
+     * @param frames
      * @param dispatcher classe à utiliser afin d'excécuter les traitements
      */
-    public ActionManageCSAccount(IJFrame frame, Dispatcher dispatcher){
+    public ActionManageCSAccount(){
+        
+    }
+    
+    public ActionManageCSAccount(Dispatcher dispatcher, IJFrame... frames){//, Dispatcher dispatcher){
     
         this.dispatcher = dispatcher;
-        JMenuBar menubar = (JMenuBar) frame.getJComponent().get("JMenuBarMainFrame");
+        this.frames = frames;
+        JMenuBar menubar = (JMenuBar) frames[0].getJComponent().get("JMenuBarMainFrame");
         JMenu menuManageCSAccount = new JMenu("Mon compte");
         
         JMenuItem updateCSAccount = new JMenuItem("Modifier mon compte");
@@ -46,7 +53,10 @@ public class ActionManageCSAccount {
         menuManageCSAccount.add(updateCSAccount);
         menuManageCSAccount.add(logout);
         menubar.add(menuManageCSAccount);
-        frame.refresh();
+        frames[0].refresh();
+        
+        
+        
     }
     
 }

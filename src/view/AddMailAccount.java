@@ -21,6 +21,9 @@ public class AddMailAccount extends javax.swing.JFrame implements IJFrame{
     public AddMailAccount() {
         initComponents();
         hsJComponent.put("jTextFieldMailAdress",jTextFieldMailAdress );
+        hsJComponent.put("jTextFieldMailPassword", jTextFieldMailPassword);
+        hsJComponent.put("jTextFieldNameMailAccount", jTextFieldNameMailAccount);
+        hsJComponent.put("jButtonCreateMailAccount", jButtonCreateMailAccount);
         pack();
     }
 
