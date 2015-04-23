@@ -47,10 +47,8 @@ public class DAOUser {
             
             statementInstance = connectionInstance.createStatement();
             
-            int statut = statementInstance.executeUpdate( "INSERT INTO Utilisateur (login, password, backupadr) VALUES ('"+
+            int statut = statementInstance.executeUpdate( "INSERT INTO users(login, password, backupadr) VALUES ('"+
                     user.getLoginAdressMail()+"','"+encryptedPassword+"','"+user.getBackupMail()+"';" );
-            if(statut == 0)
-                System.out.println("Insert fail");
             if(statut == 1)
                 return true;
             
@@ -71,8 +69,7 @@ public class DAOUser {
                 } catch ( SQLException ignore ) {
                 }
             }
-        }
-       
+        }       
         return false;
     }
     
