@@ -8,7 +8,6 @@ package module.ihm;
 
 import controller.Dispatcher;
 import interfaces.IActionIHM;
-import interfaces.IJFrame;
 import java.util.HashMap;
 import javax.swing.JButton;
 
@@ -16,19 +15,19 @@ import javax.swing.JButton;
  *
  * @author Lucas
  */
-public class InitAddMailAccount implements IActionIHM{
+public class InitUpdateMailAccount implements IActionIHM{
     
     private Dispatcher dispatcher;
     private HashMap<String, Object> hsJFrameComponent;
-    
-    private InitAddMailAccount() {
+   
+    private InitUpdateMailAccount() {
     }
     
-    public static InitAddMailAccount getInstance() {
-        return InitAddMailAccountHolder.INSTANCE;
+    public static InitUpdateMailAccount getInstance() {
+        return InitUpdateMailAccountHolder.INSTANCE;
     }
 
-    @Override
+     @Override
     public void setDispatcher(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
     }
@@ -39,18 +38,16 @@ public class InitAddMailAccount implements IActionIHM{
     }
 
 
-    @Override
+   @Override
     public void execute() {
-    
         JButton jButtonCreateMailAccount = (JButton) hsJFrameComponent.get("jButtonValideMailAccount");
-        jButtonCreateMailAccount.setText("Créer");
+        jButtonCreateMailAccount.setText("Modifier");
         jButtonCreateMailAccount.addActionListener(dispatcher.getListener());
         jButtonCreateMailAccount.setActionCommand("createMailAccount");
-    
     }
-    
-    private static class InitAddMailAccountHolder {
+   
+    private static class InitUpdateMailAccountHolder {
 
-        private static final InitAddMailAccount INSTANCE = new InitAddMailAccount();
+        private static final InitUpdateMailAccount INSTANCE = new InitUpdateMailAccount();
     }
 }

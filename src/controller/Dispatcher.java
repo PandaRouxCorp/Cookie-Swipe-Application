@@ -16,8 +16,9 @@ import model.User;
 import module.ActionManageMailAccount;
 import module.ihm.InitAddMailAccount;
 import module.ihm.InitMainFrame;
-import module.ihm.backoffice.CreateMailAccount;
-import view.AddMailAccount;
+import module.ihm.InitUpdateMailAccount;
+import module.backoffice.CreateMailAccount;
+import view.MailAccountJFrame;
 import view.MainJFrame;
 
 /**
@@ -38,8 +39,9 @@ public class Dispatcher {
         this.mainFrame.setVisible(true);
         IActionIHM initMainFrame = InitMainFrame.getInstance();
         initMainFrame.setDispatcher(this);
-        initMainFrame.setFrame(mainFrame);
+        initMainFrame.setJComponent(mainFrame.getJComponent());
         initMainFrame.execute();
+        mainFrame.refresh();
     }
     
     public static Dispatcher getInstance() {
@@ -75,7 +77,8 @@ public class Dispatcher {
                 System.out.println(action); 
                 break;
             case ActionName.updateAccount: 
-                System.out.println(action); 
+                System.err.println(action); 
+                
                 break;
             case ActionName.forgottenPassword: 
                 System.out.println(action); 
@@ -85,11 +88,11 @@ public class Dispatcher {
                 break;
             case ActionName.addMailAccount: 
                 System.err.println(action);
-                focusFrame = new AddMailAccount();
+                focusFrame = new MailAccountJFrame();
                 focusFrame.setVisible(true);
                 InitAddMailAccount initMailAccount = InitAddMailAccount.getInstance();
                 initMailAccount.setDispatcher(this);
-                initMailAccount.setFrame(focusFrame);
+                initMailAccount.setJComponent(focusFrame.getJComponent());
                 initMailAccount.execute();
                 
                 break;
@@ -97,7 +100,14 @@ public class Dispatcher {
                 System.out.println(action); 
                 break;
             case ActionName.udpateMailAccount: 
-                System.out.println(action); 
+                System.err.println(action); 
+                focusFrame = new MailAccountJFrame();
+                focusFrame.setVisible(true);
+                InitUpdateMailAccount initUpdateMailAccount = InitUpdateMailAccount.getInstance();
+                initUpdateMailAccount.setDispatcher(this);
+                initUpdateMailAccount.setJComponent(focusFrame.getJComponent());
+                initUpdateMailAccount.execute();
+               
                 break;
             case ActionName.deleteMailAccount: 
                 System.out.println(action); 
@@ -136,7 +146,7 @@ public class Dispatcher {
                 System.err.println("createMailAccount");
                 CreateMailAccount createMailAccount = CreateMailAccount.getInstance();
                 createMailAccount.setUser(user);
-                createMailAccount.setFrame(focusFrame);
+                createMailAccount.setJComponent(focusFrame.getJComponent());
                 createMailAccount.execute();
                 
 //Ici quand je valide un compte ma fenêtre va m'envoyé ici

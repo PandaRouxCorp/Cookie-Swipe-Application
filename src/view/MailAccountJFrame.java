@@ -13,17 +13,17 @@ import java.util.HashMap;
  *
  * @author Lucas
  */
-public class AddMailAccount extends javax.swing.JFrame implements IJFrame{
+public class MailAccountJFrame extends javax.swing.JFrame implements IJFrame{
 
     /**
      * Creates new form AddMailAccount
      */
-    public AddMailAccount() {
+    public MailAccountJFrame() {
         initComponents();
         hsJComponent.put("jTextFieldMailAdress",jTextFieldMailAdress );
         hsJComponent.put("jTextFieldMailPassword", jTextFieldMailPassword);
         hsJComponent.put("jTextFieldNameMailAccount", jTextFieldNameMailAccount);
-        hsJComponent.put("jButtonCreateMailAccount", jButtonCreateMailAccount);
+        hsJComponent.put("jButtonValideMailAccount", jButtonValideMailAccount);
         pack();
     }
 
@@ -42,7 +42,7 @@ public class AddMailAccount extends javax.swing.JFrame implements IJFrame{
         jLabelMailPassword = new javax.swing.JLabel();
         jTextFieldMailAdress = new javax.swing.JTextField();
         jTextFieldMailPassword = new javax.swing.JTextField();
-        jButtonCreateMailAccount = new javax.swing.JButton();
+        jButtonValideMailAccount = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,7 +52,7 @@ public class AddMailAccount extends javax.swing.JFrame implements IJFrame{
 
         jLabelMailPassword.setText("Mot de passe :");
 
-        jButtonCreateMailAccount.setText("Créer");
+        jButtonValideMailAccount.setText("<temp>");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -79,7 +79,7 @@ public class AddMailAccount extends javax.swing.JFrame implements IJFrame{
                             .addComponent(jTextFieldNameMailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(175, 175, 175)
-                        .addComponent(jButtonCreateMailAccount)))
+                        .addComponent(jButtonValideMailAccount)))
                 .addContainerGap(72, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -98,7 +98,7 @@ public class AddMailAccount extends javax.swing.JFrame implements IJFrame{
                     .addComponent(jLabelMailPassword)
                     .addComponent(jTextFieldMailPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButtonCreateMailAccount)
+                .addComponent(jButtonValideMailAccount)
                 .addContainerGap(122, Short.MAX_VALUE))
         );
 
@@ -122,26 +122,26 @@ public class AddMailAccount extends javax.swing.JFrame implements IJFrame{
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddMailAccount.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MailAccountJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddMailAccount.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MailAccountJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddMailAccount.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MailAccountJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddMailAccount.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MailAccountJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AddMailAccount().setVisible(true);
+                new MailAccountJFrame().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonCreateMailAccount;
+    private javax.swing.JButton jButtonValideMailAccount;
     private javax.swing.JLabel jLabelMailAdress;
     private javax.swing.JLabel jLabelMailPassword;
     private javax.swing.JLabel jLabelNameMailAccount;

@@ -18,6 +18,7 @@ public interface IActionIHM {
     public void setDispatcher(Dispatcher dispatcher);
     
     public void setJComponent(HashMap<String, Object> hsJComponant);
+    
     public void execute();
     
 }

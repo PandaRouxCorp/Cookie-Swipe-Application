@@ -7,6 +7,7 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -45,11 +46,11 @@ public class DispatcherTest {
     @Test
     public void testGetListener() {
 	System.out.println("getListener");
-	Dispatcher instance = new Dispatcher();
+	Dispatcher instance = Dispatcher.getInstance();
 	ActionListener expResult = null;
 	ActionListener result = instance.getListener();
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
+        //assertThat(result, null);
+        // TODO review the generated test code and remove the default call to fail.
 	fail("The test case is a prototype.");
     }
 
@@ -59,11 +60,12 @@ public class DispatcherTest {
     @Test
     public void testSendAction() {
 	System.out.println("sendAction");
-	ActionEvent e = null;
-	Dispatcher instance = new Dispatcher();
+	ActionEvent e = new ActionEvent(new JButton("TestSendAction"), 1, "TestSendAction");
+	Dispatcher instance = Dispatcher.getInstance();
 	instance.sendAction(e);
 	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
+	assertEquals(e.getActionCommand(), "TestSendAction");
+        //fail("The test case is a prototype.");
     }
     
 }

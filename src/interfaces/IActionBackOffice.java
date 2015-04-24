@@ -6,6 +6,7 @@
 
 package interfaces;
 
+import java.util.HashMap;
 import model.User;
 
 /**
@@ -14,8 +15,8 @@ import model.User;
  */
 public interface IActionBackOffice {
     
-    public void setFrame(IJFrame frame);
-    
+    public void setJComponent(HashMap<String, Object> hsJComponant);
+        
     public void setUser(User user);
     
     public void execute();

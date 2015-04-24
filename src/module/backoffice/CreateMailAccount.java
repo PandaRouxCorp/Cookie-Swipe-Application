@@ -4,11 +4,12 @@
  * and open the template in the editor.
  */
 
-package module.ihm.backoffice;
+package module.backoffice;
 
 import controller.Dispatcher;
 import interfaces.IActionBackOffice;
 import interfaces.IJFrame;
+import java.util.HashMap;
 import javax.swing.JTextField;
 import model.User;
 
@@ -19,7 +20,7 @@ import model.User;
 public class CreateMailAccount implements IActionBackOffice{
     
     private User user;
-    private IJFrame frame;
+    private HashMap<String, Object> hsJCompment;
     private CreateMailAccount() {
     }
     
@@ -30,12 +31,12 @@ public class CreateMailAccount implements IActionBackOffice{
     @Override
     public void execute() {
         //user.addNewMailAccount(null);
-        JTextField result = (JTextField) frame.getJComponent().get("jTextFieldMailAdress");
-                System.err.println(result.getText());
-                result = (JTextField) frame.getJComponent().get("jTextFieldMailPassword");
-                System.err.println(result.getText());
-                result = (JTextField) frame.getJComponent().get("jTextFieldNameMailAccount");
-                System.err.println(result.getText());
+        JTextField result = (JTextField) hsJCompment.get("jTextFieldMailAdress");
+        System.err.println(result.getText());
+        result = (JTextField) hsJCompment.get("jTextFieldMailPassword");
+        System.err.println(result.getText());
+        result = (JTextField) hsJCompment.get("jTextFieldNameMailAccount");
+        System.err.println(result.getText());
     }
 
     @Override
@@ -44,8 +45,8 @@ public class CreateMailAccount implements IActionBackOffice{
     }
 
     @Override
-    public void setFrame(IJFrame frame) {
-        this.frame = frame;
+    public void setJComponent(HashMap<String, Object> hsJCompment) {
+        this.hsJCompment = hsJCompment;
     }
     
     private static class createMailAccountHolder {
