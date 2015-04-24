@@ -7,6 +7,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -83,7 +84,55 @@ public class DAOUser {
      *@return si la conenction de l'utilisateur a réussi
      */
     public static boolean connectUser(User user){
+        BDDConnect bddInstance = null;
+        Connection connectionInstance = null;
+        Statement statementInstance = null;
+        String encryptedPassword = null;
         
+        try {
+            try {
+                encryptedPassword = new Encryption().encrypt(user.getPassword());
+            } catch (Exception ex) {
+                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            bddInstance = new BDDConnect();
+            
+            try {
+                connectionInstance =   bddInstance.getConnection();
+            } catch (Exception ex) {
+                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            statementInstance = connectionInstance.createStatement();
+            
+            ResultSet result = statementInstance.executeQuery( "SELECT count(*) FROM users where login ='"+
+                    user.getLoginAdressMail()+"' and password = '"+encryptedPassword+"';" );
+            result.next();
+            int rowCount = result.getInt(1);
+            if(rowCount == 1)
+            {
+                user.setId(result.getInt(2));
+                return true;
+            }                
+            
+        } catch ( SQLException e ) {
+            /* Traiter les erreurs éventuelles ici. */
+        } finally {
+            if ( statementInstance != null ) {
+                try {
+                    /* Puis on ferme le Statement */
+                    statementInstance.close();
+                } catch ( SQLException ignore ) {
+                }
+            }
+            if ( connectionInstance != null ) {
+                try {
+                    /* Et enfin on ferme la connexion */
+                    connectionInstance.close();
+                } catch ( SQLException ignore ) {
+                }
+            }
+        }       
         return false;
     }
 }
