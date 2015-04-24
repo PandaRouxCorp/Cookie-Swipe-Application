@@ -6,7 +6,18 @@
 
 package dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.BDDConnect;
+import model.Encryption;
 import model.MailAccount;
+import model.User;
 
 
 /**
@@ -21,8 +32,64 @@ public class DAOMailAccount {
      * @param mailAccount compte courriel à crée
      * @return si la création du mail a bien réussi
      */
-    public static boolean createMailAccount(MailAccount mailAccount){
+    public static boolean createMailAccount(MailAccount mailAccount,User user){
         
+        BDDConnect bddInstance = null;
+        Connection connectionInstance = null;
+        Statement statementInstance = null;
+        String encryptedPassword = null;
+        
+        try {
+            try {
+                encryptedPassword = new Encryption().encrypt(mailAccount.getPassword());
+            } catch (Exception ex) {
+                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            bddInstance = new BDDConnect();
+            
+            try {
+                connectionInstance =   bddInstance.getConnection();
+            } catch (Exception ex) {
+                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            statementInstance = connectionInstance.createStatement();
+            
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Calendar cal = Calendar.getInstance();
+            
+            int statut = statementInstance.executeUpdate( "INSERT INTO mailaccount( user_id," +
+                                                                                    "adresse," +
+                                                                                    "cookieswipename," +
+                                                                                    "domain," +
+                                                                                    "password," +
+                                                                                    "lastsync," +
+                                                                                    "mailsignature," +
+                                                                                    "color) VALUES ('"+
+                    user.getId()+"','"+mailAccount.getAddress()+"','"+mailAccount.getCSName()+"','"+mailAccount.getDomain()+"','"+
+                    encryptedPassword+"','"+dateFormat.format(cal)+"','"+mailAccount.getMailSignature()+"','"+mailAccount.getColor()+"';" );
+                    
+            if(statut == 1)
+                return true;
+            
+        } catch ( SQLException e ) {
+            /* Traiter les erreurs éventuelles ici. */
+        } finally {
+            if ( statementInstance != null ) {
+                try {
+                    /* Puis on ferme le Statement */
+                    statementInstance.close();
+                } catch ( SQLException ignore ) {
+                }
+            }
+            if ( connectionInstance != null ) {
+                try {
+                    /* Et enfin on ferme la connexion */
+                    connectionInstance.close();
+                } catch ( SQLException ignore ) {
+                }
+            }
+        }   
         return false;
     }
     
