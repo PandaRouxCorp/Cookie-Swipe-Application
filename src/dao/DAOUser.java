@@ -105,7 +105,7 @@ public class DAOUser {
             
             statementInstance = connectionInstance.createStatement();
             
-            ResultSet result = statementInstance.executeQuery( "SELECT count(*) FROM users where login ='"+
+            ResultSet result = statementInstance.executeQuery( "SELECT count(*), id FROM users where login ='"+
                     user.getLoginAdressMail()+"' and password = '"+encryptedPassword+"';" );
             result.next();
             int rowCount = result.getInt(1);
