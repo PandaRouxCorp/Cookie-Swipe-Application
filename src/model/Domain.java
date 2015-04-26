@@ -16,6 +16,7 @@ public class Domain {
     
     //Variable membre
     private String domain, popAddress, smtpAddress, port;
+    private int id;
         
     //Constructeur
     
@@ -69,6 +70,28 @@ public class Domain {
         return port;
     }
 
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public void setPopAddress(String popAddress) {
+        this.popAddress = popAddress;
+    }
+
+    public void setSmtpAddress(String smtpAddress) {
+        this.smtpAddress = smtpAddress;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     
     //Equals & hashCode
     
@@ -92,6 +115,6 @@ public class Domain {
         }
         final Domain other = (Domain) obj;
         return Objects.equals(this.domain, other.domain);
-    }
+    } 
 
 }
