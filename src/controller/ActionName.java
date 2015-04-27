@@ -6,6 +6,8 @@
 
 package controller;
 
+import java.awt.Color;
+
 /**
  *
  * @author Mary
@@ -21,4 +23,6 @@ public class ActionName {
                 addBlackListSender = "addBlackListSender", removeBlacklistSender = "removeBlacklistSender",
                 answerMail = "answerMail", forwardMail = "forwardMail", sendMail = "sendMail",
                 downloadPicture = "downloadPicture", logout = "logout", createMailAccount = "createMailAccount";  
+
+        public static final Color bg = new Color(1, 1, 1);
 }

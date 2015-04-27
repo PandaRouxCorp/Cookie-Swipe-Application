@@ -97,7 +97,7 @@ public class User {
      */
     public boolean addNewMailAccount(MailAccount newMailAccount){
         listOfMailAccount.add(newMailAccount);
-        return dao.DAOMailAccount.createMailAccount(newMailAccount);
+        return dao.DAOMailAccount.createMailAccount(newMailAccount, this);
         
     }
     
