@@ -122,19 +122,28 @@ public class DAOMailAccount {
             		  "SELECT count(id), id, adresse, cookieswipename, domain, password, lastsync, mailsignature, color "
             		+ "FROM mailaccount "
             		+ "WHERE user_id ='" + user.getId() + "';" );
-            
-            boolean haveMailAccount = false;
+
+            boolean loadMailAccount = true;
             
             while ( result.next() ) {
-            	haveMailAccount = true;
-            	MailAccount mailAccount = new MailAccount(result.getString(2), result.getString(3), result.getString(5), result.getString(8));
+            	String password = null;
+				try {
+					password = new Encryption().decrypt(result.getString("password"));
+				} catch (Exception e) {
+					e.printStackTrace();
+					loadMailAccount = false;
+				}
+            	MailAccount mailAccount = new MailAccount(result.getString("adresse"), result.getString("cookieswipename"), password, result.getString("color"));
             	mailAccount.setLastSynch(result.getDate(6));
             	mailAccount.setMailSignature(result.getString(7));
-//            	mailAccount.setDomain(load);
+            	mailAccount.getDomain().setId(result.getInt("domain"));
+            	if(!loadDomail(mailAccount)) {
+            		loadMailAccount = false;
+            	}
             	user.addNewMailAccount(mailAccount);
             	
             }
-            return haveMailAccount;
+            return loadMailAccount;
         } catch ( SQLException e ) {
             // Traiter les erreurs éventuelles ici. 
         } finally {
@@ -178,11 +187,10 @@ public class DAOMailAccount {
             
             statementInstance = connectionInstance.createStatement();
             
-            ResultSet result = statementInstance.executeQuery( "SELECT id,name,popaddr,smtpaddr,port FROM domain where id ='"+
+            ResultSet result = statementInstance.executeQuery( "SELECT name,popaddr,smtpaddr,port FROM domain where id ='"+
                     mailAccount.getDomain().getId()+"';" );
             
             if(result.next()){
-                mailAccount.getDomain().setId(result.getInt("id"));
                 mailAccount.getDomain().setDomain(result.getString("name"));
                 mailAccount.getDomain().setPopAddress(result.getString("popaddr"));
                 mailAccount.getDomain().setSmtpAddress(result.getString("smtpaddr"));
@@ -190,6 +198,58 @@ public class DAOMailAccount {
                 return true;
             }                      
             
+        } catch ( SQLException e ) {
+            /* Traiter les erreurs éventuelles ici. */
+        } finally {
+            if ( statementInstance != null ) {
+                try {
+                    /* Puis on ferme le Statement */
+                    statementInstance.close();
+                } catch ( SQLException ignore ) {
+                }
+            }
+            if ( connectionInstance != null ) {
+                try {
+                    /* Et enfin on ferme la connexion */
+                    connectionInstance.close();
+                } catch ( SQLException ignore ) {
+                }
+            }
+        }
+        return false;
+    }
+    
+
+    public static boolean updateMailAccount(MailAccount mailaccount) {
+        BDDConnect bddInstance = null;
+        Connection connectionInstance = null;
+        Statement statementInstance = null;
+        
+        try {
+            
+            bddInstance = new BDDConnect();
+            
+            try {
+                connectionInstance =   bddInstance.getConnection();
+            } catch (Exception ex) {
+                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            statementInstance = connectionInstance.createStatement();
+            
+            int statut = statementInstance.executeUpdate( 
+            		"UPDATE mailaccount "
+                    		+ "SET adresse = '" + mailaccount.getAddress() + "', "
+                    		+ "cookieswipename = '" + mailaccount.getCSName() + "', "
+                    		+ "domain = '" + mailaccount.getDomain().getId() + "', "
+                    		+ "password = '" + mailaccount.getPassword() + "', "
+                    		+ "lastsync = '" + mailaccount.getLastSynch() + "', "
+                    		+ "mailsignature = '" + mailaccount.getMailSignature() + "', "
+                    		+ "color = '" + mailaccount.getColor() + "' "
+                    		+ "WHERE id = " + mailaccount.getId() + ";"
+            		);
+
+            return (statut == 1);
         } catch ( SQLException e ) {
             /* Traiter les erreurs éventuelles ici. */
         } finally {

@@ -78,6 +78,63 @@ public class DAOUser {
         return false;
     }
     
+    public static boolean updateUser(User user) {
+        
+        BDDConnect bddInstance = null;
+        Connection connectionInstance = null;
+        Statement statementInstance = null;
+        String encryptedPassword = null;
+        
+        try {
+            try {
+                encryptedPassword = new Encryption().encrypt(user.getPassword());
+            } catch (Exception ex) {
+                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            bddInstance = new BDDConnect();
+            
+            try {
+                connectionInstance =   bddInstance.getConnection();
+            } catch (Exception ex) {
+                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            statementInstance = connectionInstance.createStatement();
+            
+            int statut = statementInstance.executeUpdate( 
+            		"UPDATE user "
+                    		+ "SET login = '" + user.getLoginAdressMail() + "', "
+                    		+ "password = '" + user.getPassword() + "', "
+                    		+ "backupAdr = '" + user.getBackupMail() + "', "
+                    		// c'est une array list
+//                    		+ "blackList = '" + user.getBlackList() + "', " 
+                    		+ "WHERE id = " + user.getId() + ";"
+                    );
+            
+            return (statut == 1);
+            
+        } catch ( SQLException e ) {
+            /* Traiter les erreurs éventuelles ici. */
+        } finally {
+            if ( statementInstance != null ) {
+                try {
+                    /* Puis on ferme le Statement */
+                    statementInstance.close();
+                } catch ( SQLException ignore ) {
+                }
+            }
+            if ( connectionInstance != null ) {
+                try {
+                    /* Et enfin on ferme la connexion */
+                    connectionInstance.close();
+                } catch ( SQLException ignore ) {
+                }
+            }
+        }       
+        return false;
+    }
+    
+    
      /**
      * Connecte l'utilisateur si il existe en persistance
      * @param user utilisateur qui tente de se connecter

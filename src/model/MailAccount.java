@@ -31,7 +31,7 @@ public class MailAccount {
      * Constructeur par défaut
      */
     public MailAccount(){
-        
+        domain = new Domain(); 
     }
     
     /**
@@ -42,6 +42,7 @@ public class MailAccount {
      * @param color couleur donné à la boite courriel pour l'affichage des courriels
      */
     public MailAccount(String address, String CSName, String password, String color) {
+        domain = new Domain();
         this.address = address;
         this.CSName = CSName;
         this.password = password;
