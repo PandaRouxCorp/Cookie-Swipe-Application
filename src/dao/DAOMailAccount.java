@@ -99,7 +99,7 @@ public class DAOMailAccount {
      * @param mailAccount compte courriel concerné
      * @return si le chargement du compte courriel a bien réussi
      */
-    public static boolean loadMailAccount(MailAccount mailAccount){
+    public static boolean loadMailAccount(User user){
         
         /*BDDConnect bddInstance = null;
         Connection connectionInstance = null;
