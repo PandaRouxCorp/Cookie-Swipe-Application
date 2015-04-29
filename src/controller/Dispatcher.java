@@ -31,6 +31,30 @@ public class Dispatcher {
     
     private IJFrame mainFrame, focusFrame;
     private User user;
+
+    public IJFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(IJFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public IJFrame getFocusFrame() {
+        return focusFrame;
+    }
+
+    public void setFocusFrame(IJFrame focusFrame) {
+        this.focusFrame = focusFrame;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
     
     private Dispatcher(){
         

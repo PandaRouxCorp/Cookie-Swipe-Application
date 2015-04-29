@@ -30,7 +30,7 @@ public class CreateMailAccount implements IActionBackOffice{
 
     @Override
     public void execute() {
-        //user.addNewMailAccount(null);
+        user.addNewMailAccount(null);
         JTextField result = (JTextField) hsJCompment.get("jTextFieldMailAdress");
         System.err.println(result.getText());
         result = (JTextField) hsJCompment.get("jTextFieldMailPassword");

@@ -6,12 +6,13 @@
 package dao;
 
 import model.MailAccount;
+import model.User;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -46,7 +47,7 @@ public class DAOMailAccountTest {
 	System.out.println("createMailAccount");
 	MailAccount mailAccount = null;
 	boolean expResult = false;
-	boolean result = DAOMailAccount.createMailAccount(mailAccount);
+	boolean result = DAOMailAccount.createMailAccount(mailAccount, new User());
 	assertEquals(expResult, result);
 	// TODO review the generated test code and remove the default call to fail.
 	fail("The test case is a prototype.");
