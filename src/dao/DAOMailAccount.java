@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 
 import model.BDDConnect;
 import model.Encryption;
-import model.Mail;
 import model.MailAccount;
 import model.User;
 
@@ -61,14 +60,9 @@ public class DAOMailAccount {
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Calendar cal = Calendar.getInstance();
             
-            int statut = statementInstance.executeUpdate( "INSERT INTO mailaccount( user_id," +
-                                                                                    "adresse," +
-                                                                                    "cookieswipename," +
-                                                                                    "domain," +
-                                                                                    "password," +
-                                                                                    "lastsync," +
-                                                                                    "mailsignature," +
-                                                                                    "color) VALUES ('"+
+            int statut = statementInstance.executeUpdate( 
+            		"INSERT INTO mailaccount( user_id, adresse, cookieswipename, domain, password, lastsync, mailsignature, color) "
+            		+ "VALUES ('"+
                     user.getId()+"','"+mailAccount.getAddress()+"','"+mailAccount.getCSName()+"','"+mailAccount.getDomain().getId()+"','"+
                     encryptedPassword+"','"+dateFormat.format(cal)+"','"+mailAccount.getMailSignature()+"','"+mailAccount.getColor()+"';" );
                     

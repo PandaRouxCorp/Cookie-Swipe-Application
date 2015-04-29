@@ -19,6 +19,11 @@ import model.Domain;
  */
 public class DAODomaine {
     
+	/**
+	 * insert en base de donnée le nouveau domaine
+	 * @param domain
+	 * @return
+	 */
     public static boolean createDomain(Domain domain){
         BDDConnect bddInstance = null;
         Connection connectionInstance = null;

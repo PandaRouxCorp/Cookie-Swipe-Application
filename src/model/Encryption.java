@@ -27,6 +27,11 @@ public class Encryption {
     private static int keySize = 256;
     private byte[] ivBytes;
     
+    /**
+     * @param plainText
+     * @return
+     * @throws Exception
+     */
     public String encrypt(String plainText) throws Exception {   
          
         //get salt

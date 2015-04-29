@@ -16,6 +16,11 @@ public class BDDConnect {
     public BDDConnect(){
     }
   
+    /**
+     * permet la connection a la base de donnée
+     * @return
+     * @throws Exception
+     */
     public Connection getConnection() throws Exception{
         
         String pilote = "com.mysql.jdbc.Driver";

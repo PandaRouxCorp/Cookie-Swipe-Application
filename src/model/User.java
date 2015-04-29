@@ -73,11 +73,10 @@ public class User {
     }
     
     /**
-     * Renvoie les toutes données de l'utilisateur
+     * Renvoie toutes les données de l'utilisateur
      * @return table de hash contenant toutes les données utilisateur
      */
     public HashMap<String, Object> getData(){
-       
         return null;
     }
     
@@ -106,7 +105,7 @@ public class User {
      * @return Si le compte courriel à bien été supprimé
      */
     public boolean deleteMailAccount(MailAccount deletedMailAccount){
-        return false;
+        return listOfMailAccount.remove(deletedMailAccount);
     }
     
     /**
@@ -115,7 +114,9 @@ public class User {
      * @return Si l'adresse à bien été ajoutée de la liste noire
      */
     public boolean blackListSender(String sender){
-        return false;
+    	if(blackList == null)
+    		blackList = new ArrayList<String>();
+    	return blackList.add(sender);
     }
 
     /**
@@ -124,7 +125,7 @@ public class User {
      * @return Si l'adresse à bien été retirée de la liste noire
      */
     public boolean removeBlackListSender(String sender){
-        return false;
+        return blackList.remove(sender);
     }
 
     //Getter & setter
