@@ -15,8 +15,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import model.BDDConnect;
 import model.Encryption;
+import model.Mail;
 import model.MailAccount;
 import model.User;
 
@@ -101,7 +103,7 @@ public class DAOMailAccount {
      */
     public static boolean loadMailAccount(User user){
         
-        /*BDDConnect bddInstance = null;
+        BDDConnect bddInstance = null;
         Connection connectionInstance = null;
         Statement statementInstance = null;
         String encryptedPassword = null;
@@ -122,16 +124,23 @@ public class DAOMailAccount {
             
             statementInstance = connectionInstance.createStatement();
             
-            ResultSet result = statementInstance.executeQuery( "SELECT count(*), id FROM users where login ='"+
-                    user.getLoginAdressMail()+"' and password = '"+encryptedPassword+"';" );
-            result.next();
-            int rowCount = result.getInt(1);
-            if(rowCount == 1)
-            {
-                user.setId(result.getInt(2));
-                return true;
-            }                
+            ResultSet result = statementInstance.executeQuery( 
+            		  "SELECT count(id), id, adresse, cookieswipename, domain, password, lastsync, mailsignature, color "
+            		+ "FROM mailaccount "
+            		+ "WHERE user_id ='" + user.getId() + "';" );
             
+            boolean haveMailAccount = false;
+            
+            while ( result.next() ) {
+            	haveMailAccount = true;
+            	MailAccount mailAccount = new MailAccount(result.getString(2), result.getString(3), result.getString(5), result.getString(8));
+            	mailAccount.setLastSynch(result.getDate(6));
+            	mailAccount.setMailSignature(result.getString(7));
+//            	mailAccount.setDomain(load);
+            	user.addNewMailAccount(mailAccount);
+            	
+            }
+            return haveMailAccount;
         } catch ( SQLException e ) {
             // Traiter les erreurs éventuelles ici. 
         } finally {
@@ -149,7 +158,7 @@ public class DAOMailAccount {
                 } catch ( SQLException ignore ) {
                 }
             }
-        }*/
+        }
         return false;
     }
     
@@ -214,7 +223,7 @@ public class DAOMailAccount {
      * @return si le chargement des courriels a réussi
      */
     public static boolean loadMail(MailAccount mailAccount){
-        
+
         return false;
     }
 }
