@@ -6,11 +6,15 @@
 package network.messageFramework;
 
 import java.util.concurrent.Future;
+
+import network.mail.MailSender;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -46,11 +50,15 @@ public class PostmanTest {
 	System.out.println("Register and unregister senders");
 	AbstractSender sender = new AbstractSender() {
 
-            @Override
-            public void onMessageReceived(Future receivedMessage) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        };
+        @Override
+        public void onMessageReceived(Future receivedMessage) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+//	MailSender msender = new MailSender();
+//  System.out.println(msender.getSenderId());
+    
+    System.out.println(sender.getSenderId());
 	Postman.registerSender(sender);
         assertTrue("Sender is registered", Postman.isSenderRegistered(sender));
         Postman.unregisterSender(sender);

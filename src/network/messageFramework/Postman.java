@@ -26,7 +26,7 @@ public class Postman {
     
     public static final String COOKIE_SWIPE_DIR = System.getProperty("user.dir") + "/CSstate.tmp";
     private static Postman INSTANCE;
-    private final Map<Integer, AbstractSender<?>> senders;
+    private final Map<String, AbstractSender<?>> senders;
     private final Logger LOGGER;
     
     private Postman() {
@@ -38,7 +38,7 @@ public class Postman {
         DeliverySystem.launch(message);
     }
     
-    private void relayResponse(int senderID, Future<?> response) {
+    private void relayResponse(String senderID, Future<?> response) {
         AbstractSender s = senders.get(senderID);
         if(s != null) {
             s.onGenericMessageReceived(response);
@@ -48,15 +48,15 @@ public class Postman {
         }
     }
     
-    private void registerSender(int id, AbstractSender sender) {
+    private void registerSender(String id, AbstractSender sender) {
         senders.put(id, sender);
     }
     
-    private void unregisterSender(int id) {
+    private void unregisterSender(String id) {
         senders.remove(id);
     }
     
-    private boolean isSenderRegistered(int id) {
+    private boolean isSenderRegistered(String id) {
         return senders.containsKey(id);
     }
     
@@ -88,7 +88,7 @@ public class Postman {
         INSTANCE.relayMessage(message);
     }
 
-    static void sendResponse(int senderID, Future<?> response) {
+    static void sendResponse(String senderID, Future<?> response) {
         if(INSTANCE != null) {
             INSTANCE.relayResponse(senderID, response);
         }

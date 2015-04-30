@@ -14,13 +14,13 @@ import java.util.concurrent.Callable;
  */
 public abstract class Message<T> implements Callable<T>, Serializable {
 
-    private int senderId;
+    private String senderId;
     
-    public void setSenderId(int senderId) {
+    public void setSenderId(String senderId) {
         this.senderId = senderId;
     }
     
-    public int getSenderId() {
+    public String getSenderId() {
         return this.senderId;
     }
 

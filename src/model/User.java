@@ -57,7 +57,7 @@ public class User {
     //Fonction membre publique
     
     /**
-     * Ser à créer un utilisateur dans le registre CS
+     * Sert à créer un utilisateur dans le registre CS
      * @return l'utilisateur créé
      */
     public User create(){
@@ -81,7 +81,7 @@ public class User {
     }
     
     /**
-     * Change les informations utilisateur (A mettre ne hashmap)
+     * Change les informations utilisateur (A mettre en hashmap)
      * @param data table de hash contenant toute les données utilisateur
      * @return Si la mise à jour des données à été correct
      */

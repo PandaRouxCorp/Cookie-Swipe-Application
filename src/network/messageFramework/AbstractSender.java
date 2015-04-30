@@ -16,17 +16,17 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractSender<T> {
     
-    private final int id;
+    private final String id;
     private static Logger LOGGER;
     
     public AbstractSender() { //Attention id doit etre unique
-        this.id = hashCode();
+        this.id = this.getClass().getName() + hashCode();
         if(LOGGER == null) {
             LOGGER = Logger.getLogger(this.getClass().getName());
         }
     }
     
-    public final int getSenderId() {
+    public final String getSenderId() {
         return id;
     }
     
