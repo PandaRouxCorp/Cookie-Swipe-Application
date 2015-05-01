@@ -22,7 +22,7 @@ import model.User;
 public class DAODomaine {
     
 	/**
-	 * insert en base de donnée le nouveau domaine
+	 * insert en base de donnÃ©e le nouveau domaine
 	 * @param domain
 	 * @return
 	 */

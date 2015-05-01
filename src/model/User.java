@@ -6,6 +6,7 @@
 
 package model;
 
+import dao.DAOMailAccount;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -94,9 +95,16 @@ public class User {
      * @param newMailAccount compte courriel à ajouter
      * @return Si le compte courriel à bien été ajouté
      */
-    public boolean addNewMailAccount(MailAccount newMailAccount){
-        listOfMailAccount.add(newMailAccount);        
-        return dao.DAOMailAccount.createMailAccount(newMailAccount, this);        
+    public boolean addNewMailAccount(String name, String adress, String password){
+        boolean res = false;
+        MailAccount newMailAccount = new MailAccount(name, adress, password, "blue");
+        res = DAOMailAccount.createMailAccount(newMailAccount, this);
+        if(res){
+            res = listOfMailAccount.add(newMailAccount);
+        }
+        
+        
+        return res;
     }
     
     /**

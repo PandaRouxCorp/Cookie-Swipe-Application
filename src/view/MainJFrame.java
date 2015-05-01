@@ -27,7 +27,10 @@ public class MainJFrame extends javax.swing.JFrame implements IJFrame{
     public MainJFrame() {
         initComponents();
         hsJComponent.put("JMenuBarMainFrame", jMenuBar1);
-        pack();
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+        this.setVisible(true);
     }
 
     /**

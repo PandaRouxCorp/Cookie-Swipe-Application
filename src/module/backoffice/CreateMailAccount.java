@@ -10,6 +10,7 @@ import controller.Dispatcher;
 import interfaces.IActionBackOffice;
 import interfaces.IJFrame;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import model.User;
 
@@ -30,13 +31,17 @@ public class CreateMailAccount implements IActionBackOffice{
 
     @Override
     public void execute() {
-        user.addNewMailAccount(null);
-        JTextField result = (JTextField) hsJCompment.get("jTextFieldMailAdress");
-        System.err.println(result.getText());
-        result = (JTextField) hsJCompment.get("jTextFieldMailPassword");
-        System.err.println(result.getText());
-        result = (JTextField) hsJCompment.get("jTextFieldNameMailAccount");
-        System.err.println(result.getText());
+
+        String CSName = ((JTextField) hsJCompment.get("jTextFieldNameMailAccount")).getText();
+        String mailAdress = ((JTextField) hsJCompment.get("jTextFieldMailAdress")).getText();
+        String password = ((JTextField) hsJCompment.get("jTextFieldMailPassword")).getText();
+        if(user.addNewMailAccount(CSName, mailAdress, password)){
+            new JOptionPane().showMessageDialog(null, "Votre compte mail à bien été ajouté", 
+                    "Ajout d'un nouveau compte mail", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            new JOptionPane().showMessageDialog(null, "Une erreur est survenue lors de l'ajout de votre compte mail", 
+                    "Ajout d'un nouveau compte mail", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override

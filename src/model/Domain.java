@@ -7,6 +7,7 @@
 package model;
 
 import java.util.Objects;
+import javax.swing.JOptionPane;
 
 /**
  * Domaine d'une adresse courriel
@@ -15,7 +16,7 @@ import java.util.Objects;
 public class Domain {
     
     //Variable membre
-    private String domain, popAddress, smtpAddress, port;
+    private String name, address, serverIn, serverOut, portIn, portOut;
     private int id;
         
     //Constructeur
@@ -27,19 +28,75 @@ public class Domain {
         
     }
     
-    /**
-     * Constructeur à utiliser au chargement d'un domaine 
-     * @param domain
-     * @param popAddress
-     * @param smtpAddress
-     * @param port 
-     */
-    public Domain(String domain, String popAddress, String smtpAddress, String port) {    
-        this.domain = domain;
-        this.popAddress = popAddress;
-        this.smtpAddress = smtpAddress;
-        this.port = port;
+    public Domain(String domain) throws NullPointerException{
+        System.err.println(domain);
+        switch(domain){
+            case "yahoo.fr" :
+                name = "Yahoo!";
+                address = domain;
+                serverIn = "pop.mail.yahoo.fr";
+                portIn = "995";
+                serverOut = "smtp.mail.yahoo.fr";
+                portOut = "465";
+                break;
+            case "hotmail.com" :
+            case "hotmail.fr" :
+            case "live.com" :
+            case "live.fr" :
+            case "msn.com" :
+            case "outlook.com" :
+                name = "Hotmail";
+                address = domain;
+                serverIn = "pop3.live.com";
+                portIn = "995";
+                serverOut = "smtp.live.com";
+                portOut = "587";
+                break;
+            case "orange.fr" :
+            case "wanadoo.fr" :
+                name = "";
+                address = domain;
+                serverIn = "";
+                portIn = "";
+                serverOut = "";
+                portOut = "";
+                break;
+            case "gmail.com" :
+                name = "Gmail";
+                address = domain;
+                serverIn = "imap.gmail.com";
+                portIn = "993";
+                serverOut = "smtp.gmail.com";
+                portOut = "465";
+                break;
+            default:
+                JOptionPane.showMessageDialog(null, "Domaine inconnu", 
+                    "Ajout d'un nouveau compte mail", JOptionPane.ERROR_MESSAGE);
+                throw new NullPointerException("Domain unknow");
+
+        }
     }
+
+    
+    public Domain(String name, String address, String serverIn, String serverOut, String portIn, String portOut) {
+        this.name = name;
+        this.address = address;
+        this.serverIn = serverIn;
+        this.serverOut = serverOut;
+        this.portIn = portIn;
+        this.portOut = portOut;
+    }
+
+    public Domain(String name, String address, String serverIn, String serverOut, String portIn, String portOut, int id) {
+        this.name = name;
+        this.address = address;
+        this.serverIn = serverIn;
+        this.serverOut = serverOut;
+        this.portIn = portIn;
+        this.portOut = portOut;
+        this.id = id;
+    }
+    
 
     //Fonction membre publique
     
@@ -53,38 +110,56 @@ public class Domain {
     }
     
     //Getter & setter
+
     
-    public String getDomain() {
-        return domain;
+    public String getName(){
+        return name;
+    }
+    
+    public void setName(String name){
+        this.name = name;
+    }
+    
+    public String getAddress() {
+        return address;
     }
 
-    public String getPopAddress() {
-        return popAddress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getSmtpAddress() {
-        return smtpAddress;
+    public String getServerIn() {
+        return serverIn;
     }
 
-    public String getPort() {
-        return port;
+    public void setServerIn(String serverIn) {
+        this.serverIn = serverIn;
     }
 
-    public void setDomain(String domain) {
-        this.domain = domain;
+    public String getServerOut() {
+        return serverOut;
     }
 
-    public void setPopAddress(String popAddress) {
-        this.popAddress = popAddress;
+    public void setServerOut(String serverOut) {
+        this.serverOut = serverOut;
     }
 
-    public void setSmtpAddress(String smtpAddress) {
-        this.smtpAddress = smtpAddress;
+    public String getPortIn() {
+        return portIn;
     }
 
-    public void setPort(String port) {
-        this.port = port;
+    public void setPortIn(String portIn) {
+        this.portIn = portIn;
     }
+
+    public String getPortOut() {
+        return portOut;
+    }
+
+    public void setPortOut(String portOut) {
+        this.portOut = portOut;
+    }
+
     public int getId() {
         return id;
     }
@@ -98,7 +173,7 @@ public class Domain {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 29 * hash + Objects.hashCode(this.domain);
+        hash = 29 * hash + Objects.hashCode(this.name);
         return hash;
     }
 
@@ -114,7 +189,7 @@ public class Domain {
             return false;
         }
         final Domain other = (Domain) obj;
-        return Objects.equals(this.domain, other.domain);
+        return Objects.equals(this.name, other.name);
     } 
 
 }

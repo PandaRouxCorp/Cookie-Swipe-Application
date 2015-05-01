@@ -17,7 +17,7 @@ public class BDDConnect {
     }
   
     /**
-     * permet la connection a la base de donnée
+     * permet la connection a la base de donnÃ©e
      * @return
      * @throws Exception
      */

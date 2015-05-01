@@ -60,7 +60,6 @@ public class Dispatcher {
         
         user = new User();
         this.mainFrame = new MainJFrame();
-        this.mainFrame.setVisible(true);
         IActionIHM initMainFrame = InitMainFrame.getInstance();
         initMainFrame.setDispatcher(this);
         initMainFrame.setJComponent(mainFrame.getJComponent());
@@ -113,7 +112,6 @@ public class Dispatcher {
             case ActionName.addMailAccount: 
                 System.err.println(action);
                 focusFrame = new MailAccountJFrame();
-                focusFrame.setVisible(true);
                 InitAddMailAccount initMailAccount = InitAddMailAccount.getInstance();
                 initMailAccount.setDispatcher(this);
                 initMailAccount.setJComponent(focusFrame.getJComponent());
@@ -126,7 +124,6 @@ public class Dispatcher {
             case ActionName.udpateMailAccount: 
                 System.err.println(action); 
                 focusFrame = new MailAccountJFrame();
-                focusFrame.setVisible(true);
                 InitUpdateMailAccount initUpdateMailAccount = InitUpdateMailAccount.getInstance();
                 initUpdateMailAccount.setDispatcher(this);
                 initUpdateMailAccount.setJComponent(focusFrame.getJComponent());

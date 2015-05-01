@@ -10,12 +10,13 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import javax.mail.Address;
 
 /**
  *
  * @author Mary
  */
-public class MailAccount {
+public class MailAccount extends Address {
     
     //Variable membre
     
@@ -36,15 +37,17 @@ public class MailAccount {
     
     /**
      * Constructeur à utiliser lors de l'ajout d'une boite courriel 
-     * @param address adresse courriel de la boite
      * @param CSName nom donné à la botie courriel
+     * @param address adresse courriel de la boite
      * @param password mot de passe pour accéder à la boite courriel
      * @param color couleur donné à la boite courriel pour l'affichage des courriels
      */
-    public MailAccount(String address, String CSName, String password, String color) {
-        domain = new Domain();
-        this.address = address;
+    public MailAccount(String CSName, String address, String password, String color) {
+        
+        String mailDomain = address.substring(address.indexOf('@'));
+        domain = new Domain(mailDomain);
         this.CSName = CSName;
+        this.address = address;
         this.password = password;
         this.color = color;
     }
@@ -52,8 +55,8 @@ public class MailAccount {
     /**
      * Constructeur à utiliser pour charger les comptes courriel dans l'application
      * @param id identifiant unique de la boite mail
-     * @param address adresse courriel de la boite
      * @param CSName nom donné à la boite courriel
+     * @param address adresse courriel de la boite
      * @param password mot de passe pour accéder à la boite mail
      * @param color couleur donné à la boite courriel pour l'affichage des courriels
      * @param domain domaine de l'adresse courriel
@@ -61,7 +64,7 @@ public class MailAccount {
      * @param lastSynch date de la dernière synchronisation réussi de la boite courriel
      * @param listOfMail Liste des courriels de la boite mail
      */
-    public MailAccount(int id, String address, String CSName, String password, String color,
+    public MailAccount(int id, String CSName, String address, String password, String color,
             Domain domain,String mailSignature, Date lastSynch, ArrayList<Mail> listOfMail) {
         this.id = id;
         this.address = address;
@@ -220,6 +223,16 @@ public class MailAccount {
             return false;
         }
         return Objects.equals(this.address, other.address);
+    }
+
+    @Override
+    public String getType() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

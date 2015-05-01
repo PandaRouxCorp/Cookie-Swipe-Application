@@ -24,7 +24,10 @@ public class MailAccountJFrame extends javax.swing.JFrame implements IJFrame{
         hsJComponent.put("jTextFieldMailPassword", jTextFieldMailPassword);
         hsJComponent.put("jTextFieldNameMailAccount", jTextFieldNameMailAccount);
         hsJComponent.put("jButtonValideMailAccount", jButtonValideMailAccount);
-        pack();
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+        this.setVisible(true);
     }
 
     /**
