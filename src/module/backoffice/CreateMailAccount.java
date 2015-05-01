@@ -10,6 +10,7 @@ import controller.Dispatcher;
 import interfaces.IActionBackOffice;
 import interfaces.IJFrame;
 import java.util.HashMap;
+import javax.mail.Address;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import model.User;
@@ -41,6 +42,9 @@ public class CreateMailAccount implements IActionBackOffice{
         }else{
             new JOptionPane().showMessageDialog(null, "Une erreur est survenue lors de l'ajout de votre compte mail", 
                     "Ajout d'un nouveau compte mail", JOptionPane.ERROR_MESSAGE);
+        }
+        for(Address a : user.getListOfMailAccount()){
+            System.err.println(a);
         }
     }
 

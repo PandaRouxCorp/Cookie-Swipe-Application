@@ -30,6 +30,7 @@ public class Domain {
     
     public Domain(String domain) throws NullPointerException{
         System.err.println(domain);
+        id = 1;
         switch(domain){
             case "yahoo.fr" :
                 name = "Yahoo!";

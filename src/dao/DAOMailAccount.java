@@ -7,6 +7,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,9 +36,10 @@ public class DAOMailAccount {
      */
     public static boolean createMailAccount(MailAccount mailAccount,User user){
         
-        BDDConnect bddInstance = null;
         Connection connectionInstance = null;
-        Statement statementInstance = null;
+        PreparedStatement statementInstance = null;
+        String sql = "INSERT INTO mailaccount( user_id, adresse, cookieswipename, domain, password, color) "
+                + "VALUES (?, ?, ?, ?, ?, ? )";
         String encryptedPassword = null;
         
         try {
@@ -45,44 +47,46 @@ public class DAOMailAccount {
                 encryptedPassword = new Encryption().encrypt(mailAccount.getPassword());
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
+
             }
-            bddInstance = new BDDConnect();
             
             try {
-                connectionInstance =   bddInstance.getConnection();
+                connectionInstance =   BDDConnect.getConnection();
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
             }
             
-            statementInstance = connectionInstance.createStatement();
-            
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Calendar cal = Calendar.getInstance();
-            
-            int statut = statementInstance.executeUpdate( 
-            		"INSERT INTO mailaccount( user_id, adresse, cookieswipename, domain, password, lastsync, mailsignature, color) "
-            		+ "VALUES ('"+
-                    user.getId()+"','"+mailAccount.getAddress()+"','"+mailAccount.getCSName()+"','"+mailAccount.getDomain().getId()+"','"+
-                    encryptedPassword+"','"+dateFormat.format(cal)+"','"+mailAccount.getMailSignature()+"','"+mailAccount.getColor()+"';" );
-                    
-            if(statut == 1)
-                return true;
+            statementInstance = connectionInstance.prepareStatement(sql);
+            statementInstance.setInt(1,user.getId() );
+            statementInstance.setString(2, mailAccount.getAddress());
+            statementInstance.setString(3,mailAccount.getCSName() );
+            statementInstance.setInt(4,mailAccount.getDomain().getId());
+            statementInstance.setString(5, encryptedPassword);
+            statementInstance.setString(6, mailAccount.getColor());
+            statementInstance.execute();
+            return true;
             
         } catch ( SQLException e ) {
             /* Traiter les erreurs éventuelles ici. */
+            System.err.println(e.getMessage());
+            System.err.println(statementInstance);
         } finally {
             if ( statementInstance != null ) {
                 try {
                     /* Puis on ferme le Statement */
                     statementInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
             if ( connectionInstance != null ) {
                 try {
                     /* Et enfin on ferme la connexion */
                     connectionInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
         }   
@@ -170,7 +174,7 @@ public class DAOMailAccount {
      * @return si le chargement du domaine a réussi
      */
     public static boolean loadDomail(MailAccount mailAccount){
-        BDDConnect bddInstance = null;
+       /* BDDConnect bddInstance = null;
         Connection connectionInstance = null;
         Statement statementInstance = null;
         
@@ -198,23 +202,23 @@ public class DAOMailAccount {
             }                      
             
         } catch ( SQLException e ) {
-            /* Traiter les erreurs éventuelles ici. */
+            // Traiter les erreurs éventuelles ici.
         } finally {
             if ( statementInstance != null ) {
                 try {
-                    /* Puis on ferme le Statement */
+                    // Puis on ferme le Statement 
                     statementInstance.close();
                 } catch ( SQLException ignore ) {
                 }
             }
             if ( connectionInstance != null ) {
                 try {
-                    /* Et enfin on ferme la connexion */
+                    // Et enfin on ferme la connexion
                     connectionInstance.close();
                 } catch ( SQLException ignore ) {
                 }
             }
-        }
+        }*/
         return false;
     }
     

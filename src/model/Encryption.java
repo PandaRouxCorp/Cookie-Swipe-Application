@@ -21,10 +21,10 @@ import org.apache.commons.codec.binary.Base64;
  * @author 626
  */
 public class Encryption {
-    private static final String password = "test";
+    private static final String password = "panda";
     private static String salt;
     private static int pswdIterations = 65536  ;
-    private static int keySize = 256;
+    private static int keySize = 128;
     private byte[] ivBytes;
     
     /**

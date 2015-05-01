@@ -44,7 +44,7 @@ public class MailAccount extends Address {
      */
     public MailAccount(String CSName, String address, String password, String color) {
         
-        String mailDomain = address.substring(address.indexOf('@'));
+        String mailDomain = address.substring(address.indexOf('@')+1);
         domain = new Domain(mailDomain);
         this.CSName = CSName;
         this.address = address;
@@ -232,7 +232,7 @@ public class MailAccount extends Address {
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "MailAccount{" + "id=" + id + ", address=" + address + ", CSName=" + CSName + ", password=" + password + ", color=" + color + ", mailSignature=" + mailSignature + ", domain=" + domain + ", lastSynch=" + lastSynch + ", listOfmail=" + listOfmail + '}';
     }
-    
+
 }

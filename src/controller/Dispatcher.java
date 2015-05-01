@@ -59,6 +59,7 @@ public class Dispatcher {
     private Dispatcher(){
         
         user = new User();
+        user.setId(1);
         this.mainFrame = new MainJFrame();
         IActionIHM initMainFrame = InitMainFrame.getInstance();
         initMainFrame.setDispatcher(this);

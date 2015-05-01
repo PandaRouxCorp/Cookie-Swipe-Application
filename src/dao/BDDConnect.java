@@ -31,7 +31,7 @@ public class BDDConnect {
                 conf[2] = "";
                 conf[3] = "";
                 try {
-                    FileReader fichierLecture = new FileReader("conf\\confDatabase");
+                    FileReader fichierLecture = new FileReader("src\\conf\\confDatabase");
                     BufferedReader fichier = new BufferedReader(fichierLecture);
                     String ligne;
                     int i = 0;

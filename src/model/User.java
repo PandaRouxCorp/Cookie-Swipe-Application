@@ -21,7 +21,7 @@ public class User {
     
     private int id;
     private String loginAdressMail, password, backupMail;
-    private ArrayList<MailAccount> listOfMailAccount;
+    private ArrayList<MailAccount> listOfMailAccount = new ArrayList<MailAccount>();
     private ArrayList<String> blackList;
     
     //Constrcuteur
@@ -96,7 +96,7 @@ public class User {
      * @return Si le compte courriel à bien été ajouté
      */
     public boolean addNewMailAccount(String name, String adress, String password){
-        boolean res = false;
+        boolean res = true;
         MailAccount newMailAccount = new MailAccount(name, adress, password, "blue");
         res = DAOMailAccount.createMailAccount(newMailAccount, this);
         if(res){

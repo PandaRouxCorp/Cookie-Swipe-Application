@@ -26,7 +26,7 @@ public class DAODomaine {
 	 * @return
 	 */
     public static boolean createDomain(Domain domain){
-        BDDConnect bddInstance = null;
+       /* BDDConnect bddInstance = null;
         Connection connectionInstance = null;
         Statement statementInstance = null;
         
@@ -51,23 +51,23 @@ public class DAODomaine {
                 return true;
             
         } catch ( SQLException e ) {
-            /* Traiter les erreurs éventuelles ici. */
+            //Traiter les erreurs éventuelles ici. 
         } finally {
             if ( statementInstance != null ) {
                 try {
-                    /* Puis on ferme le Statement */
+                    // Puis on ferme le Statement
                     statementInstance.close();
                 } catch ( SQLException ignore ) {
                 }
             }
             if ( connectionInstance != null ) {
                 try {
-                    /* Et enfin on ferme la connexion */
+                    // Et enfin on ferme la connexion 
                     connectionInstance.close();
                 } catch ( SQLException ignore ) {
                 }
             }
-        }  
+        }  */
         return false;
     }
     
@@ -75,7 +75,7 @@ public class DAODomaine {
     public static boolean updateDomain(Domain domain) {
         BDDConnect bddInstance = null;
         Connection connectionInstance = null;
-        Statement statementInstance = null;
+       /* Statement statementInstance = null;
         
         try {
             
@@ -100,23 +100,23 @@ public class DAODomaine {
             return (statut == 1);
             
         } catch ( SQLException e ) {
-            /* Traiter les erreurs éventuelles ici. */
+            // Traiter les erreurs éventuelles ici. 
         } finally {
             if ( statementInstance != null ) {
                 try {
-                    /* Puis on ferme le Statement */
+                    // Puis on ferme le Statement
                     statementInstance.close();
                 } catch ( SQLException ignore ) {
                 }
             }
             if ( connectionInstance != null ) {
                 try {
-                    /* Et enfin on ferme la connexion */
+                    // Et enfin on ferme la connexion 
                     connectionInstance.close();
                 } catch ( SQLException ignore ) {
                 }
             }
-        }  
+        }  */
         return false;
     }
 }
