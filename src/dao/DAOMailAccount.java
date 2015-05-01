@@ -16,7 +16,6 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import model.BDDConnect;
 import model.Encryption;
 import model.MailAccount;
 import model.User;
@@ -140,7 +139,7 @@ public class DAOMailAccount {
             	if(!loadDomail(mailAccount)) {
             		loadMailAccount = false;
             	}
-            	user.addNewMailAccount(mailAccount);
+            	//user.addNewMailAccount(mailAccount);
             	
             }
             return loadMailAccount;
