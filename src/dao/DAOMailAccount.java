@@ -10,10 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,15 +42,12 @@ public class DAOMailAccount {
             try {
                 encryptedPassword = new Encryption().encrypt(mailAccount.getPassword());
             } catch (Exception ex) {
-                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
                 System.err.println(ex.getMessage());
-
             }
             
             try {
                 connectionInstance =   BDDConnect.getConnection();
             } catch (Exception ex) {
-                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
                 System.err.println(ex.getMessage());
             }
             
@@ -95,73 +88,67 @@ public class DAOMailAccount {
     
     /**
      * Charge toute les données d'un compte courriel qui était sauvegardé
+     * @param user
      * @param mailAccount compte courriel concerné
      * @return si le chargement du compte courriel a bien réussi
      */
     public static boolean loadMailAccount(User user){
         
-        BDDConnect bddInstance = null;
         Connection connectionInstance = null;
-        Statement statementInstance = null;
-        String encryptedPassword = null;
-        
-        try {
-            try {
-                encryptedPassword = new Encryption().encrypt(user.getPassword());
-            } catch (Exception ex) {
-                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            bddInstance = new BDDConnect();
-            
-            try {
-                connectionInstance =   bddInstance.getConnection();
-            } catch (Exception ex) {
-                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            statementInstance = connectionInstance.createStatement();
-            
-            ResultSet result = statementInstance.executeQuery( 
-            		  "SELECT count(id), id, adresse, cookieswipename, domain, password, lastsync, mailsignature, color "
+        PreparedStatement statementInstance = null;
+        String sql ="SELECT count(id), id, adresse, cookieswipename, domain, password, lastsync, mailsignature, color "
             		+ "FROM mailaccount "
-            		+ "WHERE user_id ='" + user.getId() + "';" );
+            		+ "WHERE user_id = ?";
+        try {                       
+            try {
+                connectionInstance =   BDDConnect.getConnection();
+            } catch (Exception ex) {
+                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            statementInstance = connectionInstance.prepareStatement(sql);
+            statementInstance.setInt(1, user.getId());
+            
+            ResultSet result = statementInstance.executeQuery( sql);		 
 
             boolean loadMailAccount = true;
             
             while ( result.next() ) {
             	String password = null;
-				try {
-					password = new Encryption().decrypt(result.getString("password"));
-				} catch (Exception e) {
-					e.printStackTrace();
-					loadMailAccount = false;
-				}
+                try {
+                        password = new Encryption().decrypt(result.getString("password"));
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        loadMailAccount = false;
+                }
             	MailAccount mailAccount = new MailAccount(result.getString("adresse"), result.getString("cookieswipename"), password, result.getString("color"));
-            	mailAccount.setLastSynch(result.getDate(6));
-            	mailAccount.setMailSignature(result.getString(7));
+            	mailAccount.setLastSynch(result.getDate("lastsync"));
+            	mailAccount.setMailSignature(result.getString("mailsignature"));
             	mailAccount.getDomain().setId(result.getInt("domain"));
             	if(!loadDomail(mailAccount)) {
             		loadMailAccount = false;
             	}
-            	//user.addNewMailAccount(mailAccount);
-            	
+            	//user.addNewMailAccount(mailAccount);            	
             }
             return loadMailAccount;
         } catch ( SQLException e ) {
-            // Traiter les erreurs éventuelles ici. 
+            System.err.println(e.getMessage());
+            System.err.println(statementInstance); 
         } finally {
             if ( statementInstance != null ) {
                 try {
                     // Puis on ferme le Statement 
                     statementInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
             if ( connectionInstance != null ) {
                 try {
                     /// Et enfin on ferme la connexion 
                     connectionInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
         }
@@ -224,50 +211,59 @@ public class DAOMailAccount {
     
 
     public static boolean updateMailAccount(MailAccount mailaccount) {
-        BDDConnect bddInstance = null;
+
         Connection connectionInstance = null;
-        Statement statementInstance = null;
-        
+        PreparedStatement statementInstance = null;
+        String encryptedPassword = null;
+        String sql =  "UPDATE mailaccount "
+                    + "SET adresse = ?, cookieswipename = ?, domain = ?, password = ?, "
+                    + "lastsync = ?, mailsignature = ?, color = ? WHERE id = ?;";
         try {
             
-            bddInstance = new BDDConnect();
-            
             try {
-                connectionInstance =   bddInstance.getConnection();
+                connectionInstance =   BDDConnect.getConnection();
             } catch (Exception ex) {
-                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
             }
             
-            statementInstance = connectionInstance.createStatement();
+            try {
+                encryptedPassword = new Encryption().encrypt(mailaccount.getPassword());
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+            }
             
-            int statut = statementInstance.executeUpdate( 
-            		"UPDATE mailaccount "
-                    		+ "SET adresse = '" + mailaccount.getAddress() + "', "
-                    		+ "cookieswipename = '" + mailaccount.getCSName() + "', "
-                    		+ "domain = '" + mailaccount.getDomain().getId() + "', "
-                    		+ "password = '" + mailaccount.getPassword() + "', "
-                    		+ "lastsync = '" + mailaccount.getLastSynch() + "', "
-                    		+ "mailsignature = '" + mailaccount.getMailSignature() + "', "
-                    		+ "color = '" + mailaccount.getColor() + "' "
-                    		+ "WHERE id = " + mailaccount.getId() + ";"
-            		);
+            statementInstance = connectionInstance.prepareStatement(sql);
+            statementInstance.setString(1, mailaccount.getAddress());
+            statementInstance.setString(2, mailaccount.getCSName());
+            statementInstance.setInt(3, mailaccount.getDomain().getId());
+            statementInstance.setString(4, encryptedPassword );
+            statementInstance.setString(5, mailaccount.getLastSynch().toString() );
+            statementInstance.setString(6, mailaccount.getMailSignature() );
+            statementInstance.setString(7, mailaccount.getColor());
+            statementInstance.setInt(8, mailaccount.getId());
+            
+            statementInstance.executeUpdate(); 
 
-            return (statut == 1);
+            return true;
+            
         } catch ( SQLException e ) {
             /* Traiter les erreurs éventuelles ici. */
+            System.err.println(e.getMessage());
         } finally {
             if ( statementInstance != null ) {
                 try {
                     /* Puis on ferme le Statement */
                     statementInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
             if ( connectionInstance != null ) {
                 try {
                     /* Et enfin on ferme la connexion */
                     connectionInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
         }
