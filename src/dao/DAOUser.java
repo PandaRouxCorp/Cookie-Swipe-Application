@@ -7,11 +7,13 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import model.Encryption;
 import model.User;
 
@@ -28,12 +30,11 @@ public class DAOUser {
      * @return si la création de l'utilsiateur a réussi
      */
     
-    public static boolean createUser(User user){               
-        
-        BDDConnect bddInstance = null;
+    public static boolean createUser(User user){
         Connection connectionInstance = null;
-        Statement statementInstance = null;
+        PreparedStatement statementInstance = null;
         String encryptedPassword = null;
+        String request = "INSERT INTO users(login, password, backupadr) VALUES (?, ?, ?);"; 
         
         try {
             try {
@@ -41,18 +42,20 @@ public class DAOUser {
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
             }
-            bddInstance = new BDDConnect();
             
             try {
-                connectionInstance =   bddInstance.getConnection();
+                connectionInstance =   BDDConnect.getConnection();
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+            statementInstance = connectionInstance.prepareStatement(request);
+            statementInstance.setString(1, user.getLoginAdressMail());
+            statementInstance.setString(2, encryptedPassword);
+            statementInstance.setString(3, user.getBackupMail());
             
-            statementInstance = connectionInstance.createStatement();
+            int statut = statementInstance.executeUpdate();
             
-            int statut = statementInstance.executeUpdate( "INSERT INTO users(login, password, backupadr) VALUES ('"+
-                    user.getLoginAdressMail()+"','"+encryptedPassword+"','"+user.getBackupMail()+"';" );
             if(statut == 1)
                 return true;
             
@@ -78,11 +81,15 @@ public class DAOUser {
     }
     
     public static boolean updateUser(User user) {
-        
-        BDDConnect bddInstance = null;
+
         Connection connectionInstance = null;
-        Statement statementInstance = null;
+        PreparedStatement statementInstance = null;
         String encryptedPassword = null;
+        String request = "UPDATE user "
+        		+ "SET login = ?, "
+        		+ "password = ?, "
+        		+ "backupAdr = ?, "
+        		+ "WHERE id = ?;";
         
         try {
             try {
@@ -90,25 +97,21 @@ public class DAOUser {
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
             }
-            bddInstance = new BDDConnect();
             
             try {
-                connectionInstance =   bddInstance.getConnection();
+                connectionInstance =   BDDConnect.getConnection();
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            statementInstance = connectionInstance.createStatement();
+            statementInstance = connectionInstance.prepareStatement(request);
+
+            statementInstance.setString(1, user.getLoginAdressMail());
+            statementInstance.setString(2, encryptedPassword);
+            statementInstance.setString(3, user.getBackupMail());
+            statementInstance.setInt(4, user.getId());
             
-            int statut = statementInstance.executeUpdate( 
-            		"UPDATE user "
-                    		+ "SET login = '" + user.getLoginAdressMail() + "', "
-                    		+ "password = '" + user.getPassword() + "', "
-                    		+ "backupAdr = '" + user.getBackupMail() + "', "
-                    		// c'est une array list
-//                    		+ "blackList = '" + user.getBlackList() + "', " 
-                    		+ "WHERE id = " + user.getId() + ";"
-                    );
+            int statut = statementInstance.executeUpdate();
             
             return (statut == 1);
             
@@ -140,10 +143,10 @@ public class DAOUser {
      *@return si la conenction de l'utilisateur a réussi
      */
     public static boolean connectUser(User user){
-        BDDConnect bddInstance = null;
         Connection connectionInstance = null;
-        Statement statementInstance = null;
+        PreparedStatement statementInstance = null;
         String encryptedPassword = null;
+        String request = "SELECT count(*), id FROM users where login = ? and password = ?;";
         
         try {
             try {
@@ -151,22 +154,22 @@ public class DAOUser {
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
             }
-            bddInstance = new BDDConnect();
             
             try {
-                connectionInstance =   bddInstance.getConnection();
+                connectionInstance =   BDDConnect.getConnection();
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            statementInstance = connectionInstance.createStatement();
+            statementInstance = connectionInstance.prepareStatement(request);
+
+            statementInstance.setString(1, user.getLoginAdressMail());
+            statementInstance.setString(2, encryptedPassword);
             
-            ResultSet result = statementInstance.executeQuery( "SELECT count(*), id FROM users where login ='"+
-                    user.getLoginAdressMail()+"' and password = '"+encryptedPassword+"';" );
+            ResultSet result = statementInstance.executeQuery();
             result.next();
-            int rowCount = result.getInt(1);
-            if(rowCount == 1)
-            {
+            
+            if(result.getInt(1) == 1) {
                 user.setId(result.getInt(2));
                 return true;
             }                
