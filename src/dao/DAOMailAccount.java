@@ -58,7 +58,8 @@ public class DAOMailAccount {
             statementInstance.setInt(4,mailAccount.getDomain().getId());
             statementInstance.setString(5, encryptedPassword);
             statementInstance.setString(6, mailAccount.getColor());
-            statementInstance.execute();
+            
+            statementInstance.executeUpdate();
             return true;
             
         } catch ( SQLException e ) {
