@@ -139,33 +139,6 @@ public class Mail implements Serializable {
         this.attachement = attachement;
     }
     
-    //response & forward mail
-    public Mail response() {
-    	Mail resp = new Mail();
-    	resp.setBody(mailTranfer());
-    	resp.setTo(from);
-    	resp.setFrom(to);
-    	resp.setSubject("FW : " + subject);
-    	return resp;
-    }
-    
-    public Mail forward() {
-    	Mail resp = new Mail();
-    	resp.setAttachement(attachement);
-    	resp.setBody(mailTranfer());
-    	resp.setSubject("FW : " + subject);
-    	return resp;
-    }
-    
-    private String mailTranfer() {
-    	return "------------------------\n"
-    			+ "From : " + from + "\n"
-    	    	+ "To : "   + to   + "\n"
-    	    	+ "Date : " + date + "\n\n"
-    	    	+  body
-    			+ "";
-    }
-    
     //equals & hashcode
     
     @Override
