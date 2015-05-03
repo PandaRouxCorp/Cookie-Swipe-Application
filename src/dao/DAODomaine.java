@@ -6,6 +6,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -26,97 +27,102 @@ public class DAODomaine {
 	 * @return
 	 */
     public static boolean createDomain(Domain domain){
-       /* BDDConnect bddInstance = null;
         Connection connectionInstance = null;
-        Statement statementInstance = null;
-        
+        PreparedStatement statementInstance = null;
+        String request =  "INSERT INTO domain(name, adresse, popaddr, smptaddr, portin, portout) "
+                		+ "VALUES (?, ?, ?, ?, ?, ?);";
         try {
             
-            bddInstance = new BDDConnect();            
             try {
-                connectionInstance =   bddInstance.getConnection();
+                connectionInstance =   BDDConnect.getConnection();
             } catch (Exception ex) {
-                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
             }
             
-            statementInstance = connectionInstance.createStatement();
+            statementInstance = connectionInstance.prepareStatement(request);
+            statementInstance.setString(1, domain.getName());
+            statementInstance.setString(2, domain.getAddress());
+            statementInstance.setString(3, domain.getServerIn());
+            statementInstance.setString(4, domain.getServerOut());
+            statementInstance.setString(5, domain.getPortIn());
+            statementInstance.setString(6, domain.getPortOut());
             
-            int statut = statementInstance.executeUpdate( "INSERT INTO domain(  name," +
-                                                                                "popaddr," +
-                                                                                "smptaddr," +
-                                                                                "port) VALUES ('"+
-            domain.getDomain()+"','"+domain.getPopAddress()+"','"+domain.getSmtpAddress()+"','"+domain.getPort()+"';'");
-                    
+            int statut = statementInstance.executeUpdate(); 
+
             if(statut == 1)
                 return true;
-            
         } catch ( SQLException e ) {
-            //Traiter les erreurs éventuelles ici. 
+            /* Traiter les erreurs éventuelles ici. */
+            System.err.println(e.getMessage());
         } finally {
             if ( statementInstance != null ) {
                 try {
-                    // Puis on ferme le Statement
+                    /* Puis on ferme le Statement */
                     statementInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
             if ( connectionInstance != null ) {
                 try {
-                    // Et enfin on ferme la connexion 
+                    /* Et enfin on ferme la connexion */
                     connectionInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
-        }  */
+        }
         return false;
     }
     
 
     public static boolean updateDomain(Domain domain) {
-        BDDConnect bddInstance = null;
         Connection connectionInstance = null;
-       /* Statement statementInstance = null;
-        
+        PreparedStatement statementInstance = null;
+        String request = "UPDATE domain "
+        		+ "SET name = ?, "
+        		+ "popaddr = ?, "
+        		+ "smtpaddr = ?, "
+        		+ "port = ? "
+        		+ "WHERE id = ?";
         try {
             
-            bddInstance = new BDDConnect();            
             try {
-                connectionInstance =   bddInstance.getConnection();
+                connectionInstance =   BDDConnect.getConnection();
             } catch (Exception ex) {
-                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
             }
             
-            statementInstance = connectionInstance.createStatement();
+            statementInstance = connectionInstance.prepareStatement(request);
+            statementInstance.setString(1, domain.getName());
+            statementInstance.setString(2, domain.getServerIn());
+            statementInstance.setString(3, domain.getServerOut());
+            statementInstance.setString(4, domain.getPortIn());
+            statementInstance.setInt(5, domain.getId());
             
-            int statut = statementInstance.executeUpdate( 
-            		"UPDATE domain "
-	            		+ "SET name = '" + domain.getDomain() + "', "
-	            		+ "popaddr = '" + domain.getPopAddress() + "', "
-	            		+ "smtpaddr = '" + domain.getSmtpAddress() + "', "
-	            		+ "port = '" + domain.getPort() + "' "
-	            		+ "WHERE id = " + domain.getId() + ";"
-            		);
-
-            return (statut == 1);
+            statementInstance.executeUpdate(); 
             
         } catch ( SQLException e ) {
-            // Traiter les erreurs éventuelles ici. 
+            /* Traiter les erreurs éventuelles ici. */
+            System.err.println(e.getMessage());
         } finally {
             if ( statementInstance != null ) {
                 try {
-                    // Puis on ferme le Statement
+                    /* Puis on ferme le Statement */
                     statementInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
             if ( connectionInstance != null ) {
                 try {
-                    // Et enfin on ferme la connexion 
+                    /* Et enfin on ferme la connexion */
                     connectionInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
-        }  */
+        }
         return false;
     }
 }

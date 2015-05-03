@@ -161,51 +161,53 @@ public class DAOMailAccount {
      * @return si le chargement du domaine a réussi
      */
     public static boolean loadDomail(MailAccount mailAccount){
-       /* BDDConnect bddInstance = null;
         Connection connectionInstance = null;
-        Statement statementInstance = null;
-        
+        PreparedStatement statementInstance = null;
+        String request = "SELECT name, adresse, popaddr, smtpaddr, portin, portout FROM domain where id = ?;";
         try {
             
-            bddInstance = new BDDConnect();
-            
             try {
-                connectionInstance =   bddInstance.getConnection();
+                connectionInstance =   BDDConnect.getConnection();
             } catch (Exception ex) {
-                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
             }
             
-            statementInstance = connectionInstance.createStatement();
+            statementInstance = connectionInstance.prepareStatement(request);
+            statementInstance.setInt(1, mailAccount.getId());
             
-            ResultSet result = statementInstance.executeQuery( "SELECT name,popaddr,smtpaddr,port FROM domain where id ='"+
-                    mailAccount.getDomain().getId()+"';" );
-            
+            ResultSet result = statementInstance.executeQuery(); 
+
             if(result.next()){
-                mailAccount.getDomain().setDomain(result.getString("name"));
-                mailAccount.getDomain().setPopAddress(result.getString("popaddr"));
-                mailAccount.getDomain().setSmtpAddress(result.getString("smtpaddr"));
-                mailAccount.getDomain().setPort(result.getString("port"));
+                mailAccount.getDomain().setName(result.getString("name"));
+                mailAccount.getDomain().setAddress(result.getString("adresse"));
+                mailAccount.getDomain().setServerIn(result.getString("popaddr"));
+                mailAccount.getDomain().setServerOut(result.getString("smtpaddr"));
+                mailAccount.getDomain().setPortIn(result.getString("portin"));
+                mailAccount.getDomain().setPortOut(result.getString("portout"));
                 return true;
-            }                      
+            }      
             
         } catch ( SQLException e ) {
-            // Traiter les erreurs éventuelles ici.
+            /* Traiter les erreurs éventuelles ici. */
+            System.err.println(e.getMessage());
         } finally {
             if ( statementInstance != null ) {
                 try {
-                    // Puis on ferme le Statement 
+                    /* Puis on ferme le Statement */
                     statementInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
             if ( connectionInstance != null ) {
                 try {
-                    // Et enfin on ferme la connexion
+                    /* Et enfin on ferme la connexion */
                     connectionInstance.close();
-                } catch ( SQLException ignore ) {
+                } catch ( SQLException e ) {
+                    System.err.println(e.getMessage());
                 }
             }
-        }*/
+        }
         return false;
     }
     
