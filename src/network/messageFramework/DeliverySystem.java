@@ -96,6 +96,36 @@ public class DeliverySystem {
             isLaunched = false;
             slaveExecutor.shutdownNow();
         });
+        
+//        masterExecutor.execute(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                safeStop = false;
+//                shouldStop = false;
+//                isLaunched = true;
+//                while (!shouldStop) {
+//                    try {
+//                        if (!futures.isEmpty()) {
+//                            onRecieveResponse(completionService.take());
+//                        } else {
+//                            try {
+//                                Thread.sleep(100);
+//                            } catch (InterruptedException e) {
+//                                break;
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        LOGGER.log(Level.SEVERE, "Erreur :", e);
+//                    }
+//                }
+//                if (safeStop) {
+//                    saveState();
+//                }
+//                isLaunched = false;
+//                slaveExecutor.shutdownNow();
+//            }
+//        });
     }
 
     public int getTaskNumber() {
@@ -117,9 +147,15 @@ public class DeliverySystem {
 
     private void saveState() {
         List<Message> messages = new ArrayList<>();
-        futures.stream().map((f) -> matcher.get(f)).forEach((m) -> {
-            messages.add(m);
+        
+        futures.stream().forEach((f) -> {
+            messages.add(matcher.get(f));
         });
+        
+//        for(Future<?> f : futures) {
+//            messages.add(matcher.get(f));
+//        }
+        
         Postman.serializeMessages(messages);
     }
 

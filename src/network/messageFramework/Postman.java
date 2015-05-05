@@ -136,6 +136,20 @@ public class Postman {
                                     "Serialisation error: sender have been unregistered. Message is lost");
                 }
             });
+            
+//            for(Message m : messages) {
+//               AbstractSender sender = senders.get(m.getSenderId());
+//                if(sender != null && m.shouldBeSavedIfNotExecuted() && sender instanceof AbstractSerializableSender) {
+//                    ((AbstractSerializableSender)sender).beforeSerialisation();
+//                    mapToSerialized.put(m,sender);
+//                }
+//                else {
+//                    Logger.getLogger(DeliverySystem.class.getName())
+//                            .log(Level.SEVERE,
+//                                    "Serialisation error: sender have been unregistered. Message is lost");
+//                } 
+//            }
+            
             oos.writeObject(mapToSerialized);
         } catch (IOException ex) {
             Logger.getLogger(DeliverySystem.class.getName()).log(Level.SEVERE, "Serialisation error", ex);
@@ -172,6 +186,20 @@ public class Postman {
                 m.setSenderId(sender.getSenderId());
                 sendMessage(m);
             });
+            
+//            for(Message m : map.keySet()) {
+//                AbstractSerializableSender sender = (AbstractSerializableSender) map.get(m);
+//                Object pendingActions = sender.getPendingAction();
+//                sender = sender.getSingletonSender();
+//                sender.setPendingAction(pendingActions);
+//                sender.afterDeserialisation();
+//                if(!isSenderRegistered(sender.getSenderId())) {
+//                    registerSender(sender);
+//                }
+//                m.setSenderId(sender.getSenderId());
+//                sendMessage(m);
+//            }
+            
             file.delete();
         } catch (IOException
                 |ClassNotFoundException
