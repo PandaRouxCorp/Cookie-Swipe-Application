@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="cookieSwipeButtonValidate" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeLabelNameAcountMail" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeLabelMailAddress" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeLabelPasswordAccountMail" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="cookieSwipeTextFieldNameAcountMail" max="32767" attributes="0"/>
+                          <Component id="cookieSwipeTextFieldMailAddress" max="32767" attributes="0"/>
+                          <Component id="cookieSwipePasswordFieldPasswordAccountMail" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
+                      <Component id="cookieSwipeButtonCancel" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace pref="123" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="cookieSwipeTextFieldNameAcountMail" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeLabelNameAcountMail" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="cookieSwipeTextFieldMailAddress" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeLabelMailAddress" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="cookieSwipePasswordFieldPasswordAccountMail" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeLabelPasswordAccountMail" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="cookieSwipeButtonValidate" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeButtonCancel" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="48" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="view.component.CookieSwipeLabel" name="cookieSwipeLabelNameAcountMail">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Nom de la boite courriel :"/>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeLabel" name="cookieSwipeLabelMailAddress">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Adresse courriel :"/>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeLabel" name="cookieSwipeLabelPasswordAccountMail">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Mot de passe :"/>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeTextField" name="cookieSwipeTextFieldNameAcountMail">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="xyz"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cookieSwipeTextFieldNameAcountMailActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="view.component.CookieSwipeTextField" name="cookieSwipeTextFieldMailAddress">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="xyz@mail.com"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cookieSwipeTextFieldMailAddressActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="view.component.CookieSwipePasswordField" name="cookieSwipePasswordFieldPasswordAccountMail">
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonValidate">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Valider"/>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonCancel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Annuler"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

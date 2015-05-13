@@ -11,7 +11,11 @@ import interfaces.IJFrame;
 import module.ActionManageCSAccount;
 import module.ActionManageEchange;
 import module.ActionManageMailAccount;
+import view.AccountCSFrame;
+import view.AcountMailCSFrame;
+import view.MailCSFrame;
 import view.MainJFrame;
+import view.component.CookieSwipeFrame;
 
 /**
  * Point de démarage de l'application servant de controlleur pour le moment
@@ -26,7 +30,11 @@ public class CookieSwipeApplication {
         // TODO code application logic here
          
         //IJFrame j = new MainJFrame();
-        Dispatcher dispatcher = Dispatcher.getInstance();
+        //CookieSwipeFrame accountMail = new AcountMailCSFrame();
+        //CookieSwipeFrame accountCS = new AccountCSFrame();
+        CookieSwipeFrame mail = new MailCSFrame();
+        
+        //Dispatcher dispatcher = Dispatcher.getInstance();
         /*j.setVisible(true);
         ActionManageCSAccount CSAccount = new ActionManageCSAccount(dispatcher,j );
         ActionManageMailAccount mailAccount = new ActionManageMailAccount(j, dispatcher);
