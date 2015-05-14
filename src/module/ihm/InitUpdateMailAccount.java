@@ -6,10 +6,12 @@
 
 package module.ihm;
 
+import controller.ActionName;
 import controller.Dispatcher;
 import interfaces.IActionIHM;
 import java.util.HashMap;
 import javax.swing.JButton;
+import view.component.CookieSwipeButton;
 
 /**
  *
@@ -39,11 +41,13 @@ public class InitUpdateMailAccount implements IActionIHM{
 
 
    @Override
-    public void execute() {
-        JButton jButtonCreateMailAccount = (JButton) hsJFrameComponent.get("jButtonValideMailAccount");
-        jButtonCreateMailAccount.setText("Modifier");
-        jButtonCreateMailAccount.addActionListener(dispatcher.getListener());
-        jButtonCreateMailAccount.setActionCommand("createMailAccount");
+    public boolean execute() {
+        CookieSwipeButton button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonValidate");
+        button.setText("Modifier");
+        button.addActionListener(dispatcher.getListener());
+        button.setActionCommand(ActionName.udpateMailAccount);
+    
+        return true;
     }
    
     private static class InitUpdateMailAccountHolder {

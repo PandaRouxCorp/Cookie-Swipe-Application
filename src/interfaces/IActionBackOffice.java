@@ -19,5 +19,5 @@ public interface IActionBackOffice {
         
     public void setUser(User user);
     
-    public void execute();
+    public boolean execute();
 }

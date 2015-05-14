@@ -25,7 +25,7 @@ public class AccountCSFrame extends CookieSwipeFrame implements IJFrame{
         initComponents();
         this.pack();
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
         this.setVisible(true);
         hsJcomponents.put("cookieSwipeButtonCancel", cookieSwipeButtonCancel);
         hsJcomponents.put("cookieSwipeButtonValidate", cookieSwipeButtonValidate);

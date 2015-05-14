@@ -9,12 +9,8 @@ package module.ihm;
 import controller.ActionName;
 import controller.Dispatcher;
 import interfaces.IActionIHM;
-import interfaces.IJFrame;
 import java.util.HashMap;
-import javax.swing.JButton;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import view.component.CookieSwipeButton;
 
 /**
  *
@@ -38,45 +34,50 @@ public class InitMainFrame implements IActionIHM{
     }
 
     @Override
-    public void execute() {
-        JMenuBar menubar = (JMenuBar) hsJFrameComponent.get("JMenuBarMainFrame");
-        JMenu menuManageCSAccount = new JMenu("Mon compte");
+    public boolean execute() {
         
-        JMenuItem updateCSAccount = new JMenuItem("Modifier mon compte");
-        updateCSAccount.addActionListener(dispatcher.getListener());
-        updateCSAccount.setActionCommand(ActionName.updateAccount);
+        CookieSwipeButton button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonUpdateCSAccount");
+        button.setActionCommand(ActionName.updateAccount);
+        button.addActionListener(dispatcher.getListener());
         
-        JMenuItem logout = new JMenuItem("Me deconnecter");
-        logout.addActionListener(dispatcher.getListener());
-        logout.setActionCommand(ActionName.logout);
+        button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonLogout");
+        button.setActionCommand(ActionName.logout);
+        button.addActionListener(dispatcher.getListener());
         
-        menuManageCSAccount.add(updateCSAccount);
-        menuManageCSAccount.add(logout);
-        menubar.add(menuManageCSAccount);
-                
-        JMenu menuManageMailAccount = new JMenu("Gèrer compte courriel");
+        button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonAddMailAccount");
+        button.setActionCommand(ActionName.addMailAccount);
+        button.addActionListener(dispatcher.getListener());
         
-        JMenuItem addMailAccount = new JMenuItem("Ajouter un compte courriel");
-        addMailAccount.setActionCommand(ActionName.addMailAccount);
-        addMailAccount.addActionListener(dispatcher.getListener());
+        button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonUpdateMailAccount");
+        button.setActionCommand(ActionName.udpateMailAccount);
+        button.addActionListener(dispatcher.getListener());
         
-        JMenuItem updateMailAccount = new JMenuItem("Modifier un compte courriel");
-        updateMailAccount.setActionCommand(ActionName.udpateMailAccount);
-        updateMailAccount.addActionListener(dispatcher.getListener());
+        button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonDeleteMailAccount");
+        button.setActionCommand(ActionName.deleteMailAccount);
+        button.addActionListener(dispatcher.getListener());
         
-        JMenuItem deleteMaiLAccount = new JMenuItem("Supprimer un compte courriel");
-        deleteMaiLAccount.setActionCommand(ActionName.deleteMailAccount);
-        deleteMaiLAccount.addActionListener(dispatcher.getListener());
         
-        menuManageMailAccount.add(addMailAccount);
-        menuManageMailAccount.add(updateMailAccount);
-        menuManageMailAccount.add(deleteMaiLAccount);
-        menubar.add(menuManageMailAccount);
+        button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonNewMail");
+        button.setActionCommand(ActionName.writeMail);
+        button.addActionListener(dispatcher.getListener());
         
-        JButton send = new JButton("Nouveau courriel");
-        send.addActionListener(dispatcher.getListener());
-        send.setActionCommand("newMail");
-        menubar.add(send);
+        
+        button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonAnswer");
+        button.setActionCommand(ActionName.answerMail);
+        button.addActionListener(dispatcher.getListener());
+        
+        
+        button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonDeleteMail");
+        button.setActionCommand(ActionName.deleteMail);
+        button.addActionListener(dispatcher.getListener());
+        
+        
+        button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonForward");
+        button.setActionCommand(ActionName.forwardMail);
+        button.addActionListener(dispatcher.getListener());
+        
+        
+        return true;
              
     }
    

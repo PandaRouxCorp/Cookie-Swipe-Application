@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="cookieSwipeButtonNewMail" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
+                      <Component id="cookieSwipeButtonAnswer" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
+                      <Component id="cookieSwipeButtonForward" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="cookieSwipeButtonDeleteMail" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="338" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jScrollPane1" min="-2" pref="195" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jScrollPane2" min="-2" pref="599" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="cookieSwipeButtonLogout" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
+                              <Component id="cookieSwipeButtonUpdateCSAccount" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="cookieSwipeButtonAddMailAccount" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="cookieSwipeButtonUpdateMailAccount" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="cookieSwipeButtonDeleteMailAccount" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace pref="22" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="cookieSwipeButtonLogout" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cookieSwipeButtonUpdateCSAccount" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="cookieSwipeButtonAddMailAccount" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeButtonUpdateMailAccount" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeButtonDeleteMailAccount" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="40" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="cookieSwipeButtonNewMail" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeButtonAnswer" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeButtonForward" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cookieSwipeButtonDeleteMail" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="jScrollPane2" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="456" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JList" name="jListMail">
+          <Properties>
+            <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
+              <StringArray count="5">
+                <StringItem index="0" value="Item 1"/>
+                <StringItem index="1" value="Item 2"/>
+                <StringItem index="2" value="Item 3"/>
+                <StringItem index="3" value="Item 4"/>
+                <StringItem index="4" value="Item 5"/>
+              </StringArray>
+            </Property>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="view.component.CookieSwipeTree" name="cookieSwipeTreeAcountMail">
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonNewMail">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Nouveau courriel"/>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonAnswer">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="R&#xe9;pondre"/>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonForward">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Transf&#xe9;rer"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cookieSwipeButtonForwardActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonDeleteMail">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Supprimer"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cookieSwipeButtonDeleteMailActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButton1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="cookieSwipeButton1"/>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonLogout">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="D&#xe9;conexion"/>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonUpdateCSAccount">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Modifer mon compte"/>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonAddMailAccount">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Nouveau compte courriel"/>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonUpdateMailAccount">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Modifier un compte courriel"/>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonDeleteMailAccount">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Supprimer un comtpe courriel"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

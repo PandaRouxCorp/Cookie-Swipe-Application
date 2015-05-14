@@ -3,31 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package module.ihm;
 
 import controller.ActionName;
 import controller.Dispatcher;
 import interfaces.IActionIHM;
-import interfaces.IJFrame;
 import java.util.HashMap;
-import javax.swing.JButton;
 import view.component.CookieSwipeButton;
 
 /**
  *
  * @author Lucas
  */
-public class InitAddMailAccount implements IActionIHM{
-    
+public class InitWriteMail implements IActionIHM {
+
     private Dispatcher dispatcher;
     private HashMap<String, Object> hsJFrameComponent;
-    
-    private InitAddMailAccount() {
+
+    private InitWriteMail() {
     }
-    
-    public static InitAddMailAccount getInstance() {
-        return InitAddMailAccountHolder.INSTANCE;
+
+    public static InitWriteMail getInstance() {
+        return InitWriteMailHolder.INSTANCE;
     }
 
     @Override
@@ -40,21 +37,17 @@ public class InitAddMailAccount implements IActionIHM{
         this.hsJFrameComponent = hsJComponant;
     }
 
-
     @Override
     public boolean execute() {
-    
-        CookieSwipeButton button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonValidate");
-        button.setText("Créer");
-        button.setActionCommand(ActionName.createMailAccount);
+        CookieSwipeButton button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonSend");
+        button.setActionCommand(ActionName.sendMail);
         button.addActionListener(dispatcher.getListener());
         
         return true;
-    
     }
-    
-    private static class InitAddMailAccountHolder {
 
-        private static final InitAddMailAccount INSTANCE = new InitAddMailAccount();
+    private static class InitWriteMailHolder {
+
+        private static final InitWriteMail INSTANCE = new InitWriteMail();
     }
 }

@@ -24,7 +24,7 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
         initComponents();
         this.pack();
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
         this.setVisible(true);
         hsJcomponents.put("cookieSwipeButtonSend", cookieSwipeButtonSend);
         hsJcomponents.put("cookieSwipeLabelCc", cookieSwipeLabelCc);

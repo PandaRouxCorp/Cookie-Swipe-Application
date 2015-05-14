@@ -19,6 +19,6 @@ public interface IActionIHM {
     
     public void setJComponent(HashMap<String, Object> hsJComponant);
     
-    public void execute();
+    public boolean execute();
     
 }
