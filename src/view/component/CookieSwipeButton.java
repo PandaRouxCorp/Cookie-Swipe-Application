@@ -3,7 +3,6 @@ package view.component;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
-import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.border.Border;

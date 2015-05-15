@@ -9,8 +9,6 @@ import controller.ActionName;
 import controller.Dispatcher;
 import interfaces.IActionIHM;
 import java.util.HashMap;
-import javax.swing.Action;
-import javax.swing.JButton;
 import view.component.CookieSwipeButton;
 
 /**

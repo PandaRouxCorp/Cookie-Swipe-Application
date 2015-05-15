@@ -37,6 +37,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponent.put("cookieSwipeButtonLogout", cookieSwipeButtonLogout);
         hsJcomponent.put("cookieSwipeButtonUpdateCSAccount", cookieSwipeButtonUpdateCSAccount);
         hsJcomponent.put("cookieSwipeButtonUpdateMailAccount", cookieSwipeButtonUpdateMailAccount);
+        hsJcomponent.put("cookieSwipeTreeAcountMail", cookieSwipeTreeAcountMail);
         hsJcomponent.put("jListMail", jListMail);
     }
 
@@ -67,7 +68,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jListMail.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Devenez un panda gratuitement !", "Save the firefox", "Alpha Cookie Swipe", };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
