@@ -10,8 +10,6 @@ import interfaces.IActionIHM;
 import interfaces.IJFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import model.User;
 import module.ihm.InitAddMailAccount;
 import module.ihm.InitMainFrame;
@@ -66,7 +64,6 @@ public class Dispatcher {
     private Dispatcher() {
 
         user = new User();
-        user.setId(1);
         this.mainFrame = new LoginJFrame();
         IActionIHM initLoginFrame = InitLoginFrame.getInstance();
         initLoginFrame.setDispatcher(this);
@@ -83,9 +80,6 @@ public class Dispatcher {
         private static final Dispatcher INSTANCE = new Dispatcher();
     }
 
-    //ActionManageMailAccount manager = new ActionManageMailAccount(this);
-    //public Dispatcher()
-    //La j'ai mon dispatcher, c'est lui qui va lancer les méthodes qui corresponde au différent bouton de l'application
     public ActionListener getListener() {
         return new ActionListener() {
 
@@ -115,6 +109,7 @@ public class Dispatcher {
                     IActionIHM initMainFrame = InitMainFrame.getInstance();
                     initMainFrame.setDispatcher(this);
                     initMainFrame.setJComponent(mainFrame.getJComponent());
+                    initMainFrame.setUser(user);
                     initMainFrame.execute();
                 }
 

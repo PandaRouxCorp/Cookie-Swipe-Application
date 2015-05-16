@@ -63,14 +63,15 @@ public class DAODomaine {
                     System.err.println(e.getMessage());
                 }
             }
-            if ( connectionInstance != null ) {
-                try {
-                    /* Et enfin on ferme la connexion */
-                    connectionInstance.close();
-                } catch ( SQLException e ) {
-                    System.err.println(e.getMessage());
-                }
-            }
+//            On ne peux pas fermer un singleton
+//            if ( connectionInstance != null ) {
+//                try {
+//                    /* Et enfin on ferme la connexion */
+//                    connectionInstance.close();
+//                } catch ( SQLException e ) {
+//                    System.err.println(e.getMessage());
+//                }
+//            }
         }
         return false;
     }
@@ -114,14 +115,15 @@ public class DAODomaine {
                     System.err.println(e.getMessage());
                 }
             }
-            if ( connectionInstance != null ) {
-                try {
-                    /* Et enfin on ferme la connexion */
-                    connectionInstance.close();
-                } catch ( SQLException e ) {
-                    System.err.println(e.getMessage());
-                }
-            }
+//            On ne peux pas fermer un singleton
+//            if ( connectionInstance != null ) {
+//                try {
+//                    /* Et enfin on ferme la connexion */
+//                    connectionInstance.close();
+//                } catch ( SQLException e ) {
+//                    System.err.println(e.getMessage());
+//                }
+//            }
         }
         return false;
     }

@@ -8,6 +8,7 @@ package interfaces;
 
 import controller.Dispatcher;
 import java.util.HashMap;
+import model.User;
 
 /**
  *
@@ -18,6 +19,8 @@ public interface IActionIHM {
     public void setDispatcher(Dispatcher dispatcher);
     
     public void setJComponent(HashMap<String, Object> hsJComponant);
+    
+    public void setUser(User user);
     
     public boolean execute();
     

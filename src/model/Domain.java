@@ -18,7 +18,6 @@ public class Domain {
     //Variable membre
     private String name, address, serverIn, serverOut, portIn, portOut;
     private int id;
-        
     //Constructeur
     
     /**

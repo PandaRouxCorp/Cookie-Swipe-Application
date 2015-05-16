@@ -12,12 +12,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
 import javax.swing.JList;
-import javax.swing.JTree;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import model.MailAccount;
+import model.User;
 import view.component.CookieSwipeButton;
 import view.component.CookieSwipeTree;
 
@@ -29,6 +29,7 @@ public class InitMainFrame implements IActionIHM {
 
     private HashMap<String, Object> hsJFrameComponent;
     private Dispatcher dispatcher;
+    private User user;
 
     private InitMainFrame() {
     }
@@ -45,38 +46,51 @@ public class InitMainFrame implements IActionIHM {
     @Override
     public boolean execute() {
 
-        JList list = (JList) hsJFrameComponent.get("jListMail");
-        list.addListSelectionListener(new ListSelectionListener() {
+        initMail();
+        initMailAccount();
+        initButton();
 
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                displayMailButton();
-            }
-        });
-        
-        
+        return true;
+
+    }
+
+    @Override
+    public void setJComponent(HashMap<String, Object> hsJComponant) {
+        this.hsJFrameComponent = hsJComponant;
+    }
+
+    @Override
+    public void setDispatcher(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    private void initMailAccount() {
 
         DefaultMutableTreeNode myRoot = new DefaultMutableTreeNode("Tous");
 
 // Construction des différents noeuds de l'arbre.
-        DefaultMutableTreeNode mailAccount = new DefaultMutableTreeNode("panda.roux.corp@gmail.com");
-        myRoot.add(mailAccount);
+        DefaultMutableTreeNode item = null;
+        DefaultMutableTreeNode folder = null ;
+        
+        for (MailAccount mailAccount : user.getListOfMailAccount()) {
+            folder = new DefaultMutableTreeNode(mailAccount.getCSName());
 
-        DefaultMutableTreeNode folder = new DefaultMutableTreeNode("Boite de réception");
-        mailAccount.add(folder);
-        folder = new DefaultMutableTreeNode("Boite d'envoie");
-        mailAccount.add(folder);
-        folder = new DefaultMutableTreeNode("Corbeille");
-        mailAccount.add(folder);
+            item = new DefaultMutableTreeNode("Boite de réception");
+            folder.add(item);
+            item = new DefaultMutableTreeNode("Boite d'envoie");
+            folder.add(item);
+            item = new DefaultMutableTreeNode("Corbeille");
+            folder.add(item);
 
-        mailAccount = new DefaultMutableTreeNode("panda.developpeur@gmail.com");
-        myRoot.add(mailAccount);
-        folder = new DefaultMutableTreeNode("Boite de réception");
-        mailAccount.add(folder);
-        folder = new DefaultMutableTreeNode("Boite d'envoie");
-        mailAccount.add(folder);
-        folder = new DefaultMutableTreeNode("Corbeille");
-        mailAccount.add(folder);
+            myRoot.add(folder);
+
+
+        }
 
 // Construction du modèle de l'arbre.
         DefaultTreeModel myModel = new DefaultTreeModel(myRoot);
@@ -120,7 +134,9 @@ public class InitMainFrame implements IActionIHM {
             public void mouseExited(MouseEvent e) {
             }
         });
+    }
 
+    private void initButton() {
         CookieSwipeButton button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonUpdateCSAccount");
         button.setActionCommand(ActionName.updateAccount);
         button.addActionListener(dispatcher.getListener());
@@ -159,18 +175,19 @@ public class InitMainFrame implements IActionIHM {
 
         hiddeMailAccountButton();
         hiddeMailButton();
-        return true;
 
     }
 
-    @Override
-    public void setJComponent(HashMap<String, Object> hsJComponant) {
-        this.hsJFrameComponent = hsJComponant;
-    }
+    private void initMail() {
+        JList list = (JList) hsJFrameComponent.get("jListMail");
+        list.addListSelectionListener(new ListSelectionListener() {
 
-    @Override
-    public void setDispatcher(Dispatcher dispatcher) {
-        this.dispatcher = dispatcher;
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                displayMailButton();
+            }
+        });
+
     }
 
     private void displayMailAccountButton() {

@@ -9,6 +9,7 @@ import controller.ActionName;
 import controller.Dispatcher;
 import interfaces.IActionIHM;
 import java.util.HashMap;
+import model.User;
 import view.component.CookieSwipeButton;
 
 /**
@@ -19,6 +20,7 @@ public class InitLoginFrame implements IActionIHM {
 
     private Dispatcher dispatcher;
     private HashMap<String, Object> hsJcomponent;
+    private User user;
 
     private InitLoginFrame() {
     }
@@ -37,6 +39,11 @@ public class InitLoginFrame implements IActionIHM {
         this.hsJcomponent = hsJComponant;
     }
 
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
     @Override
     public boolean execute() {
         CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonLogin");

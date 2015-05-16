@@ -9,6 +9,7 @@ import controller.ActionName;
 import controller.Dispatcher;
 import interfaces.IActionIHM;
 import java.util.HashMap;
+import model.User;
 import view.component.CookieSwipeButton;
 
 /**
@@ -19,6 +20,7 @@ public class InitWriteMail implements IActionIHM {
 
     private Dispatcher dispatcher;
     private HashMap<String, Object> hsJFrameComponent;
+    private User user;
 
     private InitWriteMail() {
     }
@@ -38,11 +40,16 @@ public class InitWriteMail implements IActionIHM {
     }
 
     @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
     public boolean execute() {
         CookieSwipeButton button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonSend");
         button.setActionCommand(ActionName.sendMail);
         button.addActionListener(dispatcher.getListener());
-        
+
         return true;
     }
 

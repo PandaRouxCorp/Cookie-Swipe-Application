@@ -8,8 +8,12 @@ package module.backoffice;
 import controller.Dispatcher;
 import interfaces.IActionBackOffice;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 import model.User;
 import view.MainCSFrame;
+import view.component.CookieSwipeLabel;
+import view.component.CookieSwipePasswordField;
+import view.component.CookieSwipeTextField;
 
 /**
  *
@@ -40,7 +44,20 @@ public class LoginAccount implements IActionBackOffice {
 
     @Override
     public boolean execute() {
-        
+
+        System.err.println(user);
+
+        CookieSwipeTextField textField = (CookieSwipeTextField) hsJcomponent.get("cookieSwipeTextFieldLogin");
+        user.setLoginAdressMail(textField.getText());
+        CookieSwipePasswordField passwordField = (CookieSwipePasswordField) hsJcomponent.get("cookieSwipePasswordFieldPassword");
+        user.setPassword(new String(passwordField.getPassword()));
+
+        if (user.connect() == null) {
+            new JOptionPane().showMessageDialog(null, "Connexion impossible, merci de vérifier votre login",
+                    "Connexion à Cookie Swipe", JOptionPane.ERROR_MESSAGE);
+            return false; 
+        }
+        System.err.println(user);
         return true;
     }
 

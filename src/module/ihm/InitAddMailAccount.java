@@ -12,6 +12,7 @@ import interfaces.IActionIHM;
 import interfaces.IJFrame;
 import java.util.HashMap;
 import javax.swing.JButton;
+import model.User;
 import view.component.CookieSwipeButton;
 
 /**
@@ -22,6 +23,7 @@ public class InitAddMailAccount implements IActionIHM{
     
     private Dispatcher dispatcher;
     private HashMap<String, Object> hsJFrameComponent;
+    private User user;
     
     private InitAddMailAccount() {
     }
@@ -40,6 +42,10 @@ public class InitAddMailAccount implements IActionIHM{
         this.hsJFrameComponent = hsJComponant;
     }
 
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public boolean execute() {

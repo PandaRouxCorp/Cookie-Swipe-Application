@@ -9,6 +9,7 @@ package module.ihm;
 import controller.Dispatcher;
 import interfaces.IActionIHM;
 import java.util.HashMap;
+import model.User;
 
 /**
  *
@@ -18,6 +19,7 @@ public class InitUpdateAccountCS implements IActionIHM{
     
     private Dispatcher dispatcher;
     private HashMap<String, Object> hsJcomponent;
+    private User user;
 
     private InitUpdateAccountCS() {
     }
@@ -36,6 +38,11 @@ public class InitUpdateAccountCS implements IActionIHM{
         this.hsJcomponent = hsJComponant;
     }
 
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
     @Override
     public boolean execute() {
         
