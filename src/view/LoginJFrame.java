@@ -7,6 +7,7 @@ package view;
 
 import interfaces.IJFrame;
 import java.util.HashMap;
+import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeFrame;
 
 /**

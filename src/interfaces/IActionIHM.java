@@ -22,6 +22,6 @@ public interface IActionIHM {
     
     public void setUser(User user);
     
-    public boolean execute();
+    public boolean execute(Object ... object);
     
 }

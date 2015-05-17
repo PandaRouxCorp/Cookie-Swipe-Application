@@ -43,20 +43,7 @@ public class MailAccount extends Address {
      * @param color couleur donné à la boite courriel pour l'affichage des
      * courriels
      */
-    public MailAccount(String CSName, String address, String password, String color) {
-
-        String mailDomain = address.substring(address.indexOf('@') + 1);
-        domain = new Domain(mailDomain);
-        this.CSName = CSName;
-        this.address = address;
-        try {
-            this.password = new Encryption().encrypt(password);
-        } catch (Exception ex) {
-            Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.color = color;
-    }
-
+    
     public MailAccount(String CSName, String address, Domain domain, String password, String color) {
 
         this.CSName = CSName;
@@ -259,7 +246,7 @@ public class MailAccount extends Address {
 
     @Override
     public String toString() {
-        return "MailAccount{" + "id=" + id + ", address=" + address + ", CSName=" + CSName + ", password=" + password + ", color=" + color + ", mailSignature=" + mailSignature + ", domain=" + domain + ", lastSynch=" + lastSynch + ", listOfmail=" + listOfmail + '}';
+        return CSName;
     }
 
 }

@@ -48,7 +48,7 @@ public class InitAddMailAccount implements IActionIHM{
     }
 
     @Override
-    public boolean execute() {
+    public boolean execute(Object ... object) {
     
         CookieSwipeButton button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonValidate");
         button.setText("Créer");

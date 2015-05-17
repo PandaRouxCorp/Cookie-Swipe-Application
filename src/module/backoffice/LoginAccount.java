@@ -43,13 +43,12 @@ public class LoginAccount implements IActionBackOffice {
     }
 
     @Override
-    public boolean execute() {
-
-        System.err.println(user);
+    public boolean execute(Object ... object) {
 
         CookieSwipeTextField textField = (CookieSwipeTextField) hsJcomponent.get("cookieSwipeTextFieldLogin");
-        user.setLoginAdressMail(textField.getText());
         CookieSwipePasswordField passwordField = (CookieSwipePasswordField) hsJcomponent.get("cookieSwipePasswordFieldPassword");
+        
+        user.setLoginAdressMail(textField.getText()); 
         user.setPassword(new String(passwordField.getPassword()));
 
         if (user.connect() == null) {
@@ -57,7 +56,6 @@ public class LoginAccount implements IActionBackOffice {
                     "Connexion à Cookie Swipe", JOptionPane.ERROR_MESSAGE);
             return false; 
         }
-        System.err.println(user);
         return true;
     }
 

@@ -44,7 +44,7 @@ public class InitUpdateAccountCS implements IActionIHM{
     }
     
     @Override
-    public boolean execute() {
+    public boolean execute(Object ... object) {
         
         return true;
     }

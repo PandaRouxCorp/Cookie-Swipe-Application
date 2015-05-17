@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package model;
 
 import java.util.Objects;
@@ -11,73 +10,23 @@ import javax.swing.JOptionPane;
 
 /**
  * Domaine d'une adresse courriel
+ *
  * @author Mary
  */
 public class Domain {
-    
+
     //Variable membre
     private String name, address, serverIn, serverOut, portIn, portOut;
     private int id;
     //Constructeur
-    
+
     /**
      * Constructeur par défaut
      */
-    public Domain(){
-        
-    }
-    
-    public Domain(String domain) throws NullPointerException{
-        System.err.println(domain);
-        id = 1;
-        switch(domain){
-            case "yahoo.fr" :
-                name = "Yahoo!";
-                address = domain;
-                serverIn = "pop.mail.yahoo.fr";
-                portIn = "995";
-                serverOut = "smtp.mail.yahoo.fr";
-                portOut = "465";
-                break;
-            case "hotmail.com" :
-            case "hotmail.fr" :
-            case "live.com" :
-            case "live.fr" :
-            case "msn.com" :
-            case "outlook.com" :
-                name = "Hotmail";
-                address = domain;
-                serverIn = "pop3.live.com";
-                portIn = "995";
-                serverOut = "smtp.live.com";
-                portOut = "587";
-                break;
-            case "orange.fr" :
-            case "wanadoo.fr" :
-                name = "";
-                address = domain;
-                serverIn = "";
-                portIn = "";
-                serverOut = "";
-                portOut = "";
-                break;
-            case "gmail.com" :
-                name = "Gmail";
-                address = domain;
-                serverIn = "imap.gmail.com";
-                portIn = "993";
-                serverOut = "smtp.gmail.com";
-                portOut = "465";
-                break;
-            default:
-                JOptionPane.showMessageDialog(null, "Domaine inconnu", 
-                    "Ajout d'un nouveau compte mail", JOptionPane.ERROR_MESSAGE);
-                throw new NullPointerException("Domain unknow");
+    public Domain() {
 
-        }
     }
 
-    
     public Domain(String name, String address, String serverIn, String serverOut, String portIn, String portOut) {
         this.name = name;
         this.address = address;
@@ -96,30 +45,27 @@ public class Domain {
         this.portOut = portOut;
         this.id = id;
     }
-    
 
     //Fonction membre publique
-    
     /**
      * Sert à envoyer un courriel
+     *
      * @param mail courriel à envoyer
      * @return Si l'envoi c'est bien passé
      */
-    public boolean sendMail(Mail mail){
+    public boolean sendMail(Mail mail) {
         return false;
     }
-    
-    //Getter & setter
 
-    
-    public String getName(){
+    //Getter & setter
+    public String getName() {
         return name;
     }
-    
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getAddress() {
         return address;
     }
@@ -167,9 +113,8 @@ public class Domain {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     //Equals & hashCode
-    
     @Override
     public int hashCode() {
         int hash = 5;
@@ -182,7 +127,7 @@ public class Domain {
         if (obj == null) {
             return false;
         }
-        if(this == obj){
+        if (this == obj) {
             return true;
         }
         if (getClass() != obj.getClass()) {
@@ -190,6 +135,11 @@ public class Domain {
         }
         final Domain other = (Domain) obj;
         return Objects.equals(this.name, other.name);
-    } 
+    }
+
+    @Override
+    public String toString() {
+        return "Domain{" + "name=" + name + ", address=" + address + ", serverIn=" + serverIn + ", serverOut=" + serverOut + ", portIn=" + portIn + ", portOut=" + portOut + ", id=" + id + '}';
+    }
 
 }

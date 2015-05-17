@@ -10,6 +10,7 @@ import interfaces.IActionIHM;
 import interfaces.IJFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import model.User;
 import module.ihm.InitAddMailAccount;
 import module.ihm.InitMainFrame;
@@ -36,6 +37,7 @@ public class Dispatcher {
 
     private IJFrame mainFrame, focusFrame;
     private User user;
+    private HashMap<String, Object> param = new HashMap<String, Object>();
 
     public IJFrame getMainFrame() {
         return mainFrame;
@@ -61,6 +63,10 @@ public class Dispatcher {
         this.user = user;
     }
 
+    public HashMap<String, Object> getParam(){
+        return param;
+    }
+    
     private Dispatcher() {
 
         user = new User();
@@ -208,7 +214,9 @@ public class Dispatcher {
                 IActionBackOffice createMailAccount = CreateMailAccount.getInstance();
                 createMailAccount.setUser(user);
                 createMailAccount.setJComponent(focusFrame.getJComponent());
-                createMailAccount.execute();
+                if(createMailAccount.execute()){
+                    focusFrame.dispose();
+                }
                 break;
             case ActionName.logout:
                 System.err.println(action);

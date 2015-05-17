@@ -96,10 +96,9 @@ public class DAOMailAccount {
      * @return si le chargement du compte courriel a bien réussi
      */
     public static boolean loadMailAccount(User user) {
-        System.err.println("Load mail");
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
-        String sql = "SELECT count(id), id, adresse, cookieswipename, domain, password, lastsync, mailsignature, color "
+        String sql = "SELECT id, adresse, cookieswipename, domain, password, lastsync, mailsignature, color "
                 + "FROM mailaccount "
                 + "WHERE user_id = ?";
         try {
@@ -111,14 +110,14 @@ public class DAOMailAccount {
 
             statementInstance = connectionInstance.prepareStatement(sql);
             statementInstance.setInt(1, user.getId());
-            System.err.println(user.getId());
-            ResultSet result = statementInstance.executeQuery(sql);
+            ResultSet result = statementInstance.executeQuery();
 
             boolean loadMailAccount = true;
-            MailAccount mailAccount = new MailAccount();
 
             while (result.next()) {
-                System.err.println("panda");
+                MailAccount mailAccount = new MailAccount();
+
+                mailAccount.setId(result.getInt("id"));
                 mailAccount.setAddress(result.getString("adresse"));
                 mailAccount.setCSName(result.getString("cookieswipename"));
                 mailAccount.setPassword(result.getString("password"));
@@ -126,7 +125,6 @@ public class DAOMailAccount {
                 mailAccount.setLastSynch(result.getDate("lastsync"));
                 mailAccount.setMailSignature(result.getString("mailsignature"));
                 mailAccount.getDomain().setId(result.getInt("domain"));
-
                 if (!loadDomail(mailAccount)) {
                     loadMailAccount = false;
                 }
@@ -177,7 +175,7 @@ public class DAOMailAccount {
             }
 
             statementInstance = connectionInstance.prepareStatement(request);
-            statementInstance.setInt(1, mailAccount.getId());
+            statementInstance.setInt(1, mailAccount.getDomain().getId());
 
             ResultSet result = statementInstance.executeQuery();
 
@@ -188,6 +186,7 @@ public class DAOMailAccount {
                 mailAccount.getDomain().setServerOut(result.getString("smtpaddr"));
                 mailAccount.getDomain().setPortIn(result.getString("portin"));
                 mailAccount.getDomain().setPortOut(result.getString("portout"));
+
                 return true;
             }
 

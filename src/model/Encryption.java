@@ -6,19 +6,12 @@
 package model;
 
 import java.io.UnsupportedEncodingException;
-import java.security.AlgorithmParameters;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 /**
@@ -26,11 +19,11 @@ import org.apache.commons.codec.binary.Base64;
  * @author 626
  */
 public class Encryption {
-    private static final String password = "panda";
-    private static String salt;
-    private static int pswdIterations = 65536  ;
-    private static int keySize = 128;
-    private byte[] ivBytes;
+    SecretKeySpec secret = null;
+
+    public void setSecret(String key) {
+        this.secret = new SecretKeySpec(key.getBytes(), "AES");
+    }
     
     /**
      * @param plainText
@@ -38,44 +31,14 @@ public class Encryption {
      * @throws Exception
      */
     public String encrypt(String plainText) throws Exception {   
-//        Passage en hash
-//        StringBuffer hash = new StringBuffer();
-//            try {
-//                MessageDigest md = MessageDigest.getInstance("SHA-512");
-//                md.update(("PandaRouxCorpProtegeVotreMdp" +password).getBytes("UTF-8"));
-//                byte[] digest = md.digest();
-//                for (int i = 0; i < digest.length; i++) {
-//                    hash.append(Integer.toString((digest[i] & 0xff) + 0x100, 16).substring(1));
-//                }
-//            }catch (NoSuchAlgorithmException ex) {
-//                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-//            } catch (UnsupportedEncodingException ex) {
-//                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            return new String(hash);
-        //get salt
-        salt = generateSalt();      
-        byte[] saltBytes = salt.getBytes("UTF-8");
-         
-        // Derive the key
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        PBEKeySpec spec = new PBEKeySpec(
-                password.toCharArray(), 
-                saltBytes, 
-                pswdIterations, 
-                keySize
-                );
- 
-        SecretKey secretKey = factory.generateSecret(spec);
-        SecretKeySpec secret = new SecretKeySpec(secretKey.getEncoded(), "AES");
- 
+        if(secret == null)
+            generateSecretKey();
+                    
         //encrypt the message
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, secret);
-        AlgorithmParameters params = cipher.getParameters();
-        ivBytes = params.getParameterSpec(IvParameterSpec.class).getIV();
         byte[] encryptedTextBytes = cipher.doFinal(plainText.getBytes("UTF-8"));
-        
+
         return new Base64().encodeBase64String(encryptedTextBytes);
     }
  
@@ -87,39 +50,29 @@ public class Encryption {
      */
     @SuppressWarnings("static-access")
     public String decrypt(String encryptedText) throws Exception {
+        if(secret == null)
+            generateSecretKey();
+        
+        byte[] encryptedTextBytes = new Base64().decode(encryptedText);
 
-        byte[] saltBytes = salt.getBytes("UTF-8");
-        byte[] encryptedTextBytes = new Base64().decodeBase64(encryptedText);
-
-        // Derive the key
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        PBEKeySpec spec = new PBEKeySpec(
-                password.toCharArray(),
-                saltBytes,
-                pswdIterations,
-                keySize
-        );
-
-        SecretKey secretKey = factory.generateSecret(spec);
-        SecretKeySpec secret = new SecretKeySpec(secretKey.getEncoded(), "AES");
-
-        // Decrypt the message
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(ivBytes));
-
-        byte[] decryptedTextBytes = null;
-        try {
-            decryptedTextBytes = cipher.doFinal(encryptedTextBytes);
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        }
-
-        return new String(decryptedTextBytes);
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, secret);    
+        byte[] decryptedTextBytes = cipher.doFinal(encryptedTextBytes);
+        
+        return new String(decryptedTextBytes,"UTF-8");
     }
-
-    public String generateSalt() {
-        return "PandaRouxCorp";
+ 
+    public void generateSecretKey() {
+        try {
+            String specificCryptKey = "zertfghzbenrfzer65z+er56365zr45ze4rz4er534z65rzrz53er4135a456r4az4er34z56er42df13z4er564é6z5r4zer4";
+            MessageDigest shahash = MessageDigest.getInstance("SHA-1");
+            byte[] key = shahash.digest(specificCryptKey.getBytes("UTF-8"));
+            key = Arrays.copyOf(key,  16);
+            secret = new SecretKeySpec(key, "AES");
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Encryption.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Encryption.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

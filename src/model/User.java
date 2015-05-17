@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  * Utilisateur de l'application Cookie Swipe Peut être un singleton ?
@@ -120,7 +119,7 @@ public class User {
 
         switch (mailDomain) {
             case "yahoo.fr":
-                domain = new Domain("Yahoo", mailDomain, "pop.mail.yahoo.fr", "995", "smtp.mail.yahoo.fr", "465");
+                domain = new Domain("Yahoo", mailDomain, "pop.mail.yahoo.fr", "995", "smtp.mail.yahoo.fr", "465", 1);
                 break;
             case "hotmail.com":
             case "hotmail.fr":
@@ -128,20 +127,19 @@ public class User {
             case "live.fr":
             case "msn.com":
             case "outlook.com":
-                domain = new Domain("Microsoft", mailDomain, "pop3.live.com", "995", "smtp.live.com", "587");
+                domain = new Domain("Microsoft", mailDomain, "pop3.live.com", "995", "smtp.live.com", "587", 2);
                 break;
             case "orange.fr":
             case "wanadoo.fr":
-                domain = new Domain("Orange", mailDomain, "", "", "", "");
+                domain = new Domain("Orange", mailDomain, "", "", "", "", 3);
                 break;
             case "gmail.com":
-                domain = new Domain("Google", mailDomain, "imap.gmail.com", "993", "smtp.gmail.com", "465");
+                domain = new Domain("Google", mailDomain, "imap.gmail.com", "993", "smtp.gmail.com", "465", 4);
                 break;
             default:
                 return false;
 
         }
-        domain.setId(4);
         MailAccount newMailAccount = new MailAccount(name, address, domain, password, "blue");
         res = DAOMailAccount.createMailAccount(newMailAccount, this);
         if (res) {
@@ -206,7 +204,11 @@ public class User {
     }
 
     public void setPassword(String password) {
-       this.password = password;
+        try {
+            this.password = new Encryption().encrypt(password);
+        } catch (Exception ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public String getBackupMail() {

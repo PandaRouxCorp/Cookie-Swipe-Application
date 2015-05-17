@@ -9,6 +9,7 @@ import interfaces.IActionBackOffice;
 import java.util.HashMap;
 import javax.mail.Address;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import model.User;
 
@@ -29,22 +30,20 @@ public class CreateMailAccount implements IActionBackOffice {
     }
 
     @Override
-    public boolean execute() {
+    public boolean execute(Object ... object) {
 
         String CSName = ((JTextField) hsJCompment.get("cookieSwipeTextFieldNameAcountMail")).getText();
         String mailAdress = ((JTextField) hsJCompment.get("cookieSwipeTextFieldMailAddress")).getText();
-        String password = ((JTextField) hsJCompment.get("cookieSwipePasswordFieldPasswordAccountMail")).getText();
+        String password = new String(((JPasswordField) hsJCompment.get("cookieSwipePasswordFieldPasswordAccountMail")).getPassword());
         if (user.addNewMailAccount(CSName, mailAdress, password)) {
             new JOptionPane().showMessageDialog(null, "Votre compte mail à bien été ajouté",
                     "Ajout d'un nouveau compte mail", JOptionPane.INFORMATION_MESSAGE);
         } else {
             new JOptionPane().showMessageDialog(null, "Une erreur est survenue lors de l'ajout de votre compte mail",
                     "Ajout d'un nouveau compte mail", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        for (Address a : user.getListOfMailAccount()) {
-            System.err.println(a);
-        }
-
+       
         return true;
     }
 

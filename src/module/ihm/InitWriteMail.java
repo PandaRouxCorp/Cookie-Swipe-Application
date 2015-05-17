@@ -45,7 +45,7 @@ public class InitWriteMail implements IActionIHM {
     }
 
     @Override
-    public boolean execute() {
+    public boolean execute(Object ... object) {
         CookieSwipeButton button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonSend");
         button.setActionCommand(ActionName.sendMail);
         button.addActionListener(dispatcher.getListener());

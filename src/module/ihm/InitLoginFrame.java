@@ -45,7 +45,7 @@ public class InitLoginFrame implements IActionIHM {
     }
     
     @Override
-    public boolean execute() {
+    public boolean execute(Object ... object) {
         CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonLogin");
         button.addActionListener(dispatcher.getListener());
         button.setActionCommand(ActionName.logAccount);

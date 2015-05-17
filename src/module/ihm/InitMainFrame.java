@@ -44,7 +44,7 @@ public class InitMainFrame implements IActionIHM {
     }
 
     @Override
-    public boolean execute() {
+    public boolean execute(Object... object) {
 
         initMail();
         initMailAccount();
@@ -75,10 +75,9 @@ public class InitMainFrame implements IActionIHM {
 
 // Construction des différents noeuds de l'arbre.
         DefaultMutableTreeNode item = null;
-        DefaultMutableTreeNode folder = null ;
-        
+        DefaultMutableTreeNode folder = null;
         for (MailAccount mailAccount : user.getListOfMailAccount()) {
-            folder = new DefaultMutableTreeNode(mailAccount.getCSName());
+            folder = new DefaultMutableTreeNode(mailAccount);
 
             item = new DefaultMutableTreeNode("Boite de réception");
             folder.add(item);
@@ -88,7 +87,6 @@ public class InitMainFrame implements IActionIHM {
             folder.add(item);
 
             myRoot.add(folder);
-
 
         }
 
@@ -111,13 +109,11 @@ public class InitMainFrame implements IActionIHM {
 
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) myTree.getLastSelectedPathComponent();
                 if (node != null) {
-                    if (node.getUserObject() instanceof String) {
-                        if (((String) node.getUserObject()).equals("Tous")) {
-                            hiddeMailAccountButton();
-                        } else {
-                            displayMailAccountButton();
-                        }
-
+                    if (node.getUserObject() instanceof MailAccount) {
+                        displayMailAccountButton();
+                        dispatcher.getParam().put("mailAccountSelected", node);
+                    } else {
+                        hiddeMailAccountButton();
                     }
                 }
             }

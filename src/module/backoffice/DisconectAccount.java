@@ -37,7 +37,7 @@ public class DisconectAccount implements IActionBackOffice {
     }
 
     @Override
-    public boolean execute() {
+    public boolean execute(Object ... object) {
         System.exit(0);
         return true;
     }
