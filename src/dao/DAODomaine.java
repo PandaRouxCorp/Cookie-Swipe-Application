@@ -5,15 +5,12 @@
  */
 package dao;
 
+import errorMessage.CodeError;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import model.Domain;
-import model.User;
 
 /**
  *
@@ -26,7 +23,8 @@ public class DAODomaine {
 	 * @param domain
 	 * @return
 	 */
-    public static boolean createDomain(Domain domain){
+    public static int createDomain(Domain domain){
+        int error = 0;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
         String request =  "INSERT INTO domain(name, adresse, popaddr, smptaddr, portin, portout) "
@@ -37,6 +35,7 @@ public class DAODomaine {
                 connectionInstance =   BDDConnect.getConnection();
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
+                error = CodeError.CONNEXION_FAIL;
             }
             
             statementInstance = connectionInstance.prepareStatement(request);
@@ -50,10 +49,11 @@ public class DAODomaine {
             int statut = statementInstance.executeUpdate(); 
 
             if(statut == 1)
-                return true;
+                error = CodeError.SUCESS;
         } catch ( SQLException e ) {
             /* Traiter les erreurs éventuelles ici. */
             System.err.println(e.getMessage());
+            error = CodeError.STATEMENT_EXECUTE_FAIL;
         } finally {
             if ( statementInstance != null ) {
                 try {
@@ -61,6 +61,7 @@ public class DAODomaine {
                     statementInstance.close();
                 } catch ( SQLException e ) {
                     System.err.println(e.getMessage());
+                    error = CodeError.STATEMENT_CLOSE_FAIL;
                 }
             }
 //            On ne peux pas fermer un singleton
@@ -73,11 +74,12 @@ public class DAODomaine {
 //                }
 //            }
         }
-        return false;
+        return error;
     }
     
 
-    public static boolean updateDomain(Domain domain) {
+    public static int updateDomain(Domain domain) {
+        int error = 0;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
         String request = "UPDATE domain "
@@ -92,6 +94,7 @@ public class DAODomaine {
                 connectionInstance =   BDDConnect.getConnection();
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
+                error = CodeError.CONNEXION_FAIL;
             }
             
             statementInstance = connectionInstance.prepareStatement(request);
@@ -106,6 +109,7 @@ public class DAODomaine {
         } catch ( SQLException e ) {
             /* Traiter les erreurs éventuelles ici. */
             System.err.println(e.getMessage());
+            error = CodeError.STATEMENT_EXECUTE_FAIL;
         } finally {
             if ( statementInstance != null ) {
                 try {
@@ -113,6 +117,7 @@ public class DAODomaine {
                     statementInstance.close();
                 } catch ( SQLException e ) {
                     System.err.println(e.getMessage());
+                    error = CodeError.STATEMENT_CLOSE_FAIL;
                 }
             }
 //            On ne peux pas fermer un singleton
@@ -125,6 +130,6 @@ public class DAODomaine {
 //                }
 //            }
         }
-        return false;
+        return error;
     }
 }

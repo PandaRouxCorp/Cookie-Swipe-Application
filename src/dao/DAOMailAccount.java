@@ -5,6 +5,7 @@
  */
 package dao;
 
+import errorMessage.CodeError;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,8 +31,8 @@ public class DAOMailAccount {
      * @param mailAccount compte courriel à crée
      * @return si la création du mail a bien réussi
      */
-    public static boolean createMailAccount(MailAccount mailAccount, User user) {
-
+    public static int createMailAccount(MailAccount mailAccount, User user) {
+        int error = 0;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
         String sql = "INSERT INTO mailaccount( user_id, adresse, cookieswipename, domain, password, color) "
@@ -49,6 +50,7 @@ public class DAOMailAccount {
                 connectionInstance = BDDConnect.getConnection();
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
+                error = CodeError.CONNEXION_FAIL;
             }
 
             statementInstance = connectionInstance.prepareStatement(sql);
@@ -60,12 +62,12 @@ public class DAOMailAccount {
             statementInstance.setString(6, mailAccount.getColor());
 
             statementInstance.executeUpdate();
-            return true;
+            error = CodeError.SUCESS;
 
         } catch (SQLException e) {
             /* Traiter les erreurs éventuelles ici. */
             System.err.println(e.getMessage());
-            System.err.println(statementInstance);
+            error = CodeError.STATEMENT_EXECUTE_FAIL;
         } finally {
             if (statementInstance != null) {
                 try {
@@ -73,6 +75,7 @@ public class DAOMailAccount {
                     statementInstance.close();
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
+                    error = CodeError.STATEMENT_CLOSE_FAIL;
                 }
             }
 //            On ne peux pas fermer un singleton
@@ -85,7 +88,7 @@ public class DAOMailAccount {
 //                }
 //            }
         }
-        return false;
+        return error;
     }
 
     /**
@@ -95,7 +98,8 @@ public class DAOMailAccount {
      * @param mailAccount compte courriel concerné
      * @return si le chargement du compte courriel a bien réussi
      */
-    public static boolean loadMailAccount(User user) {
+    public static int loadMailAccount(User user) {
+        int error = 0;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
         String sql = "SELECT id, adresse, cookieswipename, domain, password, lastsync, mailsignature, color "
@@ -106,13 +110,12 @@ public class DAOMailAccount {
                 connectionInstance = BDDConnect.getConnection();
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                error = CodeError.CONNEXION_FAIL;
             }
 
             statementInstance = connectionInstance.prepareStatement(sql);
             statementInstance.setInt(1, user.getId());
             ResultSet result = statementInstance.executeQuery();
-
-            boolean loadMailAccount = true;
 
             while (result.next()) {
                 MailAccount mailAccount = new MailAccount();
@@ -125,15 +128,17 @@ public class DAOMailAccount {
                 mailAccount.setLastSynch(result.getDate("lastsync"));
                 mailAccount.setMailSignature(result.getString("mailsignature"));
                 mailAccount.getDomain().setId(result.getInt("domain"));
-                if (!loadDomail(mailAccount)) {
-                    loadMailAccount = false;
+                int resLoadDomain = loadDomail(mailAccount);
+                if (resLoadDomain != 0) {
+                    error = resLoadDomain;
+                } else {
+                    error = CodeError.SUCESS;
+                    user.getListOfMailAccount().add(mailAccount);
                 }
-                user.getListOfMailAccount().add(mailAccount);
             }
-            return loadMailAccount;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            System.err.println(statementInstance);
+            error = CodeError.STATEMENT_EXECUTE_FAIL;
         } finally {
             if (statementInstance != null) {
                 try {
@@ -141,6 +146,8 @@ public class DAOMailAccount {
                     statementInstance.close();
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
+                    error = CodeError.STATEMENT_CLOSE_FAIL;
+
                 }
             }
 //            On ne peux pas fermer un singleton
@@ -153,7 +160,7 @@ public class DAOMailAccount {
 //                }
 //            }
         }
-        return false;
+        return error;
     }
 
     /**
@@ -162,16 +169,19 @@ public class DAOMailAccount {
      * @param mailAccount compte courriel concerné
      * @return si le chargement du domaine a réussi
      */
-    public static boolean loadDomail(MailAccount mailAccount) {
+    public static int loadDomail(MailAccount mailAccount) {
+        int error = 0;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
         String request = "SELECT name, adresse, popaddr, smtpaddr, portin, portout FROM domain where id = ?;";
+
         try {
 
             try {
                 connectionInstance = BDDConnect.getConnection();
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
+                error = CodeError.CONNEXION_FAIL;
             }
 
             statementInstance = connectionInstance.prepareStatement(request);
@@ -186,13 +196,13 @@ public class DAOMailAccount {
                 mailAccount.getDomain().setServerOut(result.getString("smtpaddr"));
                 mailAccount.getDomain().setPortIn(result.getString("portin"));
                 mailAccount.getDomain().setPortOut(result.getString("portout"));
-
-                return true;
             }
-
+            error = CodeError.SUCESS;
         } catch (SQLException e) {
             /* Traiter les erreurs éventuelles ici. */
             System.err.println(e.getMessage());
+            error = CodeError.STATEMENT_EXECUTE_FAIL;
+
         } finally {
             if (statementInstance != null) {
                 try {
@@ -200,6 +210,8 @@ public class DAOMailAccount {
                     statementInstance.close();
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
+                    error = CodeError.STATEMENT_CLOSE_FAIL;
+
                 }
             }
 //             On ne peux pas fermer un singleton
@@ -212,11 +224,12 @@ public class DAOMailAccount {
 //                }
 //            }
         }
-        return false;
+
+        return error;
     }
 
-    public static boolean updateMailAccount(MailAccount mailaccount) {
-
+    public static int updateMailAccount(MailAccount mailaccount) {
+        int error = 0;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
 //        String encryptedPassword = null;
@@ -229,6 +242,7 @@ public class DAOMailAccount {
                 connectionInstance = BDDConnect.getConnection();
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
+                error = CodeError.CONNEXION_FAIL;
             }
 //            
 //            try {
@@ -249,11 +263,12 @@ public class DAOMailAccount {
 
             statementInstance.executeUpdate();
 
-            return true;
-
+            error = CodeError.SUCESS;
         } catch (SQLException e) {
             /* Traiter les erreurs éventuelles ici. */
             System.err.println(e.getMessage());
+            error = CodeError.STATEMENT_EXECUTE_FAIL;
+
         } finally {
             if (statementInstance != null) {
                 try {
@@ -261,6 +276,8 @@ public class DAOMailAccount {
                     statementInstance.close();
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
+                    error = CodeError.STATEMENT_CLOSE_FAIL;
+
                 }
             }
 //            On ne peux pas fermer un singleton
@@ -273,7 +290,7 @@ public class DAOMailAccount {
 //                }
 //            }
         }
-        return false;
+        return error;
     }
 
     /**
@@ -282,8 +299,7 @@ public class DAOMailAccount {
      * @param mailAccount compte courriel concerné
      * @return si le chargement des courriels a réussi
      */
-    public static boolean loadMail(MailAccount mailAccount) {
-
-        return false;
+    public static int loadMail(MailAccount mailAccount) {
+        return CodeError.NOT_INPLEMENT;
     }
 }

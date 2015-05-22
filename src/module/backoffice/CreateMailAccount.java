@@ -7,7 +7,7 @@ package module.backoffice;
 
 import interfaces.IActionBackOffice;
 import java.util.HashMap;
-import javax.mail.Address;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -35,7 +35,8 @@ public class CreateMailAccount implements IActionBackOffice {
         String CSName = ((JTextField) hsJCompment.get("cookieSwipeTextFieldNameAcountMail")).getText();
         String mailAdress = ((JTextField) hsJCompment.get("cookieSwipeTextFieldMailAddress")).getText();
         String password = new String(((JPasswordField) hsJCompment.get("cookieSwipePasswordFieldPasswordAccountMail")).getPassword());
-        if (user.addNewMailAccount(CSName, mailAdress, password)) {
+        String color = (String) ((JComboBox) hsJCompment.get("jComboBoxColor")).getSelectedItem();
+        if (user.addNewMailAccount(CSName, mailAdress, password, color) == 0) {
             new JOptionPane().showMessageDialog(null, "Votre compte mail à bien été ajouté",
                     "Ajout d'un nouveau compte mail", JOptionPane.INFORMATION_MESSAGE);
         } else {

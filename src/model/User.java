@@ -112,8 +112,8 @@ public class User {
      * @param newMailAccount compte courriel à ajouter
      * @return Si le compte courriel à bien été ajouté
      */
-    public boolean addNewMailAccount(String name, String address, String password) {
-        boolean res = true;
+    public int addNewMailAccount(String name, String address, String password, String color) {
+        int res = 0;
         String mailDomain = address.substring(address.indexOf('@') + 1);
         Domain domain = null;
 
@@ -137,13 +137,13 @@ public class User {
                 domain = new Domain("Google", mailDomain, "imap.gmail.com", "993", "smtp.gmail.com", "465", 4);
                 break;
             default:
-                return false;
+                return 1001;
 
         }
-        MailAccount newMailAccount = new MailAccount(name, address, domain, password, "blue");
+        MailAccount newMailAccount = new MailAccount(name, address, domain, password, color);
         res = DAOMailAccount.createMailAccount(newMailAccount, this);
-        if (res) {
-            res = listOfMailAccount.add(newMailAccount);
+        if (res == 0) {
+            listOfMailAccount.add(newMailAccount);
         }
 
         return res;
