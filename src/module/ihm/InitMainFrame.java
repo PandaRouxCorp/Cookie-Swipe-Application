@@ -111,7 +111,7 @@ public class InitMainFrame implements IActionIHM {
                 if (node != null) {
                     if (node.getUserObject() instanceof MailAccount) {
                         displayMailAccountButton();
-                        dispatcher.getParam().put("mailAccountSelected", node);
+                        dispatcher.addParam("mailAccountSelected", node.getUserObject());
                     } else {
                         hiddeMailAccountButton();
                     }
@@ -146,7 +146,7 @@ public class InitMainFrame implements IActionIHM {
         button.addActionListener(dispatcher.getListener());
 
         button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonUpdateMailAccount");
-        button.setActionCommand(ActionName.udpateMailAccount);
+        button.setActionCommand(ActionName.selectMailAccount);
         button.addActionListener(dispatcher.getListener());
 
         button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonDeleteMailAccount");

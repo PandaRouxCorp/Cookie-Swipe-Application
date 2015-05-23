@@ -5,19 +5,19 @@
  */
 package model;
 
+import errorMessage.CodeError;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.mail.Address;
 
 /**
  *
  * @author Mary
  */
-public class MailAccount extends Address {
+public class MailAccount{
 
     //Variable membre
     private int id;
@@ -152,8 +152,35 @@ public class MailAccount extends Address {
         return address;
     }
 
-    public void setAddress(String address) {
+    public int setAddress(String address) {
+        String mailDomain = address.substring(address.indexOf('@') + 1);
+        Domain domain = null;
+
+        switch (mailDomain) {
+            case "yahoo.fr":
+                domain = new Domain("Yahoo", mailDomain, "pop.mail.yahoo.fr", "995", "smtp.mail.yahoo.fr", "465", 1);
+                break;
+            case "hotmail.com":
+            case "hotmail.fr":
+            case "live.com":
+            case "live.fr":
+            case "msn.com":
+            case "outlook.com":
+                domain = new Domain("Microsoft", mailDomain, "pop3.live.com", "995", "smtp.live.com", "587", 2);
+                break;
+            case "orange.fr":
+            case "wanadoo.fr":
+                domain = new Domain("Orange", mailDomain, "", "", "", "", 3);
+                break;
+            case "gmail.com":
+                domain = new Domain("Google", mailDomain, "imap.gmail.com", "993", "smtp.gmail.com", "465", 4);
+                break;
+            default:
+                return CodeError.DOMAIN_NOT_SUPPORTED;
+
+        }
         this.address = address;
+        return CodeError.SUCESS;
     }
 
     public String getCSName() {
@@ -239,14 +266,12 @@ public class MailAccount extends Address {
         return Objects.equals(this.address, other.address);
     }
 
-    @Override
-    public String getType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 
     @Override
     public String toString() {
         return CSName;
     }
+
 
 }

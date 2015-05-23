@@ -6,6 +6,7 @@
 
 package interfaces;
 
+import controller.Dispatcher;
 import java.util.HashMap;
 import model.User;
 
@@ -16,6 +17,8 @@ import model.User;
 public interface IActionBackOffice {
     
     public void setJComponent(HashMap<String, Object> hsJComponant);
+    
+    public void setDispatcher(Dispatcher dispatcher);
         
     public void setUser(User user);
     

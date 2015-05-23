@@ -43,18 +43,23 @@ public class LoginAccount implements IActionBackOffice {
     }
 
     @Override
-    public boolean execute(Object ... object) {
+    public void setDispatcher(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
+    }
+
+    @Override
+    public boolean execute(Object... object) {
 
         CookieSwipeTextField textField = (CookieSwipeTextField) hsJcomponent.get("cookieSwipeTextFieldLogin");
         CookieSwipePasswordField passwordField = (CookieSwipePasswordField) hsJcomponent.get("cookieSwipePasswordFieldPassword");
-        
-        user.setLoginAdressMail(textField.getText()); 
+
+        user.setLoginAdressMail(textField.getText());
         user.setPassword(new String(passwordField.getPassword()));
 
         if (user.connect() == null) {
             new JOptionPane().showMessageDialog(null, "Connexion impossible, merci de vérifier votre login",
                     "Connexion à Cookie Swipe", JOptionPane.ERROR_MESSAGE);
-            return false; 
+            return false;
         }
         return true;
     }

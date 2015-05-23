@@ -18,6 +18,7 @@ import module.ihm.InitUpdateMailAccount;
 import module.backoffice.CreateMailAccount;
 import module.backoffice.DisconectAccount;
 import module.backoffice.LoginAccount;
+import module.backoffice.UpdateMailAccount;
 import module.ihm.InitLoginFrame;
 import module.ihm.InitUpdateAccountCS;
 import module.ihm.InitWriteMail;
@@ -63,10 +64,14 @@ public class Dispatcher {
         this.user = user;
     }
 
-    public HashMap<String, Object> getParam(){
-        return param;
+    public void addParam(String s, Object o) {
+        param.put(s, o);
     }
-    
+
+    public Object getParam(String s) {
+        return param.get(s);
+    }
+
     private Dispatcher() {
 
         user = new User();
@@ -147,9 +152,6 @@ public class Dispatcher {
                 break;
             case ActionName.selectMailAccount:
                 System.err.println(action);
-                break;
-            case ActionName.udpateMailAccount:
-                System.err.println(action);
                 focusFrame = new AcountMailCSFrame();
                 IActionIHM initUpdateMailAccount = InitUpdateMailAccount.getInstance();
                 initUpdateMailAccount.setDispatcher(this);
@@ -157,6 +159,17 @@ public class Dispatcher {
                 initUpdateMailAccount.execute();
 
                 break;
+            case ActionName.udpateMailAccount:
+                System.err.println(action);
+                IActionBackOffice updateMailAccount = UpdateMailAccount.getInstance();
+                updateMailAccount.setDispatcher(this);
+                updateMailAccount.setJComponent(focusFrame.getJComponent());
+                updateMailAccount.setUser(user);
+                if (updateMailAccount.execute()) {
+                    focusFrame.dispose();
+                }
+                break;
+
             case ActionName.deleteMailAccount:
                 System.err.println(action);
                 break;
@@ -167,14 +180,14 @@ public class Dispatcher {
                 iniWriteMail.setDispatcher(this);
                 iniWriteMail.setJComponent(focusFrame.getJComponent());
                 iniWriteMail.execute();
-                
+
                 break;
             case ActionName.readMail:
                 System.err.println(action);
                 break;
             case ActionName.selectMail:
                 System.err.println(action);
-                
+
                 break;
             case ActionName.deleteMail:
                 System.err.println(action);
@@ -192,7 +205,7 @@ public class Dispatcher {
                 iniWriteMailAnswer.setDispatcher(this);
                 iniWriteMailAnswer.setJComponent(focusFrame.getJComponent());
                 iniWriteMailAnswer.execute();
-                
+
                 break;
             case ActionName.forwardMail:
                 System.err.println(action);
@@ -201,7 +214,7 @@ public class Dispatcher {
                 iniWriteMailForward.setDispatcher(this);
                 iniWriteMailForward.setJComponent(focusFrame.getJComponent());
                 iniWriteMailForward.execute();
-                
+
                 break;
             case ActionName.sendMail:
                 System.err.println(action);
@@ -214,7 +227,7 @@ public class Dispatcher {
                 IActionBackOffice createMailAccount = CreateMailAccount.getInstance();
                 createMailAccount.setUser(user);
                 createMailAccount.setJComponent(focusFrame.getJComponent());
-                if(createMailAccount.execute()){
+                if (createMailAccount.execute()) {
                     focusFrame.dispose();
                 }
                 break;

@@ -256,7 +256,7 @@ public class DAOMailAccount {
             statementInstance.setString(2, mailaccount.getCSName());
             statementInstance.setInt(3, mailaccount.getDomain().getId());
             statementInstance.setString(4, mailaccount.getPassword());
-            statementInstance.setString(5, mailaccount.getLastSynch().toString());
+            statementInstance.setDate(5, mailaccount.getLastSynch());
             statementInstance.setString(6, mailaccount.getMailSignature());
             statementInstance.setString(7, mailaccount.getColor());
             statementInstance.setInt(8, mailaccount.getId());

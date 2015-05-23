@@ -18,6 +18,7 @@ public class DisconectAccount implements IActionBackOffice {
 
     private User user;
     private HashMap<String, Object> hsJcomponent;
+    private Dispatcher dispatcher;
 
     private DisconectAccount() {
     }
@@ -36,6 +37,11 @@ public class DisconectAccount implements IActionBackOffice {
         this.user = user;
     }
 
+    @Override
+    public void setDispatcher(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
+    }
+    
     @Override
     public boolean execute(Object ... object) {
         System.exit(0);

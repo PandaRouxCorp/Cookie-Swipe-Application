@@ -11,15 +11,13 @@ import interfaces.IActionIHM;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPasswordField;
-import javax.swing.JTree;
 import model.Encryption;
 import model.MailAccount;
 import model.User;
 import view.component.CookieSwipeButton;
 import view.component.CookieSwipeTextField;
-import view.component.CookieSwipeTree;
 
 /**
  *
@@ -55,30 +53,24 @@ public class InitUpdateMailAccount implements IActionIHM {
 
     @Override
     public boolean execute(Object... object) {
-        CookieSwipeTree tree = (CookieSwipeTree) hsJFrameComponent.get("cookieSwipeTreeAcountMail");;
-        Object o = tree.getLastSelectedPathComponent();
-        if (o instanceof MailAccount) {
-            MailAccount mailAccount = (MailAccount) o;
-            System.err.println("true");
-            CookieSwipeTextField textField = (CookieSwipeTextField) hsJFrameComponent.get("cookieSwipeTextFieldNameAcountMail");
-            textField.setText(mailAccount.getCSName());
-            textField = (CookieSwipeTextField) hsJFrameComponent.get("cookieSwipeTextFieldMailAddress");
-            textField.setText(mailAccount.getAddress());
-            JPasswordField passwordField = (JPasswordField) hsJFrameComponent.get("cookieSwipePasswordFieldPasswordAccountMail");
-            try {
-                passwordField.setText(new Encryption().decrypt(mailAccount.getPassword()));
-            } catch (Exception ex) {
-                Logger.getLogger(InitUpdateMailAccount.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            CookieSwipeButton button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonValidate");
-            button.setText("Modifier");
-            button.addActionListener(dispatcher.getListener());
-            button.setActionCommand(ActionName.udpateMailAccount);
-
-        } else {
-            return false;
+        MailAccount mailAccount = (MailAccount) dispatcher.getParam("mailAccountSelected");
+        CookieSwipeTextField textField = (CookieSwipeTextField) hsJFrameComponent.get("cookieSwipeTextFieldNameAcountMail");
+        textField.setText(mailAccount.getCSName());
+        textField = (CookieSwipeTextField) hsJFrameComponent.get("cookieSwipeTextFieldMailAddress");
+        textField.setText(mailAccount.getAddress());
+        JPasswordField passwordField = (JPasswordField) hsJFrameComponent.get("cookieSwipePasswordFieldPasswordAccountMail");
+        JComboBox color = (JComboBox) hsJFrameComponent.get("jComboBoxColor");
+        color.setSelectedItem(mailAccount.getColor());
+        try {
+            passwordField.setText(new Encryption().decrypt(mailAccount.getPassword()));
+        } catch (Exception ex) {
+            Logger.getLogger(InitUpdateMailAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        CookieSwipeButton button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonValidate");
+        button.setText("Modifier");
+        button.addActionListener(dispatcher.getListener());
+        button.setActionCommand(ActionName.udpateMailAccount);
 
         return true;
     }

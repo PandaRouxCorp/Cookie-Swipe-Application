@@ -148,6 +148,12 @@ public class User {
 
         return res;
     }
+    
+    
+    public int updatemailAccount(MailAccount mailAccount) {
+        return DAOMailAccount.updateMailAccount(mailAccount);
+    }
+
 
     /**
      * Supprime un compte courriel des préférence de l'utilisateur
