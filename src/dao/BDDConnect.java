@@ -12,16 +12,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Classe static permetant à une base de donnée MySql
+ * @author Stitch & Mary
+ */
 public class BDDConnect {
 
     private static Connection connexion;
     private static final String[] conf = new String[4];
 
     /**
-     * permet la connection a la base de donnée
+     * Permet de se connecter à la base de donnée
      *
-     * @return
-     * @throws Exception
+     * @return une instance de connexion
      */
     public static Connection getConnection() {
         if (connexion == null) {
@@ -63,29 +66,6 @@ public class BDDConnect {
         } else {
             return connexion;
         }
-
-        /*
-         System.out.println("MySQL JDBC Driver Registered!");
-        
-         @SuppressWarnings("UnusedAssignment")
-         Connection connection = null;
-
-         try {
-         connection = DriverManager
-         .getConnection("jdbc:mysql://93.26.228.33:3308/cookieswipe","CS", "TOTO");
- 
-         } catch (SQLException e) {
-         System.out.println("Connection Failed! Check output console");
-         return null;
-         }
-
-         if (connection != null) {
-         System.out.println("You made it, take control your database now!");
-         } else {
-         System.out.println("Failed to make connection!");
-         }
-        
-         return connection;*/
     }
 
 }

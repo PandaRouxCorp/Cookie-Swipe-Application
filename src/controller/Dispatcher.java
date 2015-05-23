@@ -29,49 +29,23 @@ import view.MailCSFrame;
 import view.MainCSFrame;
 
 /**
- * Classe permetant d'attribuer les action déclancher par l'interface
- * utilisateur à des traitements Doit être un singleton
+ * Classe singleton permetant d'attribuer des traitements à des actions de
+ * l'utilisateur utilisateur à des traitements Doit être un singleton
  *
  * @author Mary
  */
 public class Dispatcher {
 
+    //Variable membre
     private IJFrame mainFrame, focusFrame;
     private User user;
     private HashMap<String, Object> param = new HashMap<String, Object>();
 
-    public IJFrame getMainFrame() {
-        return mainFrame;
-    }
-
-    public void setMainFrame(IJFrame mainFrame) {
-        this.mainFrame = mainFrame;
-    }
-
-    public IJFrame getFocusFrame() {
-        return focusFrame;
-    }
-
-    public void setFocusFrame(IJFrame focusFrame) {
-        this.focusFrame = focusFrame;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void addParam(String s, Object o) {
-        param.put(s, o);
-    }
-
-    public Object getParam(String s) {
-        return param.get(s);
-    }
-
+    //Constructeur
+    /**
+     * Constructeur du singleton. Permet de lancer la première fenêtre de
+     * l'application et initialiser l'utilisateur.
+     */
     private Dispatcher() {
 
         user = new User();
@@ -82,15 +56,49 @@ public class Dispatcher {
         initLoginFrame.execute();
     }
 
+    /**
+     * Retourne l'instance du dispatcher
+     *
+     * @return Instance d'un dispatcher
+     */
     public static Dispatcher getInstance() {
         return Dispatcher.DispatcherHolder.INSTANCE;
     }
 
+    /**
+     * Instancie le dispatcher si c'est la première fois
+     */
     private static class DispatcherHolder {
 
         private static final Dispatcher INSTANCE = new Dispatcher();
     }
 
+    //Fonction membre publique
+    /**
+     * Permet d'ajouer un paramètre stocké dans le dispatcher
+     *
+     * @param s Nom du paramètre
+     * @param o Paramètre à stocker
+     */
+    public void addParam(String s, Object o) {
+        param.put(s, o);
+    }
+
+    /**
+     * Retour le paramètre désiré ou null si le paramètre n'exise pas
+     *
+     * @param s Nom du paramètre
+     * @return Un paramètre stocké
+     */
+    public Object getParam(String s) {
+        return param.get(s);
+    }
+
+    /**
+     * renvoie un listerner pour un bouton configuré pour utiliser le dispatcher
+     *
+     * @return ActionListener configuré
+     */
     public ActionListener getListener() {
         return new ActionListener() {
 
@@ -101,6 +109,11 @@ public class Dispatcher {
         };
     }
 
+    /**
+     * Distribue les actions de l'utilsiateur à des traitements
+     *
+     * @param e Evénement décrivant l'action à réaliser
+     */
     public void sendAction(ActionEvent e) {
 
         String action = e.getActionCommand();
@@ -242,4 +255,62 @@ public class Dispatcher {
                 break;
         }
     }
+
+    //Getter & Setter
+    /**
+     * Retourne la fenêtre principale de l'application
+     *
+     * @return Fenêtre principale
+     */
+    public IJFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    /**
+     * Permet de désigner la fenêtre considéré comme principale pour
+     * l'application
+     *
+     * @param mainFrame Fenêtre principale
+     */
+    public void setMainFrame(IJFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    /**
+     * Retourne la fenêtre qui à le focus pour l'utilisateur et qui n'es pas la
+     * fenêtre principale
+     *
+     * @return Fenêtre qui à le focus
+     */
+    public IJFrame getFocusFrame() {
+        return focusFrame;
+    }
+
+    /**
+     * Permet de désigner qu'elle fenêtre aurra à le focus pour l'utilisateur
+     *
+     * @param focusFrame fenêtre qui va avoir le foux
+     */
+    public void setFocusFrame(IJFrame focusFrame) {
+        this.focusFrame = focusFrame;
+    }
+
+    /**
+     * Retourne l'utilisateur connecté
+     *
+     * @return Utilsiateur connecté
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Permet de désigner l'utilsiateur connecté
+     *
+     * @param user Utilisateur connecté
+     */
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 }

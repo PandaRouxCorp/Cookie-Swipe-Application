@@ -73,8 +73,8 @@ public class User {
      *
      * @return l'utilisateur créé
      */
-    public User create() {
-        return dao.DAOUser.createUser(this) ? this : null;
+    public int create() {
+        return dao.DAOUser.createUser(this);
     }
 
     /**
@@ -82,8 +82,8 @@ public class User {
      *
      * @return Utilisateur connecté
      */
-    public User connect() {
-        return dao.DAOUser.connectUser(this) ? this : null;
+    public int connect() {
+        return dao.DAOUser.connectUser(this);
     }
 
     /**

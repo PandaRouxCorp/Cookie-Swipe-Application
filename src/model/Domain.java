@@ -6,7 +6,6 @@
 package model;
 
 import java.util.Objects;
-import javax.swing.JOptionPane;
 
 /**
  * Domaine d'une adresse courriel
@@ -18,6 +17,7 @@ public class Domain {
     //Variable membre
     private String name, address, serverIn, serverOut, portIn, portOut;
     private int id;
+    
     //Constructeur
 
     /**
@@ -114,7 +114,7 @@ public class Domain {
         this.id = id;
     }
 
-    //Equals & hashCode
+    //Surcharge de Object
     @Override
     public int hashCode() {
         int hash = 5;

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package dao;
 
 import errorMessage.CodeError;
@@ -13,31 +9,34 @@ import java.sql.SQLException;
 import model.Domain;
 
 /**
- *
- * @author 626
+ * Classe statique faisant office de passerelle entre les objet Domain du
+ * modèle et la persistance
+ * 
+ * @author Stitch & Mary
  */
 public class DAODomaine {
-    
-	/**
-	 * insert en base de donnée le nouveau domaine
-	 * @param domain
-	 * @return
-	 */
-    public static int createDomain(Domain domain){
+
+    /**
+     * Créer un domaine en persitance
+     * @param domain Dommaine à insérer
+     * @return un code d'erreur
+     */
+    public static int createDomain(Domain domain) {
         int error = 0;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
-        String request =  "INSERT INTO domain(name, adresse, popaddr, smptaddr, portin, portout) "
-                		+ "VALUES (?, ?, ?, ?, ?, ?);";
+        String request = "INSERT INTO domain(name, adresse, popaddr, smptaddr, portin, portout) "
+                + "VALUES (?, ?, ?, ?, ?, ?);";
         try {
-            
+
             try {
-                connectionInstance =   BDDConnect.getConnection();
+                connectionInstance = BDDConnect.getConnection();
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
                 error = CodeError.CONNEXION_FAIL;
+                return error;
             }
-            
+
             statementInstance = connectionInstance.prepareStatement(request);
             statementInstance.setString(1, domain.getName());
             statementInstance.setString(2, domain.getAddress());
@@ -45,90 +44,74 @@ public class DAODomaine {
             statementInstance.setString(4, domain.getServerOut());
             statementInstance.setString(5, domain.getPortIn());
             statementInstance.setString(6, domain.getPortOut());
-            
-            int statut = statementInstance.executeUpdate(); 
 
-            if(statut == 1)
+            int statut = statementInstance.executeUpdate();
+
+            if (statut == 1) {
                 error = CodeError.SUCESS;
-        } catch ( SQLException e ) {
-            /* Traiter les erreurs éventuelles ici. */
+            }
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
             error = CodeError.STATEMENT_EXECUTE_FAIL;
         } finally {
-            if ( statementInstance != null ) {
+            if (statementInstance != null) {
                 try {
-                    /* Puis on ferme le Statement */
                     statementInstance.close();
-                } catch ( SQLException e ) {
+                } catch (SQLException e) {
                     System.err.println(e.getMessage());
                     error = CodeError.STATEMENT_CLOSE_FAIL;
                 }
             }
-//            On ne peux pas fermer un singleton
-//            if ( connectionInstance != null ) {
-//                try {
-//                    /* Et enfin on ferme la connexion */
-//                    connectionInstance.close();
-//                } catch ( SQLException e ) {
-//                    System.err.println(e.getMessage());
-//                }
-//            }
         }
         return error;
     }
-    
 
+    /**
+     * Permet de modifier un domaine
+     * @param domain Domaine à modifier
+     * @return code d'erreur
+     */
     public static int updateDomain(Domain domain) {
         int error = 0;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
         String request = "UPDATE domain "
-        		+ "SET name = ?, "
-        		+ "popaddr = ?, "
-        		+ "smtpaddr = ?, "
-        		+ "port = ? "
-        		+ "WHERE id = ?";
+                + "SET name = ?, "
+                + "popaddr = ?, "
+                + "smtpaddr = ?, "
+                + "port = ? "
+                + "WHERE id = ?";
         try {
-            
+
             try {
-                connectionInstance =   BDDConnect.getConnection();
+                connectionInstance = BDDConnect.getConnection();
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
                 error = CodeError.CONNEXION_FAIL;
+                return error;
             }
-            
+
             statementInstance = connectionInstance.prepareStatement(request);
             statementInstance.setString(1, domain.getName());
             statementInstance.setString(2, domain.getServerIn());
             statementInstance.setString(3, domain.getServerOut());
             statementInstance.setString(4, domain.getPortIn());
             statementInstance.setInt(5, domain.getId());
-            
-            statementInstance.executeUpdate(); 
-            
-        } catch ( SQLException e ) {
-            /* Traiter les erreurs éventuelles ici. */
+
+            statementInstance.executeUpdate();
+
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
             error = CodeError.STATEMENT_EXECUTE_FAIL;
         } finally {
-            if ( statementInstance != null ) {
+            if (statementInstance != null) {
                 try {
-                    /* Puis on ferme le Statement */
                     statementInstance.close();
-                } catch ( SQLException e ) {
+                } catch (SQLException e) {
                     System.err.println(e.getMessage());
                     error = CodeError.STATEMENT_CLOSE_FAIL;
                 }
             }
-//            On ne peux pas fermer un singleton
-//            if ( connectionInstance != null ) {
-//                try {
-//                    /* Et enfin on ferme la connexion */
-//                    connectionInstance.close();
-//                } catch ( SQLException e ) {
-//                    System.err.println(e.getMessage());
-//                }
-//            }
         }
         return error;
     }

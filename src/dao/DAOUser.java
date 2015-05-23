@@ -1,19 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package dao;
 
+import errorMessage.CodeError;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import model.Encryption;
 import model.User;
 
 /**
@@ -28,26 +22,21 @@ public class DAOUser {
      * Crée l'utilsiateur en persitance puis le connecte
      *
      * @param user utilsiateur à créer
-     * @return si la création de l'utilsiateur a réussi
+     * @return Code d'erreur
      */
-    public static boolean createUser(User user) {
+    public static int createUser(User user) {
+        int error;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
-//        String encryptedPassword = null;
         String request = "INSERT INTO users(login, password, backupadr) VALUES (?, ?, ?);";
 
         try {
-//            Passage de l'encryption dans la classe User
-//            try {
-//                encryptedPassword = new Encryption().encrypt(user.getPassword());
-//            } catch (Exception ex) {
-//                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-
             try {
                 connectionInstance = BDDConnect.getConnection();
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                error = CodeError.CONNEXION_FAIL;
+                return error;
             }
 
             statementInstance = connectionInstance.prepareStatement(request);
@@ -58,36 +47,38 @@ public class DAOUser {
             int statut = statementInstance.executeUpdate();
 
             if (statut == 1) {
-                return true;
+                error = CodeError.SUCESS;
+            } else {
+                error = CodeError.FAILLURE;
             }
 
-        } catch (SQLException e) {
-            /* Traiter les erreurs éventuelles ici. */
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            error = CodeError.STATEMENT_EXECUTE_FAIL;
+
         } finally {
             if (statementInstance != null) {
                 try {
-                    /* Puis on ferme le Statement */
                     statementInstance.close();
-                } catch (SQLException ignore) {
+                } catch (SQLException ex) {
+                    Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                    error = CodeError.STATEMENT_CLOSE_FAIL;
                 }
             }
-//            On ne peux pas fermer un singleton
-//            if ( connectionInstance != null ) {
-//                try {
-//                    /* Et enfin on ferme la connexion */
-//                    connectionInstance.close();
-//                } catch ( SQLException ignore ) {
-//                }
-//            }
         }
-        return false;
+        return error;
     }
 
-    public static boolean updateUser(User user) {
-
+    /**
+     * Permet de modifier les informations d'un utilisateur en persitance
+     *
+     * @param user Utilisateur à modifier
+     * @return Code d'erreur
+     */
+    public static int updateUser(User user) {
+        int error;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
-//        String encryptedPassword = null;
         String request = "UPDATE user "
                 + "SET login = ?, "
                 + "password = ?, "
@@ -95,17 +86,11 @@ public class DAOUser {
                 + "WHERE id = ?;";
 
         try {
-//            Passage de l'encryption dans la classe User
-//            try {
-//                encryptedPassword = new Encryption().encrypt(user.getPassword());
-//            } catch (Exception ex) {
-//                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            
             try {
                 connectionInstance = BDDConnect.getConnection();
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                error = CodeError.CONNEXION_FAIL;
             }
 
             statementInstance = connectionInstance.prepareStatement(request);
@@ -117,54 +102,45 @@ public class DAOUser {
 
             int statut = statementInstance.executeUpdate();
 
-            return (statut == 1);
-
-        } catch (SQLException e) {
-            /* Traiter les erreurs éventuelles ici. */
+            if (statut == 1) {
+                error = CodeError.SUCESS;
+            } else {
+                error = CodeError.FAILLURE;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            error = CodeError.STATEMENT_EXECUTE_FAIL;
         } finally {
             if (statementInstance != null) {
                 try {
-                    /* Puis on ferme le Statement */
                     statementInstance.close();
-                } catch (SQLException ignore) {
+                } catch (SQLException ex) {
+                    Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                    error = CodeError.STATEMENT_CLOSE_FAIL;
                 }
             }
-//On ne peux pas fermer un singleton
-//            if (connectionInstance != null) {
-//                try {
-//                    /* Et enfin on ferme la connexion */
-//                    connectionInstance.close();
-//                } catch (SQLException ignore) {
-//                }
-//            }
         }
-        return false;
+        return error;
     }
 
     /**
      * Connecte l'utilisateur si il existe en persistance
      *
-     * @param user utilisateur qui tente de se connecter
-     * @return si la conenction de l'utilisateur a réussi
+     * @param user Utilisateur qui tente de se connecter
+     * @return Code d'erreur
      */
-    public static boolean connectUser(User user) {
+    public static int connectUser(User user) {
+        int error;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
-//        String encryptedPassword = null;
         String request = "SELECT count(*), id FROM users where login = ? and password = ?;";
 
         try {
-//            Passage de l'encryption dans la classe User
-//            try {
-//                encryptedPassword = new Encryption().encrypt(user.getPassword());
-//            } catch (Exception ex) {
-//                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-
             try {
                 connectionInstance = BDDConnect.getConnection();
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                error = CodeError.CONNEXION_FAIL;
             }
 
             statementInstance = connectionInstance.prepareStatement(request);
@@ -176,29 +152,24 @@ public class DAOUser {
             result.next();
             if (result.getInt(1) == 1) {
                 user.setId(result.getInt(2));
-                DAOMailAccount.loadMailAccount(user);
-                return true;
+                error = DAOMailAccount.loadMailAccount(user);
+            } else {
+                error = CodeError.FAILLURE;
             }
 
-        } catch (SQLException e) {
-            /* Traiter les erreurs éventuelles ici. */
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            error = CodeError.STATEMENT_EXECUTE_FAIL;
         } finally {
             if (statementInstance != null) {
                 try {
-                    /* Puis on ferme le Statement */
                     statementInstance.close();
-                } catch (SQLException ignore) {
+                } catch (SQLException ex) {
+                    Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                    error = CodeError.STATEMENT_CLOSE_FAIL;
                 }
             }
-//            On ne peux pas fermer un singleton
-//            if (connectionInstance != null) {
-//                try {
-//                    /* Et enfin on ferme la connexion */
-//                    connectionInstance.close();
-//                } catch (SQLException ignore) {
-//                }
-//            }
         }
-        return false;
+        return error;
     }
 }

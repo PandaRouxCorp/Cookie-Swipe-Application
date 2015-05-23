@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import errorMessage.CodeError;
@@ -12,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import model.Encryption;
 import model.MailAccount;
 import model.User;
 
@@ -21,7 +14,7 @@ import model.User;
  * Classe statique faisant office de passerelle entre les objet MailAccount du
  * modèle et la persistance
  *
- * @author Mary
+ * @author Mary & Stitch
  */
 public class DAOMailAccount {
 
@@ -29,7 +22,8 @@ public class DAOMailAccount {
      * Créé un comtpe courriel en persitance
      *
      * @param mailAccount compte courriel à crée
-     * @return si la création du mail a bien réussi
+     * @param user utilisateur qui créer le compte
+     * @return code d'erreur
      */
     public static int createMailAccount(MailAccount mailAccount, User user) {
         int error = 0;
@@ -37,20 +31,13 @@ public class DAOMailAccount {
         PreparedStatement statementInstance = null;
         String sql = "INSERT INTO mailaccount( user_id, adresse, cookieswipename, domain, password, color) "
                 + "VALUES (?, ?, ?, ?, ?, ? )";
-//        String encryptedPassword = null;
-
         try {
-//            try {
-//                encryptedPassword = new Encryption().encrypt(mailAccount.getPassword());
-//            } catch (Exception ex) {
-//                System.err.println(ex.getMessage());
-//            }
-//            
             try {
                 connectionInstance = BDDConnect.getConnection();
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
                 error = CodeError.CONNEXION_FAIL;
+                return error;
             }
 
             statementInstance = connectionInstance.prepareStatement(sql);
@@ -65,28 +52,17 @@ public class DAOMailAccount {
             error = CodeError.SUCESS;
 
         } catch (SQLException e) {
-            /* Traiter les erreurs éventuelles ici. */
             System.err.println(e.getMessage());
             error = CodeError.STATEMENT_EXECUTE_FAIL;
         } finally {
             if (statementInstance != null) {
                 try {
-                    /* Puis on ferme le Statement */
                     statementInstance.close();
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                     error = CodeError.STATEMENT_CLOSE_FAIL;
                 }
             }
-//            On ne peux pas fermer un singleton
-//            if ( connectionInstance != null ) {
-//                try {
-//                    /* Et enfin on ferme la connexion */
-//                    connectionInstance.close();
-//                } catch ( SQLException e ) {
-//                    System.err.println(e.getMessage());
-//                }
-//            }
         }
         return error;
     }
@@ -94,9 +70,8 @@ public class DAOMailAccount {
     /**
      * Charge toute les données d'un compte courriel qui était sauvegardé
      *
-     * @param user
-     * @param mailAccount compte courriel concerné
-     * @return si le chargement du compte courriel a bien réussi
+     * @param user Utilisateur concerné
+     * @return Code d'erreur
      */
     public static int loadMailAccount(User user) {
         int error = 0;
@@ -111,6 +86,7 @@ public class DAOMailAccount {
             } catch (Exception ex) {
                 Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
                 error = CodeError.CONNEXION_FAIL;
+                return error;
             }
 
             statementInstance = connectionInstance.prepareStatement(sql);
@@ -150,15 +126,6 @@ public class DAOMailAccount {
 
                 }
             }
-//            On ne peux pas fermer un singleton
-//            if ( connectionInstance != null ) {
-//                try {
-//                    /// Et enfin on ferme la connexion 
-//                    connectionInstance.close();
-//                } catch ( SQLException e ) {
-//                    System.err.println(e.getMessage());
-//                }
-//            }
         }
         return error;
     }
@@ -167,7 +134,7 @@ public class DAOMailAccount {
      * Charge le domaine d'un comtpe courriel
      *
      * @param mailAccount compte courriel concerné
-     * @return si le chargement du domaine a réussi
+     * @return Code d'erreur
      */
     public static int loadDomail(MailAccount mailAccount) {
         int error = 0;
@@ -182,6 +149,7 @@ public class DAOMailAccount {
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
                 error = CodeError.CONNEXION_FAIL;
+                return error;
             }
 
             statementInstance = connectionInstance.prepareStatement(request);
@@ -199,14 +167,12 @@ public class DAOMailAccount {
             }
             error = CodeError.SUCESS;
         } catch (SQLException e) {
-            /* Traiter les erreurs éventuelles ici. */
             System.err.println(e.getMessage());
             error = CodeError.STATEMENT_EXECUTE_FAIL;
 
         } finally {
             if (statementInstance != null) {
                 try {
-                    /* Puis on ferme le Statement */
                     statementInstance.close();
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
@@ -214,42 +180,32 @@ public class DAOMailAccount {
 
                 }
             }
-//             On ne peux pas fermer un singleton
-//            if ( connectionInstance != null ) {
-//                try {
-//                    /* Et enfin on ferme la connexion */
-//                    connectionInstance.close();
-//                } catch ( SQLException e ) {
-//                    System.err.println(e.getMessage());
-//                }
-//            }
         }
 
         return error;
     }
 
+    /**
+     * Permet de modifier un compte courriel en persitance
+     *
+     * @param mailaccount Compte courriel à changer
+     * @return Code d'erreur
+     */
     public static int updateMailAccount(MailAccount mailaccount) {
         int error = 0;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
-//        String encryptedPassword = null;
         String sql = "UPDATE mailaccount "
                 + "SET adresse = ?, cookieswipename = ?, domain = ?, password = ?, "
                 + "lastsync = ?, mailsignature = ?, color = ? WHERE id = ?;";
         try {
-
             try {
                 connectionInstance = BDDConnect.getConnection();
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
                 error = CodeError.CONNEXION_FAIL;
+                return error;
             }
-//            
-//            try {
-//                encryptedPassword = new Encryption().encrypt(mailaccount.getPassword());
-//            } catch (Exception ex) {
-//                System.err.println(ex.getMessage());
-//            }
 
             statementInstance = connectionInstance.prepareStatement(sql);
             statementInstance.setString(1, mailaccount.getAddress());
@@ -265,14 +221,12 @@ public class DAOMailAccount {
 
             error = CodeError.SUCESS;
         } catch (SQLException e) {
-            /* Traiter les erreurs éventuelles ici. */
             System.err.println(e.getMessage());
             error = CodeError.STATEMENT_EXECUTE_FAIL;
 
         } finally {
             if (statementInstance != null) {
                 try {
-                    /* Puis on ferme le Statement */
                     statementInstance.close();
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
@@ -280,15 +234,6 @@ public class DAOMailAccount {
 
                 }
             }
-//            On ne peux pas fermer un singleton
-//            if ( connectionInstance != null ) {
-//                try {
-//                    /* Et enfin on ferme la connexion */
-//                    connectionInstance.close();
-//                } catch ( SQLException e ) {
-//                    System.err.println(e.getMessage());
-//                }
-//            }
         }
         return error;
     }
@@ -297,7 +242,7 @@ public class DAOMailAccount {
      * Charge les courriels d'un compte courriel
      *
      * @param mailAccount compte courriel concerné
-     * @return si le chargement des courriels a réussi
+     * @return Code d'erreur
      */
     public static int loadMail(MailAccount mailAccount) {
         return CodeError.NOT_INPLEMENT;

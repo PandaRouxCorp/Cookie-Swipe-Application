@@ -6,12 +6,11 @@
 package module.backoffice;
 
 import controller.Dispatcher;
+import errorMessage.CodeError;
 import interfaces.IActionBackOffice;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
 import model.User;
-import view.MainCSFrame;
-import view.component.CookieSwipeLabel;
 import view.component.CookieSwipePasswordField;
 import view.component.CookieSwipeTextField;
 
@@ -56,7 +55,7 @@ public class LoginAccount implements IActionBackOffice {
         user.setLoginAdressMail(textField.getText());
         user.setPassword(new String(passwordField.getPassword()));
 
-        if (user.connect() == null) {
+        if (user.connect() != CodeError.SUCESS) {
             new JOptionPane().showMessageDialog(null, "Connexion impossible, merci de vérifier votre login",
                     "Connexion à Cookie Swipe", JOptionPane.ERROR_MESSAGE);
             return false;
