@@ -23,55 +23,45 @@ import model.User;
  *
  * @author Lucas
  */
-public class UpdateMailAccount implements IActionBackOffice {
+public class DeleteMailAccount implements IActionBackOffice {
 
     private User user;
     private HashMap<String, Object> hsJCompment;
     private Dispatcher dispatcher;
 
-    private UpdateMailAccount() {
+    private DeleteMailAccount() {
     }
 
-    public static UpdateMailAccount getInstance() {
-        return updateMailAccountAccountHolder.INSTANCE;
+    public static DeleteMailAccount getInstance() {
+        return deleteMailAccountHolder.INSTANCE;
+    }
+
+    private static class deleteMailAccountHolder {
+
+        private static final DeleteMailAccount INSTANCE = new DeleteMailAccount();
     }
 
     @Override
     public boolean execute(Object... object) {
         int error;
         MailAccount mailAccount = (MailAccount) dispatcher.getParam("mailAccountSelected");
-        String CSName = ((JTextField) hsJCompment.get("cookieSwipeTextFieldNameAcountMail")).getText();
-        mailAccount.setCSName(CSName);
-        String mailAdress = ((JTextField) hsJCompment.get("cookieSwipeTextFieldMailAddress")).getText();
-        error = mailAccount.setAddress(mailAdress);
-        String password = new String(((JPasswordField) hsJCompment.get("cookieSwipePasswordFieldPasswordAccountMail")).getPassword());
-        try {
-            mailAccount.setPassword(new Encryption().encrypt(password));
-        } catch (Exception ex) {
-            Logger.getLogger(UpdateMailAccount.class.getName()).log(Level.SEVERE, null, ex);
-            error = CodeError.ENCRYPTION_FAIL;
-        }
-        String color = (String) ((JComboBox) hsJCompment.get("jComboBoxColor")).getSelectedItem();
-        mailAccount.setColor(color);
-
-        if (error == 0) {
-            error = user.updatemailAccount(mailAccount);
-        }
+        error = user.deleteMailAccount(mailAccount);
+        
         switch (error) {
             case CodeError.SUCESS:
-                new JOptionPane().showMessageDialog(null, "Votre compte mail à bien été modifié",
-                        "Modification d'un compte mail", JOptionPane.INFORMATION_MESSAGE);
+                new JOptionPane().showMessageDialog(null, "Votre compte mail à bien été supprimé",
+                        "Suppression d'un compte mail", JOptionPane.INFORMATION_MESSAGE);
                 return true;
 
             case CodeError.CONNEXION_FAIL:
             case CodeError.STATEMENT_EXECUTE_FAIL:
             case CodeError.STATEMENT_CLOSE_FAIL:
                 new JOptionPane().showMessageDialog(null, "Problème de connexion au serveur\nCode erreur : " + error,
-                        "Modification d'un compte mail", JOptionPane.ERROR_MESSAGE);
+                        "Suppression d'un compte mail", JOptionPane.ERROR_MESSAGE);
                 break;
             default:
                 new JOptionPane().showMessageDialog(null, "Un problème est survenu\nCode erreur : " + error,
-                        "Modification d'un compte mail", JOptionPane.ERROR_MESSAGE);
+                        "Suppression d'un compte mail", JOptionPane.ERROR_MESSAGE);
 
         }
         return false;
@@ -91,11 +81,6 @@ public class UpdateMailAccount implements IActionBackOffice {
     @Override
     public void setDispatcher(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
-    }
-
-    private static class updateMailAccountAccountHolder {
-
-        private static final UpdateMailAccount INSTANCE = new UpdateMailAccount();
     }
 
 }

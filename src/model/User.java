@@ -6,6 +6,7 @@
 package model;
 
 import dao.DAOMailAccount;
+import errorMessage.CodeError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -148,12 +149,10 @@ public class User {
 
         return res;
     }
-    
-    
+
     public int updatemailAccount(MailAccount mailAccount) {
         return DAOMailAccount.updateMailAccount(mailAccount);
     }
-
 
     /**
      * Supprime un compte courriel des préférence de l'utilisateur
@@ -161,8 +160,12 @@ public class User {
      * @param deletedMailAccount compte courriel à supprimer
      * @return Si le compte courriel à bien été supprimé
      */
-    public boolean deleteMailAccount(MailAccount deletedMailAccount) {
-        return listOfMailAccount.remove(deletedMailAccount);
+    public int deleteMailAccount(MailAccount deletedMailAccount) {
+        int error = DAOMailAccount.deleteMailAccount(deletedMailAccount);
+        if (error == CodeError.SUCESS) {
+            listOfMailAccount.remove(deletedMailAccount);
+        }
+        return error;
     }
 
     /**
@@ -268,6 +271,5 @@ public class User {
     public String toString() {
         return "User{" + "id=" + id + ", loginAdressMail=" + loginAdressMail + ", password=" + password + ", backupMail=" + backupMail + ", listOfMailAccount=" + listOfMailAccount + ", blackList=" + blackList + '}';
     }
-
 
 }

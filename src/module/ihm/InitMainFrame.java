@@ -11,6 +11,8 @@ import interfaces.IActionIHM;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -176,6 +178,13 @@ public class InitMainFrame implements IActionIHM {
 
     private void initMail() {
         JList list = (JList) hsJFrameComponent.get("jListMail");
+        for(MailAccount mailAccount : user.getListOfMailAccount()){
+            try {
+                mailAccount.readMessage();
+            } catch (Exception ex) {
+                Logger.getLogger(InitMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         list.addListSelectionListener(new ListSelectionListener() {
 
             @Override

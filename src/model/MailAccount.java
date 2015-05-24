@@ -6,18 +6,25 @@
 package model;
 
 import errorMessage.CodeError;
+import java.net.Authenticator;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Properties;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Store;
 
 /**
  *
  * @author Mary
  */
-public class MailAccount{
+public class MailAccount {
 
     //Variable membre
     private int id;
@@ -43,7 +50,6 @@ public class MailAccount{
      * @param color couleur donné à la boite courriel pour l'affichage des
      * courriels
      */
-    
     public MailAccount(String CSName, String address, Domain domain, String password, String color) {
 
         this.CSName = CSName;
@@ -53,7 +59,8 @@ public class MailAccount{
             this.password = new Encryption().encrypt(password);
         } catch (Exception ex) {
             Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }        this.color = color;
+        }
+        this.color = color;
     }
 
     /**
@@ -108,6 +115,47 @@ public class MailAccount{
      */
     public boolean updateData(HashMap<String, Object> data) {
         return false;
+    }
+
+    public void readMessage()
+            throws Exception {
+
+        // Définir les paramètres de connexion
+        Session session = Session.getDefaultInstance(new Properties(),
+                new javax.mail.Authenticator() {
+                    public PasswordAuthentication getPasswordAuthentication(){
+                        return new PasswordAuthentication(address, password);
+                    }
+                });
+        Store store = session.getStore("pop3");
+
+        // Ouvrir la connexion
+        store.connect(domain.getServerIn(), address, password);
+
+        System.out.println("Vous ête connecté à " + domain.getServerIn());
+
+        // Ouverture de la boîte de réception
+        Folder inbox = store.getFolder("INBOX");
+        if (inbox == null) {
+            System.out.println("Boîte de Réception introuvale");
+        }
+        inbox.open(Folder.READ_ONLY);
+
+        // Sélectionner tous les messages du répertoire ouvert
+        Message[] messages = inbox.getMessages();
+
+        // Afficher le nombre de message
+        System.out.println("Vous avez: " + messages.length + " message(s)");
+
+        System.out.println("Voici le contenu d'un message:");
+        System.out.println();
+
+        // Afficher le contenu d'un message
+        if (messages.length >= 1) {
+            messages[1].writeTo(System.out);
+        }
+
+        store.close();
     }
 
     /**
@@ -266,12 +314,9 @@ public class MailAccount{
         return Objects.equals(this.address, other.address);
     }
 
-    
-
     @Override
     public String toString() {
         return CSName;
     }
-
 
 }

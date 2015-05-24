@@ -16,6 +16,7 @@ import module.ihm.InitAddMailAccount;
 import module.ihm.InitMainFrame;
 import module.ihm.InitUpdateMailAccount;
 import module.backoffice.CreateMailAccount;
+import module.backoffice.DeleteMailAccount;
 import module.backoffice.DisconectAccount;
 import module.backoffice.LoginAccount;
 import module.backoffice.UpdateMailAccount;
@@ -185,6 +186,12 @@ public class Dispatcher {
 
             case ActionName.deleteMailAccount:
                 System.err.println(action);
+                System.err.println(action);
+                IActionBackOffice deleteMailAccount = DeleteMailAccount.getInstance();
+                deleteMailAccount.setDispatcher(this);
+                deleteMailAccount.setUser(user);
+                deleteMailAccount.execute();
+                
                 break;
             case ActionName.writeMail:
                 System.err.println(action);

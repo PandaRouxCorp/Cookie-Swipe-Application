@@ -9,9 +9,7 @@ package module.ihm;
 import controller.ActionName;
 import controller.Dispatcher;
 import interfaces.IActionIHM;
-import interfaces.IJFrame;
 import java.util.HashMap;
-import javax.swing.JButton;
 import model.User;
 import view.component.CookieSwipeButton;
 

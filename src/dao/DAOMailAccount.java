@@ -247,4 +247,43 @@ public class DAOMailAccount {
     public static int loadMail(MailAccount mailAccount) {
         return CodeError.NOT_INPLEMENT;
     }
+
+    public static int deleteMailAccount(MailAccount mailAccount) {
+        int error;
+        Connection connectionInstance = null;
+        PreparedStatement statementInstance = null;
+        String sql = "DELETE FROM mailaccount WHERE id = ?";
+        try {
+            try {
+                connectionInstance = BDDConnect.getConnection();
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+                error = CodeError.CONNEXION_FAIL;
+                return error;
+            }
+
+            statementInstance = connectionInstance.prepareStatement(sql);
+            statementInstance.setInt(1, mailAccount.getId());
+
+            statementInstance.execute();
+
+            error = CodeError.SUCESS;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            error = CodeError.STATEMENT_EXECUTE_FAIL;
+
+        } finally {
+            if (statementInstance != null) {
+                try {
+                    statementInstance.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                    error = CodeError.STATEMENT_CLOSE_FAIL;
+
+                }
+            }
+        }
+
+        return error;
+    }
 }
