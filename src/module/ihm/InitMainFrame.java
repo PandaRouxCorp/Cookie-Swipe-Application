@@ -10,6 +10,8 @@ import controller.Dispatcher;
 import interfaces.IActionIHM;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +20,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import model.Mail;
 import model.MailAccount;
 import model.User;
 import view.component.CookieSwipeButton;
@@ -178,13 +181,31 @@ public class InitMainFrame implements IActionIHM {
 
     private void initMail() {
         JList list = (JList) hsJFrameComponent.get("jListMail");
-        for(MailAccount mailAccount : user.getListOfMailAccount()){
-            try {
-                mailAccount.readMessage();
-            } catch (Exception ex) {
-                Logger.getLogger(InitMainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        int i = 0;
+        for (MailAccount mailAccount : user.getListOfMailAccount()) {
+//            try {
+//                mailAccount.readMessage();
+//            } catch (Exception ex) {
+//                Logger.getLogger(InitMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+            mailAccount.getListOfmail().add(new Mail(i, new Date(2014, 12, 22), mailAccount.getAddress(),
+                    "lucas.girardin@ipsen.com", "Sans objet", "low", "Hello panda", null));
+            i++;
         }
+        list.setModel(new javax.swing.AbstractListModel() {
+            ArrayList<Mail> mailList = new ArrayList<Mail>();
+            for(MailAccount mailAccount : user.getListOfMailAccount()) {
+                mailList.ensureCapacity(mailAccount.getListOfmail().size());
+            }
+
+            public int getSize() {
+                return 10;
+            }
+
+            public Object getElementAt(int i) {
+                return null;
+            }
+        });
         list.addListSelectionListener(new ListSelectionListener() {
 
             @Override

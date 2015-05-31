@@ -60,7 +60,8 @@ public class Mail implements Serializable {
      * @param body corps du courriel
      * @param attachement liste de fichier en pièce jointe du courriel
      */
-    public Mail(int id, Date date, String to, String from, String subject, String priority, String body, File[] attachement) {
+    public Mail(int id, Date date, String to, String from, String subject, String priority, 
+            String body, File[] attachement) {
         this.id = id;
         this.date = date;
         this.to = to;
