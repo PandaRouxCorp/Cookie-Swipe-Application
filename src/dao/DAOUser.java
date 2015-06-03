@@ -136,27 +136,26 @@ public class DAOUser {
         String request = "SELECT count(*), id FROM users where login = ? and password = ?;";
 
         try {
-            try {
-                connectionInstance = BDDConnect.getConnection();
-            } catch (Exception ex) {
-                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
-                error = CodeError.CONNEXION_FAIL;
+            connectionInstance = BDDConnect.getConnection();
+            if(connectionInstance == null) {
+                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, "CONNEXION_FAIL");
+                error =  CodeError.CONNEXION_FAIL;
             }
+            else {
+                statementInstance = connectionInstance.prepareStatement(request);
 
-            statementInstance = connectionInstance.prepareStatement(request);
+                statementInstance.setString(1, user.getLoginAdressMail());
+                statementInstance.setString(2, user.getPassword());
 
-            statementInstance.setString(1, user.getLoginAdressMail());
-            statementInstance.setString(2, user.getPassword());
-
-            ResultSet result = statementInstance.executeQuery();
-            result.next();
-            if (result.getInt(1) == 1) {
-                user.setId(result.getInt(2));
-                error = DAOMailAccount.loadMailAccount(user);
-            } else {
-                error = CodeError.FAILLURE;
-            }
-
+                ResultSet result = statementInstance.executeQuery();
+                result.next();
+                if (result.getInt(1) == 1) {
+                    user.setId(result.getInt(2));
+                    error = DAOMailAccount.loadMailAccount(user);
+                } else {
+                    error = CodeError.FAILLURE;
+                }
+            }    
         } catch (SQLException ex) {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
             error = CodeError.STATEMENT_EXECUTE_FAIL;
