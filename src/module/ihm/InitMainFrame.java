@@ -193,11 +193,9 @@ public class InitMainFrame implements IActionIHM {
             i++;
         }
         list.setModel(new javax.swing.AbstractListModel() {
-            ArrayList<Mail> mailList = new ArrayList<Mail>();
-            for(MailAccount mailAccount : user.getListOfMailAccount()) {
-                mailList.ensureCapacity(mailAccount.getListOfmail().size());
-            }
-
+            ArrayList<Mail> mailList = new ArrayList<>();
+            
+            @Override
             public int getSize() {
                 return 10;
             }
