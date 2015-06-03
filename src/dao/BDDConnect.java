@@ -4,6 +4,7 @@ package dao;
  *
  * @author 626
  */
+import cookie.swipe.application.SystemSettings;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe static permetant à une base de donnée MySql
@@ -34,33 +37,35 @@ public class BDDConnect {
                 conf[2] = "";
                 conf[3] = "";
                 try {
-                    FileReader fichierLecture = new FileReader("src\\conf\\confDatabase");
-                    BufferedReader fichier = new BufferedReader(fichierLecture);
+                    BufferedReader fichier = new BufferedReader(new FileReader(
+                            "src" + SystemSettings.SEPARATOR + 
+                            "conf" + SystemSettings.SEPARATOR + 
+                            "confDatabase"
+                    ));
                     String ligne;
                     int i = 0;
                     while ((ligne = fichier.readLine()) != null) {
                         conf[i] += ligne;
                         i++;
                     }
-                    fichierLecture.close();
-                } catch (FileNotFoundException e1) {
-                    e1.getMessage();
+                    fichier.close();
                 } catch (IOException e) {
-                    e.getMessage();
+                    Logger.getLogger("BDDConnect").log(Level.SEVERE, "Erreur lors de la lecture du fichier de configuration", e);
+                    return null;
                 }
             }
-            String pilote = "com.mysql.jdbc.Driver";
             try {
+                String pilote = "com.mysql.jdbc.Driver";
                 Class.forName(pilote);
             } catch (ClassNotFoundException e) {
-                System.err.println("Where is your MySQL JDBC Driver?");
+                Logger.getLogger("BDDConnect").log(Level.SEVERE, "Where is your MySQL JDBC Driver?", e);
                 return null;
             }
             try {
                 connexion = DriverManager.getConnection(conf[0] + "/" + conf[1], conf[2], conf[3]);
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
-
+                Logger.getLogger("BDDConnect").log(Level.SEVERE, "Where is your MySQL JDBC Driver?", e);
+                return null;
             }
             return connexion;
         } else {
