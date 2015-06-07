@@ -39,6 +39,7 @@ public class MailAccount {
      */
     public MailAccount() {
         domain = new Domain();
+        listOfmail = new ArrayList<>();
     }
 
     /**
@@ -61,6 +62,7 @@ public class MailAccount {
             Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.color = color;
+        listOfmail = new ArrayList<>();
     }
 
     /**
