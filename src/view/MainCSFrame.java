@@ -6,7 +6,6 @@
 package view;
 
 import interfaces.IJFrame;
-import java.util.HashMap;
 import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeFrame;
 
@@ -15,8 +14,6 @@ import view.component.CookieSwipeFrame;
  * @author Suiken
  */
 public class MainCSFrame extends CookieSwipeFrame implements IJFrame {
-
-    HashMap<String, Object> hsJcomponent = new HashMap<String, Object>();
 
     /**
      * Creates new form MainCSFrame
@@ -246,10 +243,6 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame {
     private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public HashMap<String, Object> getJComponent() {
-        return hsJcomponent;
-    }
 
     @Override
     public void refresh() {

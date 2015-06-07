@@ -11,7 +11,7 @@ public class ActionName {
         public static final String createAccount = "createAccount", logAccount = "logAccount", 
                 updateAccount = "updateAccount", forgottenPassword = "forgottenPassword",
                 forgottenLogin = "forgottenLogin", addMailAccount = "addMailAccount",
-                selectMailAccount = "selectMailAccount", udpateMailAccount = "udpateMailAccount",
+                selectMailAccount = "selectMailAccount", updateMailAccount = "updateMailAccount",
                 deleteMailAccount = "deleteMailAccount", writeMail = "writeMail",
                 readMail = "readMail", selectMail = "selectMail", deleteMail = "deleteMail",
                 addBlackListSender = "addBlackListSender", removeBlacklistSender = "removeBlacklistSender",

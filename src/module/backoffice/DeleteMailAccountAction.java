@@ -5,17 +5,10 @@
  */
 package module.backoffice;
 
-import controller.Dispatcher;
+import cookie.swipe.application.CookieSwipeApplication;
 import errorMessage.CodeError;
-import interfaces.IActionBackOffice;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JComboBox;
+import interfaces.IAction;
 import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import model.Encryption;
 import model.MailAccount;
 import model.User;
 
@@ -23,28 +16,13 @@ import model.User;
  *
  * @author Lucas
  */
-public class DeleteMailAccount implements IActionBackOffice {
-
-    private User user;
-    private HashMap<String, Object> hsJCompment;
-    private Dispatcher dispatcher;
-
-    private DeleteMailAccount() {
-    }
-
-    public static DeleteMailAccount getInstance() {
-        return deleteMailAccountHolder.INSTANCE;
-    }
-
-    private static class deleteMailAccountHolder {
-
-        private static final DeleteMailAccount INSTANCE = new DeleteMailAccount();
-    }
+public class DeleteMailAccountAction implements IAction {
 
     @Override
     public boolean execute(Object... object) {
         int error;
-        MailAccount mailAccount = (MailAccount) dispatcher.getParam("mailAccountSelected");
+        MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
+        User user = CookieSwipeApplication.getApplication().getUser();
         error = user.deleteMailAccount(mailAccount);
         
         switch (error) {
@@ -66,21 +44,4 @@ public class DeleteMailAccount implements IActionBackOffice {
         }
         return false;
     }
-
-    @Override
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    @Override
-    public void setJComponent(HashMap<String, Object> hsJCompment) {
-        this.hsJCompment = hsJCompment;
-
-    }
-
-    @Override
-    public void setDispatcher(Dispatcher dispatcher) {
-        this.dispatcher = dispatcher;
-    }
-
 }

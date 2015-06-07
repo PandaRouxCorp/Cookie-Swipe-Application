@@ -7,14 +7,13 @@ package module.ihm;
 
 import controller.ActionName;
 import controller.Dispatcher;
-import interfaces.IActionIHM;
+import cookie.swipe.application.CookieSwipeApplication;
+import interfaces.IAction;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -23,6 +22,7 @@ import javax.swing.tree.DefaultTreeModel;
 import model.Mail;
 import model.MailAccount;
 import model.User;
+import view.MainCSFrame;
 import view.component.CookieSwipeButton;
 import view.component.CookieSwipeTree;
 
@@ -30,57 +30,29 @@ import view.component.CookieSwipeTree;
  *
  * @author Lucas
  */
-public class InitMainFrame implements IActionIHM {
-
-    private HashMap<String, Object> hsJFrameComponent;
-    private Dispatcher dispatcher;
-    private User user;
-
-    private InitMainFrame() {
+public class MainFrameInitializer implements IAction {
+    
+    private final HashMap<String, Object> hsJFrameComponent;
+    
+    public MainFrameInitializer(MainCSFrame frame) {
+        hsJFrameComponent = frame.getJComponent();
     }
-
-    public static InitMainFrame getInstance() {
-        return InitMainFrameHolder.INSTANCE;
-    }
-
-    private static class InitMainFrameHolder {
-
-        private static final InitMainFrame INSTANCE = new InitMainFrame();
-    }
-
+    
     @Override
     public boolean execute(Object... object) {
-
         initMail();
         initMailAccount();
         initButton();
-
         return true;
-
-    }
-
-    @Override
-    public void setJComponent(HashMap<String, Object> hsJComponant) {
-        this.hsJFrameComponent = hsJComponant;
-    }
-
-    @Override
-    public void setDispatcher(Dispatcher dispatcher) {
-        this.dispatcher = dispatcher;
-    }
-
-    @Override
-    public void setUser(User user) {
-        this.user = user;
     }
 
     private void initMailAccount() {
-
         DefaultMutableTreeNode myRoot = new DefaultMutableTreeNode("Tous");
 
 // Construction des différents noeuds de l'arbre.
         DefaultMutableTreeNode item = null;
         DefaultMutableTreeNode folder = null;
+        User user = CookieSwipeApplication.getApplication().getUser();
         for (MailAccount mailAccount : user.getListOfMailAccount()) {
             folder = new DefaultMutableTreeNode(mailAccount);
 
@@ -116,7 +88,7 @@ public class InitMainFrame implements IActionIHM {
                 if (node != null) {
                     if (node.getUserObject() instanceof MailAccount) {
                         displayMailAccountButton();
-                        dispatcher.addParam("mailAccountSelected", node.getUserObject());
+                        CookieSwipeApplication.getApplication().setParam("mailAccountSelected", node.getUserObject());
                     } else {
                         hiddeMailAccountButton();
                     }
@@ -138,41 +110,43 @@ public class InitMainFrame implements IActionIHM {
     }
 
     private void initButton() {
+        Dispatcher dispatcher = new Dispatcher();
+        
         CookieSwipeButton button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonUpdateCSAccount");
         button.setActionCommand(ActionName.updateAccount);
-        button.addActionListener(dispatcher.getListener());
+        button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonLogout");
         button.setActionCommand(ActionName.logout);
-        button.addActionListener(dispatcher.getListener());
+        button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonAddMailAccount");
         button.setActionCommand(ActionName.addMailAccount);
-        button.addActionListener(dispatcher.getListener());
+        button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonUpdateMailAccount");
         button.setActionCommand(ActionName.selectMailAccount);
-        button.addActionListener(dispatcher.getListener());
+        button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonDeleteMailAccount");
         button.setActionCommand(ActionName.deleteMailAccount);
-        button.addActionListener(dispatcher.getListener());
+        button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonNewMail");
         button.setActionCommand(ActionName.writeMail);
-        button.addActionListener(dispatcher.getListener());
+        button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonAnswer");
         button.setActionCommand(ActionName.answerMail);
-        button.addActionListener(dispatcher.getListener());
+        button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonDeleteMail");
         button.setActionCommand(ActionName.deleteMail);
-        button.addActionListener(dispatcher.getListener());
+        button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJFrameComponent.get("cookieSwipeButtonForward");
         button.setActionCommand(ActionName.forwardMail);
-        button.addActionListener(dispatcher.getListener());
+        button.addActionListener(dispatcher);
 
         hiddeMailAccountButton();
         hiddeMailButton();
@@ -181,12 +155,13 @@ public class InitMainFrame implements IActionIHM {
 
     private void initMail() {
         JList list = (JList) hsJFrameComponent.get("jListMail");
+        User user = CookieSwipeApplication.getApplication().getUser();
         int i = 0;
         for (MailAccount mailAccount : user.getListOfMailAccount()) {
 //            try {
 //                mailAccount.readMessage();
 //            } catch (Exception ex) {
-//                Logger.getLogger(InitMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+//                Logger.getLogger(MainFrameInitializer.class.getName()).log(Level.SEVERE, null, ex);
 //            }
             mailAccount.getListOfmail().add(new Mail(i, new Date(2014, 12, 22), mailAccount.getAddress(),
                     "lucas.girardin@ipsen.com", "Sans objet", "low", "Hello panda", null));

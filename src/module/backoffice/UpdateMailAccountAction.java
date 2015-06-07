@@ -5,10 +5,9 @@
  */
 package module.backoffice;
 
-import controller.Dispatcher;
+import cookie.swipe.application.CookieSwipeApplication;
 import errorMessage.CodeError;
-import interfaces.IActionBackOffice;
-import java.util.HashMap;
+import interfaces.AbstractIHMAction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComboBox;
@@ -18,43 +17,38 @@ import javax.swing.JTextField;
 import model.Encryption;
 import model.MailAccount;
 import model.User;
+import view.component.CookieSwipeFrame;
 
 /**
  *
  * @author Lucas
  */
-public class UpdateMailAccount implements IActionBackOffice {
+public class UpdateMailAccountAction extends AbstractIHMAction {
 
-    private User user;
-    private HashMap<String, Object> hsJCompment;
-    private Dispatcher dispatcher;
-
-    private UpdateMailAccount() {
-    }
-
-    public static UpdateMailAccount getInstance() {
-        return updateMailAccountAccountHolder.INSTANCE;
+    public UpdateMailAccountAction(CookieSwipeFrame csFrame) {
+        super(csFrame);
     }
 
     @Override
     public boolean execute(Object... object) {
         int error;
-        MailAccount mailAccount = (MailAccount) dispatcher.getParam("mailAccountSelected");
-        String CSName = ((JTextField) hsJCompment.get("cookieSwipeTextFieldNameAcountMail")).getText();
+        MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
+        String CSName = ((JTextField) hsJcomponent.get("cookieSwipeTextFieldNameAcountMail")).getText();
         mailAccount.setCSName(CSName);
-        String mailAdress = ((JTextField) hsJCompment.get("cookieSwipeTextFieldMailAddress")).getText();
+        String mailAdress = ((JTextField) hsJcomponent.get("cookieSwipeTextFieldMailAddress")).getText();
         error = mailAccount.setAddress(mailAdress);
-        String password = new String(((JPasswordField) hsJCompment.get("cookieSwipePasswordFieldPasswordAccountMail")).getPassword());
+        String password = new String(((JPasswordField) hsJcomponent.get("cookieSwipePasswordFieldPasswordAccountMail")).getPassword());
         try {
             mailAccount.setPassword(new Encryption().encrypt(password));
         } catch (Exception ex) {
-            Logger.getLogger(UpdateMailAccount.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UpdateMailAccountAction.class.getName()).log(Level.SEVERE, null, ex);
             error = CodeError.ENCRYPTION_FAIL;
         }
-        String color = (String) ((JComboBox) hsJCompment.get("jComboBoxColor")).getSelectedItem();
+        String color = (String) ((JComboBox) hsJcomponent.get("jComboBoxColor")).getSelectedItem();
         mailAccount.setColor(color);
 
         if (error == 0) {
+            User user = CookieSwipeApplication.getApplication().getUser();
             error = user.updatemailAccount(mailAccount);
         }
         switch (error) {
@@ -76,26 +70,4 @@ public class UpdateMailAccount implements IActionBackOffice {
         }
         return false;
     }
-
-    @Override
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    @Override
-    public void setJComponent(HashMap<String, Object> hsJCompment) {
-        this.hsJCompment = hsJCompment;
-
-    }
-
-    @Override
-    public void setDispatcher(Dispatcher dispatcher) {
-        this.dispatcher = dispatcher;
-    }
-
-    private static class updateMailAccountAccountHolder {
-
-        private static final UpdateMailAccount INSTANCE = new UpdateMailAccount();
-    }
-
 }

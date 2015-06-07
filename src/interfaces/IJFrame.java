@@ -5,8 +5,6 @@
  */
 package interfaces;
 
-import java.util.HashMap;
-
 /**
  * Interface permetant de partager les composants d'une fenêtre et de la la
  * rafraichir
@@ -14,8 +12,6 @@ import java.util.HashMap;
  * @author Mary
  */
 public interface IJFrame {
-
-    public HashMap<String, Object> getJComponent();
 
     public void setVisible(boolean b);
 

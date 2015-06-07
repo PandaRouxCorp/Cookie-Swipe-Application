@@ -6,7 +6,6 @@
 package model;
 
 import errorMessage.CodeError;
-import java.net.Authenticator;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;

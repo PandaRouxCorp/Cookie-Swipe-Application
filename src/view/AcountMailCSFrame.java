@@ -6,7 +6,6 @@
 package view;
 
 import interfaces.IJFrame;
-import java.util.HashMap;
 import view.component.CookieSwipeFrame;
 
 /**
@@ -14,8 +13,6 @@ import view.component.CookieSwipeFrame;
  * @author Lucas
  */
 public class AcountMailCSFrame extends CookieSwipeFrame implements IJFrame {
-
-    private HashMap<String, Object> hsJcomponents = new HashMap<String, Object>();
 
     /**
      * Creates new form AcountMailCSFrame
@@ -26,15 +23,15 @@ public class AcountMailCSFrame extends CookieSwipeFrame implements IJFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
         this.setVisible(true);
-        hsJcomponents.put("cookieSwipeButtonCancel", cookieSwipeButtonCancel);
-        hsJcomponents.put("cookieSwipeButtonValidate", cookieSwipeButtonValidate);
-        hsJcomponents.put("cookieSwipeLabelMailAddress", cookieSwipeLabelMailAddress);
-        hsJcomponents.put("cookieSwipeLabelNameAcountMail", cookieSwipeLabelNameAcountMail);
-        hsJcomponents.put("cookieSwipeLabelPasswordAccountMail", cookieSwipeLabelPasswordAccountMail);
-        hsJcomponents.put("cookieSwipePasswordFieldPasswordAccountMail", cookieSwipePasswordFieldPasswordAccountMail);
-        hsJcomponents.put("cookieSwipeTextFieldMailAddress", cookieSwipeTextFieldMailAddress);
-        hsJcomponents.put("cookieSwipeTextFieldNameAcountMail", cookieSwipeTextFieldNameAcountMail);
-        hsJcomponents.put("jComboBoxColor", jComboBoxColor);
+        hsJcomponent.put("cookieSwipeButtonCancel", cookieSwipeButtonCancel);
+        hsJcomponent.put("cookieSwipeButtonValidate", cookieSwipeButtonValidate);
+        hsJcomponent.put("cookieSwipeLabelMailAddress", cookieSwipeLabelMailAddress);
+        hsJcomponent.put("cookieSwipeLabelNameAcountMail", cookieSwipeLabelNameAcountMail);
+        hsJcomponent.put("cookieSwipeLabelPasswordAccountMail", cookieSwipeLabelPasswordAccountMail);
+        hsJcomponent.put("cookieSwipePasswordFieldPasswordAccountMail", cookieSwipePasswordFieldPasswordAccountMail);
+        hsJcomponent.put("cookieSwipeTextFieldMailAddress", cookieSwipeTextFieldMailAddress);
+        hsJcomponent.put("cookieSwipeTextFieldNameAcountMail", cookieSwipeTextFieldNameAcountMail);
+        hsJcomponent.put("jComboBoxColor", jComboBoxColor);
 
     }
 
@@ -199,10 +196,6 @@ public class AcountMailCSFrame extends CookieSwipeFrame implements IJFrame {
     private javax.swing.JComboBox jComboBoxColor;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public HashMap<String, Object> getJComponent() {
-        return hsJcomponents;   
-    }
 
     @Override
     public void refresh() {

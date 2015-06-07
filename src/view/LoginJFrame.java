@@ -6,8 +6,6 @@
 package view;
 
 import interfaces.IJFrame;
-import java.util.HashMap;
-import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeFrame;
 
 /**
@@ -15,8 +13,6 @@ import view.component.CookieSwipeFrame;
  * @author Lucas
  */
 public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
-
-    private HashMap<String, Object> hsJComponent = new HashMap<String, Object>();
 
     /**
      * Creates new form LoginJFrame
@@ -27,13 +23,13 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
         this.setVisible(true);
-        hsJComponent.put("cookieSwipeButtonLogin", cookieSwipeButtonLogin);
-        hsJComponent.put("cookieSwipeButtonSendLogin", cookieSwipeButtonSendLogin);
-        hsJComponent.put("cookieSwipeButtonSendPassword", cookieSwipeButtonSendPassword);
-        hsJComponent.put("cookieSwipeLabelLogin", cookieSwipeLabelLogin);
-        hsJComponent.put("cookieSwipeLabelPassword", cookieSwipeLabelPassword);
-        hsJComponent.put("cookieSwipePasswordFieldPassword", cookieSwipePasswordFieldPassword);
-        hsJComponent.put("cookieSwipeTextFieldLogin", cookieSwipeTextFieldLogin);
+        hsJcomponent.put("cookieSwipeButtonLogin", cookieSwipeButtonLogin);
+        hsJcomponent.put("cookieSwipeButtonSendLogin", cookieSwipeButtonSendLogin);
+        hsJcomponent.put("cookieSwipeButtonSendPassword", cookieSwipeButtonSendPassword);
+        hsJcomponent.put("cookieSwipeLabelLogin", cookieSwipeLabelLogin);
+        hsJcomponent.put("cookieSwipeLabelPassword", cookieSwipeLabelPassword);
+        hsJcomponent.put("cookieSwipePasswordFieldPassword", cookieSwipePasswordFieldPassword);
+        hsJcomponent.put("cookieSwipeTextFieldLogin", cookieSwipeTextFieldLogin);
     }
 
     /**
@@ -213,10 +209,6 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public HashMap<String, Object> getJComponent() {
-        return hsJComponent;
-    }
 
     @Override
     public void refresh() {
