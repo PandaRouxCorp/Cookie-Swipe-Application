@@ -1,6 +1,5 @@
 package cookie.swipe.application;
 
-import controller.Dispatcher;
 import java.util.HashMap;
 import model.User;
 import module.ihm.LoginFrameInitializer;
