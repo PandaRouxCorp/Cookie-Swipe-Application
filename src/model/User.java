@@ -9,10 +9,9 @@ import dao.DAOMailAccount;
 import errorMessage.CodeError;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import view.MainCSFrame;
-import view.component.CookieSwipeFrame;
 
 /**
  * Utilisateur de l'application Cookie Swipe Peut être un singleton ?
@@ -24,9 +23,9 @@ public class User {
     //Variable membre
     private int id;
     private String loginAdressMail, password, backupMail;
-    private ArrayList<MailAccount> listOfMailAccount = new ArrayList<MailAccount>();
-    private ArrayList<String> blackList;
-    private ArrayList<ListMailAccountListener> mailAccountListeners = new ArrayList<>();
+    private List<MailAccount> listOfMailAccount = new ArrayList<>();
+    private List<String> blackList;
+    private List<ListMailAccountListener> mailAccountListeners = new ArrayList<>();
 
     //Constrcuteur
     /**
@@ -87,7 +86,11 @@ public class User {
      * @return Utilisateur connecté
      */
     public int connect() {
-        return dao.DAOUser.connectUser(this);
+        int returnCode = dao.DAOUser.connectUser(this);
+        if(CodeError.SUCESS == returnCode) {
+            retrieveMails();
+        }
+        return returnCode;
     }
 
     /**
@@ -233,19 +236,19 @@ public class User {
         this.backupMail = backupMail;
     }
 
-    public ArrayList<MailAccount> getListOfMailAccount() {
+    public List<MailAccount> getListOfMailAccount() {
         return listOfMailAccount;
     }
 
-    public void setListOfMailAccount(ArrayList<MailAccount> listOfMailAccount) {
+    public void setListOfMailAccount(List<MailAccount> listOfMailAccount) {
         this.listOfMailAccount = listOfMailAccount;
     }
 
-    public ArrayList<String> getBlackList() {
+    public List<String> getBlackList() {
         return blackList;
     }
 
-    public void setBlackList(ArrayList<String> blackList) {
+    public void setBlackList(List<String> blackList) {
         this.blackList = blackList;
     }
 
@@ -290,6 +293,19 @@ public class User {
     private void notifyMailAccountDeleted(MailAccount mc) {
         for(ListMailAccountListener listener : mailAccountListeners) {
             listener.notifyMailAccountDeleted(mc);
+        }
+    }
+    
+    private void notifyMailListChanged(MailAccount mc) {
+        for(ListMailAccountListener listener : mailAccountListeners) {
+            listener.notifyMailListChanged(mc);
+        }
+    }
+
+    private void retrieveMails() {
+        for(MailAccount mc : listOfMailAccount) {
+            DAOMailAccount.loadMail(mc);
+            notifyMailListChanged(mc);
         }
     }
 

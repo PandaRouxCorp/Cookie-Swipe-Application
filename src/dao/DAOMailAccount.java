@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.MailAccount;
@@ -93,8 +95,13 @@ public class DAOMailAccount {
             statementInstance.setInt(1, user.getId());
             ResultSet result = statementInstance.executeQuery();
 
+            List<MailAccount> mailAccountList = new ArrayList<>();
+            MailAccount mailAccount = null;
+            
+            error = CodeError.SUCESS;
+            
             while (result.next()) {
-                MailAccount mailAccount = new MailAccount();
+                mailAccount = new MailAccount();
 
                 mailAccount.setId(result.getInt("id"));
                 mailAccount.setAddress(result.getString("adresse"));
@@ -108,10 +115,10 @@ public class DAOMailAccount {
                 if (resLoadDomain != 0) {
                     error = resLoadDomain;
                 } else {
-                    error = CodeError.SUCESS;
-                    user.getListOfMailAccount().add(mailAccount);
+                    mailAccountList.add(mailAccount);
                 }
             }
+            user.setListOfMailAccount(mailAccountList);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             error = CodeError.STATEMENT_EXECUTE_FAIL;
@@ -245,7 +252,13 @@ public class DAOMailAccount {
      * @return Code d'erreur
      */
     public static int loadMail(MailAccount mailAccount) {
-        return CodeError.NOT_INPLEMENT;
+        try {
+            mailAccount.getMessages();
+        } catch (Exception ex) {
+            Logger.getLogger(DAOMailAccount.class.getName()).log(Level.SEVERE, "An error occured when retreiving mail for " + mailAccount.getCSName(), ex);
+            return CodeError.FAILLURE;
+        }
+        return CodeError.SUCESS;
     }
 
     public static int deleteMailAccount(MailAccount mailAccount) {
