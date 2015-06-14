@@ -20,7 +20,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import model.Mail;
 import model.MailAccount;
@@ -55,7 +54,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
         while (en.hasMoreElements()) {
             DefaultMutableTreeNode node = en.nextElement();
             TreeNode[] path = node.getPath();
-            if(path[path.length - 1].equals(mc.getCSName())) {
+            if(path[path.length - 1].toString().equals(mc.getCSName())) {
                 rootNode.remove(node);
                 break; 
             }
