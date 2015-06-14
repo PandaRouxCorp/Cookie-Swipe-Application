@@ -123,30 +123,13 @@ public class User {
         int res = 0;
         String mailDomain = address.substring(address.indexOf('@') + 1);
         Domain domain = null;
-
-        switch (mailDomain) {
-            case "yahoo.fr":
-                domain = new Domain("Yahoo", mailDomain, "pop.mail.yahoo.fr", "995", "smtp.mail.yahoo.fr", "465", 1);
-                break;
-            case "hotmail.com":
-            case "hotmail.fr":
-            case "live.com":
-            case "live.fr":
-            case "msn.com":
-            case "outlook.com":
-                domain = new Domain("Microsoft", mailDomain, "pop3.live.com", "995", "smtp.live.com", "587", 2);
-                break;
-            case "orange.fr":
-            case "wanadoo.fr":
-                domain = new Domain("Orange", mailDomain, "", "", "", "", 3);
-                break;
-            case "gmail.com":
-                domain = new Domain("Google", mailDomain, "imap.gmail.com", "993", "smtp.gmail.com", "465", 4);
-                break;
-            default:
-                return 1001;
-
+        try {
+            domain = Domain.getDomainFor(mailDomain);
+        } catch (Exception ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            return CodeError.FAILLURE;
         }
+       
         MailAccount newMailAccount = new MailAccount(name, address, domain, password, color);
         res = DAOMailAccount.createMailAccount(newMailAccount, this);
         if (res == 0) {

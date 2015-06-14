@@ -5,6 +5,7 @@
  */
 package model;
 
+import errorMessage.CodeError;
 import java.util.Objects;
 
 /**
@@ -14,8 +15,38 @@ import java.util.Objects;
  */
 public class Domain {
 
+    static Domain getDomainFor(String mailDomain) throws Exception {
+        Domain domain = null;
+        switch (mailDomain) {
+            case "yahoo.fr":
+                domain = new Domain("Yahoo", mailDomain, "pop.mail.yahoo.fr",
+                        "995", "smtp.mail.yahoo.fr", "465", "pop3", 1);
+                break;
+            case "hotmail.com":
+            case "hotmail.fr":
+            case "live.com":
+            case "live.fr":
+            case "msn.com":
+            case "outlook.com":
+                domain = new Domain("Microsoft", mailDomain, "pop3.live.com",
+                        "995", "smtp.live.com", "587", "pop3", 2);
+                break;
+            case "orange.fr":
+            case "wanadoo.fr":
+                domain = new Domain("Orange", mailDomain, "", "", "", "", "", 3);
+                break;
+            case "gmail.com":
+                domain = new Domain("Google", mailDomain, "imap.gmail.com", "993",
+                        "smtp.gmail.com", "465", "imaps", 4);
+                break;
+            default:
+                throw new Exception("Unknown domain: " +  mailDomain);
+        }
+        return domain;
+    }
+
     //Variable membre
-    private String name, address, serverIn, serverOut, portIn, portOut;
+    private String name, address, serverIn, serverOut, portIn, portOut, storeProtocol;
     private int id;
     
     //Constructeur
@@ -27,22 +58,24 @@ public class Domain {
 
     }
 
-    public Domain(String name, String address, String serverIn, String serverOut, String portIn, String portOut) {
+    public Domain(String name, String address, String serverIn, String serverOut, String portIn, String portOut, String storeProtocole) {
         this.name = name;
         this.address = address;
         this.serverIn = serverIn;
         this.serverOut = serverOut;
         this.portIn = portIn;
         this.portOut = portOut;
+        this.storeProtocol = storeProtocole;
     }
 
-    public Domain(String name, String address, String serverIn, String serverOut, String portIn, String portOut, int id) {
+    public Domain(String name, String address, String serverIn, String serverOut, String portIn, String portOut, String storeProtocol, int id) {
         this.name = name;
         this.address = address;
         this.serverIn = serverIn;
         this.serverOut = serverOut;
         this.portIn = portIn;
         this.portOut = portOut;
+        this.storeProtocol = storeProtocol;
         this.id = id;
     }
 
@@ -112,6 +145,14 @@ public class Domain {
 
     public void setId(int id) {
         this.id = id;
+    }
+    
+    public String getStoreProtocole() {
+        return this.storeProtocol;
+    }
+    
+    public void setStoreProtocol(String storeProtocol) {
+        this.storeProtocol = storeProtocol; 
     }
 
     //Surcharge de Object
