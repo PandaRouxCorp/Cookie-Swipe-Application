@@ -261,4 +261,19 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
         new MainFrameInitializer(this).addMailAccountInTree(mc);
     }
 
+    @Override
+    public void notifyMailDeleted(MailAccount mc) {
+        System.err.println("Not supported yet.");
+    }
+
+    @Override
+    public void notifyMailAdded(MailAccount mc) {
+        System.err.println("Not supported yet.");
+    }
+
+    @Override
+    public void notifyMailListChanged(MailAccount mc) {
+        System.err.println("Not supported yet.");
+    }
+
 }
