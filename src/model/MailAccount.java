@@ -148,44 +148,50 @@ public class MailAccount {
 	 */
 	public void getMessages() throws Exception {
 
-		// Definir les parametres de connexion
-		Session session = Session.getDefaultInstance(new Properties(),
-				new javax.mail.Authenticator() {
-					public javax.mail.PasswordAuthentication getPasswordAuthentication() {
-						return new javax.mail.PasswordAuthentication(address, password);
-					}
-				});
-		Store store = session.getStore("pop3");
+            // Definir les parametres de connexion
+            Session session = Session.getDefaultInstance(
+                new Properties(),
+                new javax.mail.Authenticator() {
+                    public javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                        return new javax.mail.PasswordAuthentication(address, password);
+                    }
+            });
+            
+            Store store = session.getStore("pop3");
+            
+            System.out.println(domain.getServerIn() + " " +  address + " " + password);
 
-		// Ouvrir la connexion
-		store.connect(domain.getServerIn(), address, password);
+            
+            
+            // Ouvrir la connexion
+            store.connect(domain.getServerIn(), address, password);
 
-		System.out.println("Vous ete connecte a " + domain.getServerIn());
+            System.out.println("Vous ete connecte a " + domain.getServerIn());
 
-		// Ouverture de la boite de reception
-		Folder inbox = store.getFolder("INBOX");
-		if (inbox == null) {
-			System.out.println("Boite de Reception introuvale");
-		}
-		inbox.open(Folder.READ_ONLY);
-		int count = inbox.getMessageCount();
+            // Ouverture de la boite de reception
+            Folder inbox = store.getFolder("INBOX");
+            if (inbox == null) {
+                    System.out.println("Boite de Reception introuvale");
+            }
+            inbox.open(Folder.READ_ONLY);
+            int count = inbox.getMessageCount();
 
-		// recuperation de tous les mails et les mettres dans la liste
-		for (int i = 0; i < count; i++) {
-			javax.mail.Message message = inbox.getMessage(i);
-			Mail mail = new Mail();
-			mail.setBody(message.getDescription());
-			mail.setSubject(message.getSubject());
-			System.out.println(mail.getSubject());
-			mail.setDate((Date) message.getReceivedDate());
-			String from = "";
-			for (Address f : message.getFrom())
-				from += f.toString() + "; ";
-			mail.setFrom(from);
-			// verifier doublons avant ou clear la list.
-			listOfmail.add(mail);
-		}
-		store.close();
+            // recuperation de tous les mails et les mettres dans la liste
+            for (int i = 0; i < count; i++) {
+                    javax.mail.Message message = inbox.getMessage(i);
+                    Mail mail = new Mail();
+                    mail.setBody(message.getDescription());
+                    mail.setSubject(message.getSubject());
+                    System.out.println(mail.getSubject());
+                    mail.setDate((Date) message.getReceivedDate());
+                    String from = "";
+                    for (Address f : message.getFrom())
+                            from += f.toString() + "; ";
+                    mail.setFrom(from);
+                    // verifier doublons avant ou clear la list.
+                    listOfmail.add(mail);
+            }
+            store.close();
 
 	}
 

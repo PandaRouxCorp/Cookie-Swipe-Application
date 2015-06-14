@@ -13,5 +13,11 @@ public interface ListMailAccountListener {
 
     public void notifyMailAccountDeleted(MailAccount mc);
     public void notifyMailAccountAdded(MailAccount mc);
+
+    public void notifyMailDeleted(MailAccount mc);
+
+    public void notifyMailAdded(MailAccount mc);
+
+    public void notifyMailListChanged(MailAccount mc);
     
 }
