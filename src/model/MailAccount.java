@@ -142,7 +142,7 @@ public class MailAccount {
 	}
 
 	/**
-	 * r�cupere la liste de mails
+	 * r�cupere la liste de mails
 	 * 
 	 * @throws Exception
 	 */
@@ -162,7 +162,7 @@ public class MailAccount {
 
 		System.out.println("Vous ête connecté à " + domain.getServerIn());
 
-		// Ouverture de la boite de r�ception
+		// Ouverture de la boite de réception
 		Folder inbox = store.getFolder("INBOX");
 		if (inbox == null) {
 			System.out.println("Boîte de Réception introuvale");
@@ -170,7 +170,7 @@ public class MailAccount {
 		inbox.open(Folder.READ_ONLY);
 		int count = inbox.getMessageCount();
 
-		// r�cuperation de tous les mails et les mettres dans la liste
+		// récuperation de tous les mails et les mettres dans la liste
 		for (int i = 0; i < count; i++) {
 			javax.mail.Message message = inbox.getMessage(i);
 			Mail mail = new Mail();
@@ -182,7 +182,7 @@ public class MailAccount {
 			for (Address f : message.getFrom())
 				from += f.toString() + "; ";
 			mail.setFrom(from);
-			// v�rifier doublons avant ou clear la list.
+			// vérifier doublons avant ou clear la list.
 			listOfmail.add(mail);
 		}
 		store.close();
