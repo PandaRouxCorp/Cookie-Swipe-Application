@@ -5,19 +5,26 @@
  */
 package model;
 
-import errorMessage.CodeError;
+import java.net.PasswordAuthentication;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Properties;
+
+import javax.mail.Address;
 import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import network.messageFramework.Message;
+import errorMessage.CodeError;
 
 /**
  *
@@ -25,299 +32,414 @@ import javax.mail.Store;
  */
 public class MailAccount {
 
-    //Variable membre
-    private int id;
-    private String address, CSName, password, color, mailSignature;
-    private Domain domain;
-    private Date lastSynch;
-    private ArrayList<Mail> listOfmail;
+	// Variable membre
+	private int id;
+	private String address, CSName, password, color, mailSignature;
+	private Domain domain;
+	private Date lastSynch;
+	private ArrayList<Mail> listOfmail;
 
-    //Constructeur 
-    /**
-     * Constructeur par défaut
-     */
-    public MailAccount() {
-        domain = new Domain();
-        listOfmail = new ArrayList<>();
-    }
+	// Constructeur
+	/**
+	 * Constructeur par défaut
+	 */
+	public MailAccount() {
+		domain = new Domain();
+		listOfmail = new ArrayList<>();
+	}
 
-    /**
-     * Constructeur à utiliser lors de l'ajout d'une boite courriel
-     *
-     * @param CSName nom donné à la botie courriel
-     * @param address adresse courriel de la boite
-     * @param password mot de passe pour accéder à la boite courriel
-     * @param color couleur donné à la boite courriel pour l'affichage des
-     * courriels
-     */
-    public MailAccount(String CSName, String address, Domain domain, String password, String color) {
+	/**
+	 * Constructeur à utiliser lors de l'ajout d'une boite courriel
+	 *
+	 * @param CSName
+	 *            nom donné à la botie courriel
+	 * @param address
+	 *            adresse courriel de la boite
+	 * @param password
+	 *            mot de passe pour accéder à la boite courriel
+	 * @param color
+	 *            couleur donné à la boite courriel pour l'affichage des
+	 *            courriels
+	 */
+	public MailAccount(String CSName, String address, Domain domain,
+			String password, String color) {
 
-        this.CSName = CSName;
-        this.address = address;
-        this.domain = domain;
-        try {
-            this.password = new Encryption().encrypt(password);
-        } catch (Exception ex) {
-            Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.color = color;
-        listOfmail = new ArrayList<>();
-    }
+		this.CSName = CSName;
+		this.address = address;
+		this.domain = domain;
+		try {
+			this.password = new Encryption().encrypt(password);
+		} catch (Exception ex) {
+			Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE,
+					null, ex);
+		}
+		this.color = color;
+		listOfmail = new ArrayList<>();
+	}
 
-    /**
-     * Constructeur à utiliser pour charger les comptes courriel dans
-     * l'application
-     *
-     * @param id identifiant unique de la boite mail
-     * @param CSName nom donné à la boite courriel
-     * @param address adresse courriel de la boite
-     * @param password mot de passe pour accéder à la boite mail
-     * @param color couleur donné à la boite courriel pour l'affichage des
-     * courriels
-     * @param domain domaine de l'adresse courriel
-     * @param mailSignature signature à mettre à la fin d'un courriel
-     * @param lastSynch date de la dernière synchronisation réussi de la boite
-     * courriel
-     * @param listOfMail Liste des courriels de la boite mail
-     */
-    public MailAccount(int id, String CSName, String address, String password, String color,
-            Domain domain, String mailSignature, Date lastSynch, ArrayList<Mail> listOfMail) {
-        this.id = id;
-        this.address = address;
-        this.CSName = CSName;
-        try {
-            this.password = new Encryption().encrypt(password);
-        } catch (Exception ex) {
-            Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.color = color;
-        this.domain = domain;
-        this.mailSignature = mailSignature;
-        this.lastSynch = lastSynch;
-        this.listOfmail = listOfMail;
-    }
+	/**
+	 * Constructeur à utiliser pour charger les comptes courriel dans
+	 * l'application
+	 *
+	 * @param id
+	 *            identifiant unique de la boite mail
+	 * @param CSName
+	 *            nom donné à la boite courriel
+	 * @param address
+	 *            adresse courriel de la boite
+	 * @param password
+	 *            mot de passe pour accéder à la boite mail
+	 * @param color
+	 *            couleur donné à la boite courriel pour l'affichage des
+	 *            courriels
+	 * @param domain
+	 *            domaine de l'adresse courriel
+	 * @param mailSignature
+	 *            signature à mettre à la fin d'un courriel
+	 * @param lastSynch
+	 *            date de la dernière synchronisation réussi de la boite
+	 *            courriel
+	 * @param listOfMail
+	 *            Liste des courriels de la boite mail
+	 */
+	public MailAccount(int id, String CSName, String address, String password,
+			String color, Domain domain, String mailSignature, Date lastSynch,
+			ArrayList<Mail> listOfMail) {
+		this.id = id;
+		this.address = address;
+		this.CSName = CSName;
+		try {
+			this.password = new Encryption().encrypt(password);
+		} catch (Exception ex) {
+			Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE,
+					null, ex);
+		}
+		this.color = color;
+		this.domain = domain;
+		this.mailSignature = mailSignature;
+		this.lastSynch = lastSynch;
+		this.listOfmail = listOfMail;
+	}
 
-    //Fonction membre public
-    /**
-     * Renvoie les toutes données du compte courriel
-     *
-     * @return table de hash contenant toutes les données du compte courriel
-     */
-    public HashMap<String, Object> getData() {
+	// Fonction membre public
+	/**
+	 * Renvoie les toutes données du compte courriel
+	 *
+	 * @return table de hash contenant toutes les données du compte courriel
+	 */
+	public HashMap<String, Object> getData() {
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Modifie les données du compte courrie
-     *
-     * @param data table de hash contenant les données du compte courriel
-     * @return Si la mise à jours des données est correct
-     */
-    public boolean updateData(HashMap<String, Object> data) {
-        return false;
-    }
+	/**
+	 * Modifie les données du compte courrie
+	 *
+	 * @param data
+	 *            table de hash contenant les données du compte courriel
+	 * @return Si la mise à jours des données est correct
+	 */
+	public boolean updateData(HashMap<String, Object> data) {
+		return false;
+	}
 
-    public void readMessage()
-            throws Exception {
+	/**
+	 * r�cupere la liste de mails
+	 * 
+	 * @throws Exception
+	 */
+	public void getMessages() throws Exception {
 
-        // Définir les paramètres de connexion
-        Session session = Session.getDefaultInstance(new Properties(),
-                new javax.mail.Authenticator() {
-                    public PasswordAuthentication getPasswordAuthentication(){
-                        return new PasswordAuthentication(address, password);
-                    }
-                });
-        Store store = session.getStore("pop3");
+		// Définir les paramètres de connexion
+		Session session = Session.getDefaultInstance(new Properties(),
+				new javax.mail.Authenticator() {
+					public PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(address, password);
+					}
+				});
+		Store store = session.getStore("pop3");
 
-        // Ouvrir la connexion
-        store.connect(domain.getServerIn(), address, password);
+		// Ouvrir la connexion
+		store.connect(domain.getServerIn(), address, password);
 
-        System.out.println("Vous ête connecté à " + domain.getServerIn());
+		System.out.println("Vous ête connecté à " + domain.getServerIn());
 
-        // Ouverture de la boîte de réception
-        Folder inbox = store.getFolder("INBOX");
-        if (inbox == null) {
-            System.out.println("Boîte de Réception introuvale");
-        }
-        inbox.open(Folder.READ_ONLY);
+		// Ouverture de la boite de r�ception
+		Folder inbox = store.getFolder("INBOX");
+		if (inbox == null) {
+			System.out.println("Boîte de Réception introuvale");
+		}
+		inbox.open(Folder.READ_ONLY);
+		int count = inbox.getMessageCount();
 
-        // Sélectionner tous les messages du répertoire ouvert
-        Message[] messages = inbox.getMessages();
+		// r�cuperation de tous les mails et les mettres dans la liste
+		for (int i = 0; i < count; i++) {
+			javax.mail.Message message = inbox.getMessage(i);
+			Mail mail = new Mail();
+			mail.setBody(message.getDescription());
+			mail.setSubject(message.getSubject());
+			mail.setDate((Date) message.getReceivedDate());
+			String from = "";
+			for (Address f : message.getFrom())
+				from += f.toString() + "; ";
+			mail.setFrom(from);
+			// v�rifier doublons avant ou clear la list.
+			listOfmail.add(mail);
+		}
+		store.close();
 
-        // Afficher le nombre de message
-        System.out.println("Vous avez: " + messages.length + " message(s)");
+	}
 
-        System.out.println("Voici le contenu d'un message:");
-        System.out.println();
+	public void readMessage() throws Exception {
+		// Définir les paramètres de connexion
+		Session session = Session.getDefaultInstance(new Properties(),
+				new javax.mail.Authenticator() {
+					public PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(address, password);
+					}
+				});
+		Store store = session.getStore("pop3");
 
-        // Afficher le contenu d'un message
-        if (messages.length >= 1) {
-            messages[1].writeTo(System.out);
-        }
+		// Ouvrir la connexion
+		store.connect(domain.getServerIn(), address, password);
 
-        store.close();
-    }
+		System.out.println("Vous ête connecté à " + domain.getServerIn());
 
-    /**
-     * Sert à créer un nouveau courriel
-     *
-     * @return courriel créé
-     */
-    public Mail createNewMail() {
-        return null;
-    }
+		// Ouverture de la boîte de réception
+		Folder inbox = store.getFolder("INBOX");
+		if (inbox == null) {
+			System.out.println("Boîte de Réception introuvale");
+		}
+		inbox.open(Folder.READ_ONLY);
 
-    /**
-     * Sert à envoyer un courriel, délègue l'envoi à un domaine
-     *
-     * @param mail courriel à envoyer
-     * @return Si l'envoi c'est bien passé
-     */
-    public boolean sendMail(Mail mail) {
-        return false;
-    }
+		// Sélectionner tous les messages du répertoire ouvert
+		Message[] messages = inbox.getMessages();
 
-    /**
-     * Sert à suppriemr un courriel de la boite courriel
-     *
-     * @param mail courriel à supprimer
-     * @return Si la suppresion c'est bien passé
-     */
-    public boolean deleteMail(Mail mail) {
-        return false;
-    }
+		// Afficher le nombre de message
+		System.out.println("Vous avez: " + messages.length + " message(s)");
 
-    //Getter & setter
-    public int getId() {
-        return id;
-    }
+		System.out.println("Voici le contenu d'un message:");
+		System.out.println();
 
-    public void setId(int id) {
-        this.id = id;
-    }
+		// Afficher le contenu d'un message
+		if (messages.length >= 1) {
+			// messages[1].writeTo(System.out);
+		}
 
-    public String getAddress() {
-        return address;
-    }
+		store.close();
+	}
+	
+	private Session getSession() {
 
-    public int setAddress(String address) {
-        String mailDomain = address.substring(address.indexOf('@') + 1);
-        Domain domain = null;
+		Properties properties = new Properties();
 
-        switch (mailDomain) {
-            case "yahoo.fr":
-                domain = new Domain("Yahoo", mailDomain, "pop.mail.yahoo.fr", "995", "smtp.mail.yahoo.fr", "465", 1);
-                break;
-            case "hotmail.com":
-            case "hotmail.fr":
-            case "live.com":
-            case "live.fr":
-            case "msn.com":
-            case "outlook.com":
-                domain = new Domain("Microsoft", mailDomain, "pop3.live.com", "995", "smtp.live.com", "587", 2);
-                break;
-            case "orange.fr":
-            case "wanadoo.fr":
-                domain = new Domain("Orange", mailDomain, "", "", "", "", 3);
-                break;
-            case "gmail.com":
-                domain = new Domain("Google", mailDomain, "imap.gmail.com", "993", "smtp.gmail.com", "465", 4);
-                break;
-            default:
-                return CodeError.DOMAIN_NOT_SUPPORTED;
+		properties.setProperty("mail.transport.protocol", "smtp");
+		// properties.setProperty("mail.smtp.host", SMTP_HOST1);
+		// properties.setProperty("mail.smtp.user", LOGIN_SMTP1);
+		// properties.setProperty("mail.from", IMAP_ACCOUNT1);
 
-        }
-        this.address = address;
-        return CodeError.SUCESS;
-    }
+		return Session.getInstance(properties);
+	}
 
-    public String getCSName() {
-        return CSName;
-    }
+	public MimeMessage writeMail(String subject, String text, String to, String copyDest) throws MessagingException {
+		MimeMessage message = new MimeMessage(getSession());
+		message.setText(text);
+		message.setSubject(subject);
+		message.setFrom(address);
+//		message.addRecipients(javax.mail.Message.RecipientType.TO, to);
+//		if(copyDest != null && !copyDest.isEmpty())
+//			message.addRecipients(javax.mail.Message.RecipientType.CC, copyDest);
+		return message;
+	}
 
-    public void setCSName(String CSName) {
-        this.CSName = CSName;
-    }
+	public MimeMessage writeMail(Mail mail) throws MessagingException {
+		return writeMail(mail.getSubject(), mail.getBody(), mail.getTo(), mail.getCopyTo());
+	}
 
-    public Domain getDomain() {
-        return domain;
-    }
+	/**
+	 * Sert à créer un nouveau courriel
+	 *
+	 * @return courriel créé
+	 */
+	public Mail createNewMail() {
+		return null;
+	}
 
-    public void setDomain(Domain domain) {
-        this.domain = domain;
-    }
+	/**
+	 * Sert à envoyer un courriel, délègue l'envoi à un domaine
+	 *
+	 * @param mail
+	 *            courriel à envoyer
+	 * @return Si l'envoi c'est bien passé
+	 */
+	public boolean sendMail(Mail mail) {
+		Transport transport = null;
+		try {
+			Session session = getSession();
+			transport = session.getTransport("smtp");
+			transport.connect(address, password);
+			transport.sendMessage(writeMail(mail), new Address[] {
+					new InternetAddress(mail.getTo()),
+					new InternetAddress(mail.getCopyTo()) });
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				if (transport != null) {
+					transport.close();
+				}
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		}
+		return true;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	/**
+	 * Sert à suppriemr un courriel de la boite courriel
+	 *
+	 * @param mail
+	 *            courriel à supprimer
+	 * @return Si la suppresion c'est bien passé
+	 */
+	public boolean deleteMail(Mail mail) {
+		return false;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	// Getter & setter
+	public int getId() {
+		return id;
+	}
 
-    public String getMailSignature() {
-        return mailSignature;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setMailSignature(String mailSignature) {
-        this.mailSignature = mailSignature;
-    }
+	public String getAddress() {
+		return address;
+	}
 
-    public String getColor() {
-        return color;
-    }
+	public int setAddress(String address) {
+		String mailDomain = address.substring(address.indexOf('@') + 1);
+		Domain domain = null;
 
-    public void setColor(String color) {
-        this.color = color;
-    }
+		switch (mailDomain) {
+		case "yahoo.fr":
+			domain = new Domain("Yahoo", mailDomain, "pop.mail.yahoo.fr",
+					"995", "smtp.mail.yahoo.fr", "465", 1);
+			break;
+		case "hotmail.com":
+		case "hotmail.fr":
+		case "live.com":
+		case "live.fr":
+		case "msn.com":
+		case "outlook.com":
+			domain = new Domain("Microsoft", mailDomain, "pop3.live.com",
+					"995", "smtp.live.com", "587", 2);
+			break;
+		case "orange.fr":
+		case "wanadoo.fr":
+			domain = new Domain("Orange", mailDomain, "", "", "", "", 3);
+			break;
+		case "gmail.com":
+			domain = new Domain("Google", mailDomain, "imap.gmail.com", "993",
+					"smtp.gmail.com", "465", 4);
+			break;
+		default:
+			return CodeError.DOMAIN_NOT_SUPPORTED;
 
-    public Date getLastSynch() {
-        return lastSynch;
-    }
+		}
+		this.address = address;
+		return CodeError.SUCESS;
+	}
 
-    public void setLastSynch(Date lastSynch) {
-        this.lastSynch = lastSynch;
-    }
+	public String getCSName() {
+		return CSName;
+	}
 
-    public ArrayList<Mail> getListOfmail() {
-        return listOfmail;
-    }
+	public void setCSName(String CSName) {
+		this.CSName = CSName;
+	}
 
-    public void setListOfmail(ArrayList<Mail> listOfmail) {
-        this.listOfmail = listOfmail;
-    }
+	public Domain getDomain() {
+		return domain;
+	}
 
-    //equals & hashcode
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 97 * hash + this.id;
-        hash = 97 * hash + Objects.hashCode(this.address);
-        return hash;
-    }
+	public void setDomain(Domain domain) {
+		this.domain = domain;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (this == obj) {
-            return true;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final MailAccount other = (MailAccount) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        return Objects.equals(this.address, other.address);
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    @Override
-    public String toString() {
-        return CSName;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getMailSignature() {
+		return mailSignature;
+	}
+
+	public void setMailSignature(String mailSignature) {
+		this.mailSignature = mailSignature;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public Date getLastSynch() {
+		return lastSynch;
+	}
+
+	public void setLastSynch(Date lastSynch) {
+		this.lastSynch = lastSynch;
+	}
+
+	public ArrayList<Mail> getListOfmail() {
+		return listOfmail;
+	}
+
+	public void setListOfmail(ArrayList<Mail> listOfmail) {
+		this.listOfmail = listOfmail;
+	}
+
+	// equals & hashcode
+	@Override
+	public int hashCode() {
+		int hash = 5;
+		hash = 97 * hash + this.id;
+		hash = 97 * hash + Objects.hashCode(this.address);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (this == obj) {
+			return true;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final MailAccount other = (MailAccount) obj;
+		if (this.id != other.id) {
+			return false;
+		}
+		return Objects.equals(this.address, other.address);
+	}
+
+	@Override
+	public String toString() {
+		return CSName;
+	}
 
 }

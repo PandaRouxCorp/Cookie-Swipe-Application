@@ -19,10 +19,10 @@ public class Mail implements Serializable {
     //Variable membre
     private int id;
     private Date date;
-    private String to, from, subject, priority, body;
+    private String to, from, subject, priority, body, copyTo;
     private File[] attachement;
 
-    //Constrcteur 
+    //Constructeur 
     
     /**
      * Constrcteur par défaut
@@ -138,6 +138,14 @@ public class Mail implements Serializable {
 
     public void setAttachement(File[] attachement) {
         this.attachement = attachement;
+    }
+
+    public String getCopyTo() {
+        return copyTo;
+    }
+
+    public void setAttachement(String copyTo) {
+        this.copyTo = copyTo;
     }
     
     //response & forward mail

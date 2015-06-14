@@ -39,6 +39,17 @@ public class MailAccountTest {
     @After
     public void tearDown() {
     }
+    
+    @Test
+    public void sendMail() {
+    	Mail mail = new Mail();
+    	mail.setSubject("c'est une test");
+    	mail.setBody("le body du test");
+//    	panda.roux.corp@gmail.com
+//    	mdp: panda
+    	MailAccount account = new MailAccount();
+    	account.sendMail(mail);
+    }
 
     /**
      * Test of getData method, of class MailAccount.
