@@ -6,6 +6,9 @@
 package view;
 
 import interfaces.IJFrame;
+import model.ListMailAccountListener;
+import model.MailAccount;
+import module.ihm.MainFrameInitializer;
 import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeFrame;
 
@@ -13,7 +16,7 @@ import view.component.CookieSwipeFrame;
  *
  * @author Suiken
  */
-public class MainCSFrame extends CookieSwipeFrame implements IJFrame {
+public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAccountListener {
 
     /**
      * Creates new form MainCSFrame
@@ -35,7 +38,6 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponent.put("cookieSwipeButtonLogout", cookieSwipeButtonLogout);
         hsJcomponent.put("cookieSwipeButtonUpdateCSAccount", cookieSwipeButtonUpdateCSAccount);
         hsJcomponent.put("cookieSwipeButtonUpdateMailAccount", cookieSwipeButtonUpdateMailAccount);
-        hsJcomponent.put("cookieSwipeTreeAcountMail", cookieSwipeTreeAcountMail);
         hsJcomponent.put("jListMail", jListMail);
     }
 
@@ -248,4 +250,15 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame {
     public void refresh() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void notifyMailAccountDeleted(MailAccount mc) {
+        new MainFrameInitializer(this).deleteMailAccountInTree(mc);
+    }
+
+    @Override
+    public void notifyMailAccountAdded(MailAccount mc) {
+        new MainFrameInitializer(this).addMailAccountInTree(mc);
+    }
+
 }

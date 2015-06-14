@@ -58,6 +58,7 @@ public class Dispatcher implements ActionListener {
         String password = ((CookieSwipePasswordField)application.getMainFrameJComponent("cookieSwipePasswordFieldPassword")).getText();
         if (new ConnectAccountAction().execute(login, password)) {
             MainCSFrame frame = new MainCSFrame();
+            application.getUser().addListMailAccountListeneur(frame);
             application.setMainFrame(frame);
             new MainFrameInitializer(frame).execute();
         }

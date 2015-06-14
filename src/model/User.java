@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import view.MainCSFrame;
+import view.component.CookieSwipeFrame;
 
 /**
  * Utilisateur de l'application Cookie Swipe Peut être un singleton ?
@@ -24,6 +26,7 @@ public class User {
     private String loginAdressMail, password, backupMail;
     private ArrayList<MailAccount> listOfMailAccount = new ArrayList<MailAccount>();
     private ArrayList<String> blackList;
+    private ArrayList<ListMailAccountListener> mailAccountListeners = new ArrayList<>();
 
     //Constrcuteur
     /**
@@ -145,6 +148,7 @@ public class User {
         res = DAOMailAccount.createMailAccount(newMailAccount, this);
         if (res == 0) {
             listOfMailAccount.add(newMailAccount);
+            notifyMailAccountAdded(newMailAccount);
         }
 
         return res;
@@ -164,6 +168,7 @@ public class User {
         int error = DAOMailAccount.deleteMailAccount(deletedMailAccount);
         if (error == CodeError.SUCESS) {
             listOfMailAccount.remove(deletedMailAccount);
+            notifyMailAccountDeleted(deletedMailAccount);
         }
         return error;
     }
@@ -270,6 +275,22 @@ public class User {
     @Override
     public String toString() {
         return "User{" + "id=" + id + ", loginAdressMail=" + loginAdressMail + ", password=" + password + ", backupMail=" + backupMail + ", listOfMailAccount=" + listOfMailAccount + ", blackList=" + blackList + '}';
+    }
+
+    public void addListMailAccountListeneur(ListMailAccountListener listener) {
+        mailAccountListeners.add(listener);
+    }
+    
+    private void notifyMailAccountAdded(MailAccount mc) {
+        for(ListMailAccountListener listener : mailAccountListeners) {
+            listener.notifyMailAccountAdded(mc);
+        }
+    }
+    
+    private void notifyMailAccountDeleted(MailAccount mc) {
+        for(ListMailAccountListener listener : mailAccountListeners) {
+            listener.notifyMailAccountDeleted(mc);
+        }
     }
 
 }

@@ -1,21 +1,16 @@
 package view.component;
 
 import java.awt.Color;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.JTree;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.views.AbstractView;
 
 public class CookieSwipeTree extends JTree {
 
