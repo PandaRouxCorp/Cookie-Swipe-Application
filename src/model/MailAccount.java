@@ -5,7 +5,6 @@
  */
 package model;
 
-import java.net.PasswordAuthentication;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +22,6 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import network.messageFramework.Message;
 import errorMessage.CodeError;
 
 /**
@@ -153,8 +151,8 @@ public class MailAccount {
 		// Définir les paramètres de connexion
 		Session session = Session.getDefaultInstance(new Properties(),
 				new javax.mail.Authenticator() {
-					public PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(address, password);
+					public javax.mail.PasswordAuthentication getPasswordAuthentication() {
+						return new javax.mail.PasswordAuthentication(address, password);
 					}
 				});
 		Store store = session.getStore("pop3");
@@ -178,6 +176,7 @@ public class MailAccount {
 			Mail mail = new Mail();
 			mail.setBody(message.getDescription());
 			mail.setSubject(message.getSubject());
+			System.out.println(mail.getSubject());
 			mail.setDate((Date) message.getReceivedDate());
 			String from = "";
 			for (Address f : message.getFrom())
@@ -194,8 +193,8 @@ public class MailAccount {
 		// Définir les paramètres de connexion
 		Session session = Session.getDefaultInstance(new Properties(),
 				new javax.mail.Authenticator() {
-					public PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(address, password);
+					public javax.mail.PasswordAuthentication getPasswordAuthentication() {
+						return new javax.mail.PasswordAuthentication(address, password);
 					}
 				});
 		Store store = session.getStore("pop3");
@@ -213,7 +212,7 @@ public class MailAccount {
 		inbox.open(Folder.READ_ONLY);
 
 		// Sélectionner tous les messages du répertoire ouvert
-		Message[] messages = inbox.getMessages();
+		javax.mail.Message[] messages = inbox.getMessages();
 
 		// Afficher le nombre de message
 		System.out.println("Vous avez: " + messages.length + " message(s)");
@@ -234,9 +233,10 @@ public class MailAccount {
 		Properties properties = new Properties();
 
 		properties.setProperty("mail.transport.protocol", "smtp");
-		// properties.setProperty("mail.smtp.host", SMTP_HOST1);
-		// properties.setProperty("mail.smtp.user", LOGIN_SMTP1);
-		// properties.setProperty("mail.from", IMAP_ACCOUNT1);
+		 properties.setProperty("mail.smtp.host", domain.getServerOut());
+		 properties.setProperty("mail.smtp.user", domain.getAddress());
+		 properties.setProperty("mail.smtp.port", domain.getPortOut());
+//		 properties.setProperty("mail.from", domain.getServerIn());
 
 		return Session.getInstance(properties);
 	}

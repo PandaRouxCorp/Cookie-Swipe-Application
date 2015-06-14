@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `login`, `password`, `backupAdr`, `blacklist`) VALUES
-(1, 'panda.roux.corp@gmail.com', 'ftkQGFdCHrYow/XnlXFK1Q==', 'lucas.girardin@outlooK.com', '');
+(1, 'panda.roux.corp@gmail.com', 'H8mxSuAXrWJst9TuxCLXWw==', 'lucas.girardin@outlooK.com', '');
 
 --
 -- Contraintes pour les tables exportées

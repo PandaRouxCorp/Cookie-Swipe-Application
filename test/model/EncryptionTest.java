@@ -8,7 +8,7 @@ public class EncryptionTest {
 	public void encryptTest() {
 		Encryption e = new Encryption();
 		try {
-			System.out.println(e.encrypt("Panda12345"));
+			System.out.println(e.encrypt("panda"));
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
