@@ -39,7 +39,7 @@ public class MailAccount {
 
 	// Constructeur
 	/**
-	 * Constructeur par défaut
+	 * Constructeur par defaut
 	 */
 	public MailAccount() {
 		domain = new Domain();
@@ -47,16 +47,16 @@ public class MailAccount {
 	}
 
 	/**
-	 * Constructeur à utiliser lors de l'ajout d'une boite courriel
+	 * Constructeur a utiliser lors de l'ajout d'une boite courriel
 	 *
 	 * @param CSName
-	 *            nom donné à la botie courriel
+	 *            nom donne a la botie courriel
 	 * @param address
 	 *            adresse courriel de la boite
 	 * @param password
-	 *            mot de passe pour accéder à la boite courriel
+	 *            mot de passe pour acceder a la boite courriel
 	 * @param color
-	 *            couleur donné à la boite courriel pour l'affichage des
+	 *            couleur donne a la boite courriel pour l'affichage des
 	 *            courriels
 	 */
 	public MailAccount(String CSName, String address, Domain domain,
@@ -76,26 +76,26 @@ public class MailAccount {
 	}
 
 	/**
-	 * Constructeur à utiliser pour charger les comptes courriel dans
+	 * Constructeur a utiliser pour charger les comptes courriel dans
 	 * l'application
 	 *
 	 * @param id
 	 *            identifiant unique de la boite mail
 	 * @param CSName
-	 *            nom donné à la boite courriel
+	 *            nom donne a la boite courriel
 	 * @param address
 	 *            adresse courriel de la boite
 	 * @param password
-	 *            mot de passe pour accéder à la boite mail
+	 *            mot de passe pour acceder a la boite mail
 	 * @param color
-	 *            couleur donné à la boite courriel pour l'affichage des
+	 *            couleur donne a la boite courriel pour l'affichage des
 	 *            courriels
 	 * @param domain
 	 *            domaine de l'adresse courriel
 	 * @param mailSignature
-	 *            signature à mettre à la fin d'un courriel
+	 *            signature a mettre a la fin d'un courriel
 	 * @param lastSynch
-	 *            date de la dernière synchronisation réussi de la boite
+	 *            date de la derniere synchronisation reussi de la boite
 	 *            courriel
 	 * @param listOfMail
 	 *            Liste des courriels de la boite mail
@@ -121,9 +121,9 @@ public class MailAccount {
 
 	// Fonction membre public
 	/**
-	 * Renvoie les toutes données du compte courriel
+	 * Renvoie les toutes donnees du compte courriel
 	 *
-	 * @return table de hash contenant toutes les données du compte courriel
+	 * @return table de hash contenant toutes les donnees du compte courriel
 	 */
 	public HashMap<String, Object> getData() {
 
@@ -131,11 +131,11 @@ public class MailAccount {
 	}
 
 	/**
-	 * Modifie les données du compte courrie
+	 * Modifie les donnees du compte courrie
 	 *
 	 * @param data
-	 *            table de hash contenant les données du compte courriel
-	 * @return Si la mise à jours des données est correct
+	 *            table de hash contenant les donnees du compte courriel
+	 * @return Si la mise a jours des donnees est correct
 	 */
 	public boolean updateData(HashMap<String, Object> data) {
 		return false;
@@ -148,7 +148,7 @@ public class MailAccount {
 	 */
 	public void getMessages() throws Exception {
 
-		// Définir les paramètres de connexion
+		// Definir les parametres de connexion
 		Session session = Session.getDefaultInstance(new Properties(),
 				new javax.mail.Authenticator() {
 					public javax.mail.PasswordAuthentication getPasswordAuthentication() {
@@ -160,17 +160,17 @@ public class MailAccount {
 		// Ouvrir la connexion
 		store.connect(domain.getServerIn(), address, password);
 
-		System.out.println("Vous ête connecté à " + domain.getServerIn());
+		System.out.println("Vous ete connecte a " + domain.getServerIn());
 
-		// Ouverture de la boite de réception
+		// Ouverture de la boite de reception
 		Folder inbox = store.getFolder("INBOX");
 		if (inbox == null) {
-			System.out.println("Boîte de Réception introuvale");
+			System.out.println("Boite de Reception introuvale");
 		}
 		inbox.open(Folder.READ_ONLY);
 		int count = inbox.getMessageCount();
 
-		// récuperation de tous les mails et les mettres dans la liste
+		// recuperation de tous les mails et les mettres dans la liste
 		for (int i = 0; i < count; i++) {
 			javax.mail.Message message = inbox.getMessage(i);
 			Mail mail = new Mail();
@@ -182,7 +182,7 @@ public class MailAccount {
 			for (Address f : message.getFrom())
 				from += f.toString() + "; ";
 			mail.setFrom(from);
-			// vérifier doublons avant ou clear la list.
+			// verifier doublons avant ou clear la list.
 			listOfmail.add(mail);
 		}
 		store.close();
@@ -190,7 +190,7 @@ public class MailAccount {
 	}
 
 	public void readMessage() throws Exception {
-		// Définir les paramètres de connexion
+		// Definir les parametres de connexion
 		Session session = Session.getDefaultInstance(new Properties(),
 				new javax.mail.Authenticator() {
 					public javax.mail.PasswordAuthentication getPasswordAuthentication() {
@@ -202,16 +202,16 @@ public class MailAccount {
 		// Ouvrir la connexion
 		store.connect(domain.getServerIn(), address, password);
 
-		System.out.println("Vous ête connecté à " + domain.getServerIn());
+		System.out.println("Vous etes connecte a " + domain.getServerIn());
 
-		// Ouverture de la boîte de réception
+		// Ouverture de la boite de reception
 		Folder inbox = store.getFolder("INBOX");
 		if (inbox == null) {
-			System.out.println("Boîte de Réception introuvale");
+			System.out.println("Boite de Reception introuvale");
 		}
 		inbox.open(Folder.READ_ONLY);
 
-		// Sélectionner tous les messages du répertoire ouvert
+		// Selectionner tous les messages du repertoire ouvert
 		javax.mail.Message[] messages = inbox.getMessages();
 
 		// Afficher le nombre de message
@@ -257,20 +257,20 @@ public class MailAccount {
 	}
 
 	/**
-	 * Sert à créer un nouveau courriel
+	 * Sert a creer un nouveau courriel
 	 *
-	 * @return courriel créé
+	 * @return courriel cree
 	 */
 	public Mail createNewMail() {
 		return null;
 	}
 
 	/**
-	 * Sert à envoyer un courriel, délègue l'envoi à un domaine
+	 * Sert a envoyer un courriel, delegue l'envoi a un domaine
 	 *
 	 * @param mail
-	 *            courriel à envoyer
-	 * @return Si l'envoi c'est bien passé
+	 *            courriel a envoyer
+	 * @return Si l'envoi c'est bien passe
 	 */
 	public boolean sendMail(Mail mail) {
 		Transport transport = null;
@@ -297,11 +297,11 @@ public class MailAccount {
 	}
 
 	/**
-	 * Sert à suppriemr un courriel de la boite courriel
+	 * Sert a suppriemr un courriel de la boite courriel
 	 *
 	 * @param mail
-	 *            courriel à supprimer
-	 * @return Si la suppresion c'est bien passé
+	 *            courriel a supprimer
+	 * @return Si la suppresion c'est bien passe
 	 */
 	public boolean deleteMail(Mail mail) {
 		return false;
