@@ -9,6 +9,7 @@ package model;
 import java.io.File;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  *
@@ -20,12 +21,12 @@ public class Mail implements Serializable {
     private int id;
     private Date date;
     private String to, from, subject, priority, body, copyTo;
-    private File[] attachement;
+    private ArrayList<File> attachement;
 
     //Constructeur 
     
     /**
-     * Constrcteur par défaut
+     * Constructeur par défaut
      */
     public Mail(){
         
@@ -61,7 +62,7 @@ public class Mail implements Serializable {
      * @param attachement liste de fichier en pièce jointe du courriel
      */
     public Mail(int id, Date date, String to, String from, String subject, String priority, 
-            String body, File[] attachement) {
+            String body, ArrayList<File> attachement) {
         this.id = id;
         this.date = date;
         this.to = to;
@@ -73,6 +74,9 @@ public class Mail implements Serializable {
     }
     
     //Fonction membre publique
+    public void addAttachement(File file) {
+        attachement.add(file);
+    }
     
     //Getter & setter
     
@@ -132,11 +136,11 @@ public class Mail implements Serializable {
         this.body = body;
     }
 
-    public File[] getAttachement() {
+    public ArrayList<File> getAttachement() {
         return attachement;
     }
 
-    public void setAttachement(File[] attachement) {
+    public void setAttachement(ArrayList<File> attachement) {
         this.attachement = attachement;
     }
 
@@ -146,35 +150,7 @@ public class Mail implements Serializable {
 
     public void setAttachement(String copyTo) {
         this.copyTo = copyTo;
-    }
-    
-    //response & forward mail
-    public Mail response() {
-    	Mail resp = new Mail();
-    	resp.setBody(mailTranfer());
-    	resp.setTo(from);
-    	resp.setFrom(to);
-    	resp.setSubject("FW : " + subject);
-    	return resp;
-    }
-    
-    public Mail forward() {
-    	Mail resp = new Mail();
-    	resp.setAttachement(attachement);
-    	resp.setBody(mailTranfer());
-    	resp.setSubject("FW : " + subject);
-    	return resp;
-    }
-    
-    private String mailTranfer() {
-    	return "------------------------\n"
-    			+ "From : " + from + "\n"
-    	    	+ "To : "   + to   + "\n"
-    	    	+ "Date : " + date + "\n\n"
-    	    	+  body
-    			+ "";
-    }
-    
+    }    
     //equals & hashcode
     
     @Override

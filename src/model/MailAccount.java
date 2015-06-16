@@ -23,6 +23,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import errorMessage.CodeError;
+import java.io.File;
 
 /**
  *
@@ -36,6 +37,7 @@ public class MailAccount {
     private Domain domain;
     private Date lastSynch;
     private ArrayList<Mail> listOfmail;
+    private Mail currentMail;
 
     // Constructeur
     /**
@@ -248,7 +250,21 @@ public class MailAccount {
      * @return courriel cree
      */
     public Mail createNewMail() {
-        return null;
+        currentMail = new Mail();
+        return currentMail;
+    }
+    
+    public void addDestinataire(String destinataire) {
+        String to = currentMail.getSubject();
+        if(to == null || to.isEmpty())
+            to = destinataire;
+        else 
+            to += "; " + destinataire;
+        currentMail.setTo(to);
+    }
+    
+    public void addSubject(String subject) {
+        currentMail.setSubject(subject);
     }
 
     /**
@@ -257,15 +273,18 @@ public class MailAccount {
      * @param mail courriel a envoyer
      * @return Si l'envoi c'est bien passe
      */
-    public boolean sendMail(Mail mail) {
+    public boolean sendMail() {
         Transport transport = null;
         try {
             Session session = getSession();
             transport = session.getTransport("smtp");
             transport.connect(address, password);
-            transport.sendMessage(writeMail(mail), new Address[]{
-                new InternetAddress(mail.getTo()),
-                new InternetAddress(mail.getCopyTo())});
+            transport.sendMessage(writeMail(currentMail), new Address[]{
+                new InternetAddress(currentMail.getTo()),
+                new InternetAddress(currentMail.getCopyTo())});
+//            transport.sendMessage(writeMail(mail), new Address[]{
+//                new InternetAddress(mail.getTo()),
+//                new InternetAddress(mail.getCopyTo())});
         } catch (MessagingException e) {
             e.printStackTrace();
             return false;
@@ -280,15 +299,27 @@ public class MailAccount {
         }
         return true;
     }
+    
+    public void setMail(Mail mail) {
+        currentMail = mail;
+    }
 
     /**
-     * Sert a suppriemr un courriel de la boite courriel
+     * Sert a supprimer un courriel de la boite courriel
      *
      * @param mail courriel a supprimer
      * @return Si la suppresion c'est bien passe
      */
     public boolean deleteMail(Mail mail) {
         return false;
+    }
+    
+    public void addAttachement( File file ) {
+        currentMail.addAttachement(file);
+    }
+    
+    public void addAttachement( String filename ) {
+        currentMail.addAttachement( new File(filename) );
     }
 
     // Getter & setter
@@ -370,6 +401,33 @@ public class MailAccount {
 
     public void setListOfmail(ArrayList<Mail> listOfmail) {
         this.listOfmail = listOfmail;
+    }
+    
+    //response & forward mail
+    public Mail response(Mail mail) {
+    	Mail resp = new Mail();
+    	resp.setBody(mailTranfer(mail));
+    	resp.setTo(mail.getFrom());
+    	resp.setFrom(mail.getTo());
+    	resp.setSubject("FW : " + mail.getSubject());
+    	return resp;
+    }
+    
+    public Mail forward(Mail mail) {
+    	Mail resp = new Mail();
+    	resp.setAttachement(mail.getAttachement());
+    	resp.setBody(mailTranfer(mail));
+    	resp.setSubject("FW : " + mail.getSubject());
+    	return resp;
+    }
+    
+    private String mailTranfer(Mail mail) {
+    	return "------------------------\n"
+    		+ "From : " + mail.getFrom() + "\n"
+    	    	+ "To : "   + mail.getTo()   + "\n"
+    	    	+ "Date : " + mail.getDate() + "\n\n"
+    	    	+  mail.getBody()
+    		+ "";
     }
 
     // equals & hashcode

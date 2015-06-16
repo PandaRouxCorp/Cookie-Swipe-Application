@@ -47,23 +47,23 @@ public class MailAccountTest {
      * @throws Exception 
      */
     @Test
-    public void sendMail() throws Exception {
+    public void testsendMail() throws Exception {
     	Mail mail = new Mail();
     	mail.setSubject("c'est une test");
     	mail.setBody("le body du test");
     	mail.setTo("yehouda_arnauve@hotmail.com");
 
     	MailAccount account = new MailAccount();
-    	account.setDomain(new Domain("Google", "gmail.com", "pop.gmail.com", "smtp.gmail.com", "993", "465"));
+    	account.setDomain(new Domain("Google", "gmail.com", "pop.gmail.com", "smtp.gmail.com", "993", "465", "pop3s"));
     	account.setAddress("panda.roux.corp@gmail.com");
     	account.setCSName("panda.roux.corp@gmail.com");
-    	account.setPassword("Panda123456");
-    	
-    	boolean send = account.sendMail(mail);
+    	account.setPassword("Panda123456789");
+        
+    	account.setMail(mail);
+    	boolean send = account.sendMail();
     	
 		assertEquals(send, true);
 //    	account.getMessages();
-//    	System.out.println("sendMail terminé");
     }
 
     /**
@@ -112,17 +112,17 @@ public class MailAccountTest {
     /**
      * Test of sendMail method, of class MailAccount.
      */
-    @Test
-    public void testSendMail() {
-	System.out.println("sendMail");
-	Mail mail = null;
-	MailAccount instance = new MailAccount();
-	boolean expResult = false;
-	boolean result = instance.sendMail(mail);
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
+//    @Test
+//    public void testSendMail() {
+//	System.out.println("sendMail");
+//	Mail mail = null;
+//	MailAccount instance = new MailAccount();
+//	boolean expResult = false;
+//	boolean result = instance.sendMail(mail);
+//	assertEquals(expResult, result);
+//	// TODO review the generated test code and remove the default call to fail.
+//	fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of deleteMail method, of class MailAccount.
