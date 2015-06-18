@@ -5,22 +5,22 @@
  */
 package controller;
 
-import cookie.swipe.application.CookieSwipeApplication;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import module.ihm.AddMailAccountFrameInitializer;
-import module.ihm.MainFrameInitializer;
-import module.ihm.UpdateMailAccountFrameInitializer;
+
+import module.backoffice.ConnectAccountAction;
 import module.backoffice.CreateMailAccountAction;
 import module.backoffice.DeleteMailAccountAction;
 import module.backoffice.DisconectAccountAction;
-import module.backoffice.ConnectAccountAction;
 import module.backoffice.UpdateMailAccountAction;
+import module.ihm.AddMailAccountFrameInitializer;
+import module.ihm.MainFrameInitializer;
 import module.ihm.UpdateAccountCSFrameInitializer;
+import module.ihm.UpdateMailAccountFrameInitializer;
 import module.ihm.WriteMailFrameInitializer;
 import view.AccountCSFrame;
 import view.AcountMailCSFrame;
@@ -29,6 +29,7 @@ import view.MainCSFrame;
 import view.component.CookieSwipeFrame;
 import view.component.CookieSwipePasswordField;
 import view.component.CookieSwipeTextField;
+import cookie.swipe.application.CookieSwipeApplication;
 
 
 public class Dispatcher implements ActionListener {
@@ -55,7 +56,7 @@ public class Dispatcher implements ActionListener {
     public void logAccountAction() {
         CookieSwipeApplication application = CookieSwipeApplication.getApplication();
         String login    = ((CookieSwipeTextField)application.getMainFrameJComponent("cookieSwipeTextFieldLogin")).getText();
-        String password = ((CookieSwipePasswordField)application.getMainFrameJComponent("cookieSwipePasswordFieldPassword")).getText();
+        String password = new String(((CookieSwipePasswordField)application.getMainFrameJComponent("cookieSwipePasswordFieldPassword")).getPassword());
         if (new ConnectAccountAction().execute(login, password)) {
             MainCSFrame frame = new MainCSFrame();
             application.getUser().addListMailAccountListeneur(frame);
@@ -123,7 +124,7 @@ public class Dispatcher implements ActionListener {
         System.err.println("NOT IMPLEMENTED");
     }
 
-    private void selectMailAction() {
+    public void selectMailAction() {
         System.err.println("NOT IMPLEMENTED");
     }
 

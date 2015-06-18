@@ -147,7 +147,7 @@ public class DAOMailAccount {
         int error = 0;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
-        String request = "SELECT name, adresse, popaddr, smtpaddr, portin, portout FROM domain where id = ?;";
+        String request = "SELECT name, adresse, popaddr, smtpaddr, portin, portout, protocol FROM domain where id = ?;";
 
         try {
 
@@ -171,6 +171,7 @@ public class DAOMailAccount {
                 mailAccount.getDomain().setServerOut(result.getString("smtpaddr"));
                 mailAccount.getDomain().setPortIn(result.getString("portin"));
                 mailAccount.getDomain().setPortOut(result.getString("portout"));
+                mailAccount.getDomain().setStoreProtocol(result.getString("protocol"));
             }
             error = CodeError.SUCESS;
         } catch (SQLException e) {

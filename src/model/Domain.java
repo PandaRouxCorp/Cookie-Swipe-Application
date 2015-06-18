@@ -5,7 +5,6 @@
  */
 package model;
 
-import errorMessage.CodeError;
 import java.util.Objects;
 
 /**
@@ -147,7 +146,7 @@ public class Domain {
         this.id = id;
     }
     
-    public String getStoreProtocole() {
+    public String getStoreProtocol() {
         return this.storeProtocol;
     }
     

@@ -27,7 +27,8 @@ public class ConnectAccountAction implements IAction {
         u.setPassword(password);
 
         if(u.connect() != CodeError.SUCESS) {
-            new JOptionPane().showMessageDialog(null, "Connexion impossible, merci de vérifier votre login",
+            new JOptionPane();
+			JOptionPane.showMessageDialog(null, "Connexion impossible, merci de vérifier votre login",
                     "Connexion à Cookie Swipe", JOptionPane.ERROR_MESSAGE);
             return false;
         }

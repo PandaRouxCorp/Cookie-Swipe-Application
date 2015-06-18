@@ -126,6 +126,32 @@ public class MailAccount {
     public boolean updateData(HashMap<String, Object> data) {
         return false;
     }
+    
+    public boolean connectionIsOk() {
+    	try {
+			getClientConnection();
+		} catch (Exception e) {
+			return false;
+		}
+    	return true;
+    }
+    
+    public Store getClientConnection() throws MessagingException, Exception {
+    	// Get a Properties object
+        Properties props = System.getProperties();
+
+        // Get a Session object
+        Session session = Session.getInstance(props, null);
+        session.setDebug(true);
+        
+        Store store = session.getStore(domain.getStoreProtocol());
+        
+        // Ouvrir la connexion
+        store.connect(domain.getServerIn(), address, new Encryption().decrypt(password));
+        
+        return store;
+    }
+    
 
     /**
      * r�cupere la liste de mails
@@ -134,19 +160,7 @@ public class MailAccount {
      */
     public void getMessages() throws Exception {
 
-        // Get a Properties object
-        Properties props = System.getProperties();
-
-        // Get a Session object
-        Session session = Session.getInstance(props, null);
-        session.setDebug(true);
-        
-        Store store = session.getStore(domain.getStoreProtocole());
-
-        // Ouvrir la connexion
-        store.connect(domain.getServerIn(), address, new Encryption().decrypt(password));
-
-        System.out.println("Vous ete connecte a " + domain.getServerIn());
+        Store store = getClientConnection();
 
         // Ouverture de la boite de reception
         Folder inbox = store.getFolder("INBOX");
@@ -307,7 +321,7 @@ public class MailAccount {
     public int setAddress(String address) {
         String mailDomain = address.substring(address.indexOf('@') + 1);
         try {
-            Domain domain = Domain.getDomainFor(mailDomain);
+            domain = Domain.getDomainFor(mailDomain);
         } catch (Exception ex) {
             Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, "", ex);
             return CodeError.FAILLURE;

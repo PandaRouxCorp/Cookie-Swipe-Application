@@ -5,13 +5,14 @@
  */
 package model;
 
-import dao.DAOMailAccount;
-import errorMessage.CodeError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import dao.DAOMailAccount;
+import errorMessage.CodeError;
 
 /**
  * Utilisateur de l'application Cookie Swipe Peut être un singleton ?
@@ -120,7 +121,6 @@ public class User {
      * @return Si le compte courriel à bien été ajouté
      */
     public int addNewMailAccount(String name, String address, String password, String color) {
-        int res = 0;
         String mailDomain = address.substring(address.indexOf('@') + 1);
         Domain domain = null;
         try {
@@ -129,14 +129,17 @@ public class User {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             return CodeError.FAILLURE;
         }
-       
+        
         MailAccount newMailAccount = new MailAccount(name, address, domain, password, color);
-        res = DAOMailAccount.createMailAccount(newMailAccount, this);
-        if (res == 0) {
+        if(!newMailAccount.connectionIsOk()) {	
+        	return CodeError.CONNEXION_FAIL;
+        }
+        
+        int res = DAOMailAccount.createMailAccount(newMailAccount, this);
+        if (res == CodeError.SUCESS) {
             listOfMailAccount.add(newMailAccount);
             notifyMailAccountAdded(newMailAccount);
         }
-
         return res;
     }
 
