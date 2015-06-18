@@ -62,7 +62,7 @@ public class MailAccountTest {
     	account.setMail(mail);
     	boolean send = account.sendMail();
     	
-		assertEquals(send, true);
+	assertEquals(send, true);
 //    	account.getMessages();
     }
 

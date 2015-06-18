@@ -24,6 +24,7 @@ import javax.mail.internet.MimeMessage;
 
 import errorMessage.CodeError;
 import java.io.File;
+import javax.mail.Message;
 
 /**
  *
@@ -130,7 +131,7 @@ public class MailAccount {
     }
 
     /**
-     * r�cupere la liste de mails
+     * recupere la liste de mails
      *
      * @throws Exception
      */
@@ -142,8 +143,9 @@ public class MailAccount {
         // Get a Session object
         Session session = Session.getInstance(props, null);
         session.setDebug(true);
-        
-        Store store = session.getStore(domain.getStoreProtocole());
+
+        Store store = session.getStore("pop3");
+//        Store store = session.getStore(domain.getStoreProtocole());
 
         // Ouvrir la connexion
         store.connect(domain.getServerIn(), address, new Encryption().decrypt(password));
@@ -182,6 +184,7 @@ public class MailAccount {
         // Definir les parametres de connexion
         Session session = Session.getDefaultInstance(new Properties(),
                 new javax.mail.Authenticator() {
+                    @Override
                     public javax.mail.PasswordAuthentication getPasswordAuthentication() {
                         return new javax.mail.PasswordAuthentication(address, password);
                     }
@@ -217,31 +220,31 @@ public class MailAccount {
         store.close();
     }
 
-    private Session getSession() {
-        Properties properties = new Properties();
+    private Properties getProperties() {
+        Properties props = new Properties();
 
-        properties.setProperty("mail.transport.protocol", "smtp");
-        properties.setProperty("mail.smtp.host", domain.getServerOut());
-        properties.setProperty("mail.smtp.user", domain.getAddress());
-        properties.setProperty("mail.smtp.port", domain.getPortOut());
-//		properties.setProperty("mail.from", domain.getServerIn());
+        props.put("mail.transport.protocol", domain.getStoreProtocole());
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", domain.getServerOut());
+        props.put("mail.smtp.socketFactory.port", domain.getPortOut());
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.user", address);
+        props.put("mail.smtp.port", domain.getPortOut());
+        props.put("mail.from", domain.getServerIn());
 
-        return Session.getInstance(properties);
-    }
+        // version pour test gmail avec le compte panda.roux.corp@gmail.com
+//        props.put("mail.transport.protocol", "smtp");
+//        props.put("mail.smtp.auth", "true");
+//        props.put("mail.smtp.starttls.enable", "true");
+//        props.put("mail.smtp.host", "smtp.gmail.com");
+//        props.put("mail.smtp.socketFactory.port", "465");
+//        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+//        props.put("mail.smtp.user", "panda.roux.corp@gmail.com");
+//        props.put("mail.smtp.port", "465");
+//        props.put("mail.from", "pop.gmail.com");
 
-    public MimeMessage writeMail(String subject, String text, String to, String copyDest) throws MessagingException {
-        MimeMessage message = new MimeMessage(getSession());
-        message.setText(text);
-        message.setSubject(subject);
-        message.setFrom(address);
-//		message.addRecipients(javax.mail.Message.RecipientType.TO, to);
-//		if(copyDest != null && !copyDest.isEmpty())
-//			message.addRecipients(javax.mail.Message.RecipientType.CC, copyDest);
-        return message;
-    }
-
-    public MimeMessage writeMail(Mail mail) throws MessagingException {
-        return writeMail(mail.getSubject(), mail.getBody(), mail.getTo(), mail.getCopyTo());
+        return props;
     }
 
     /**
@@ -253,16 +256,17 @@ public class MailAccount {
         currentMail = new Mail();
         return currentMail;
     }
-    
+
     public void addDestinataire(String destinataire) {
         String to = currentMail.getSubject();
-        if(to == null || to.isEmpty())
+        if (to == null || to.isEmpty()) {
             to = destinataire;
-        else 
+        } else {
             to += "; " + destinataire;
+        }
         currentMail.setTo(to);
     }
-    
+
     public void addSubject(String subject) {
         currentMail.setSubject(subject);
     }
@@ -270,36 +274,45 @@ public class MailAccount {
     /**
      * Sert a envoyer un courriel, delegue l'envoi a un domaine
      *
-     * @param mail courriel a envoyer
      * @return Si l'envoi c'est bien passe
      */
     public boolean sendMail() {
-        Transport transport = null;
         try {
-            Session session = getSession();
-            transport = session.getTransport("smtp");
-            transport.connect(address, password);
-            transport.sendMessage(writeMail(currentMail), new Address[]{
-                new InternetAddress(currentMail.getTo()),
-                new InternetAddress(currentMail.getCopyTo())});
-//            transport.sendMessage(writeMail(mail), new Address[]{
-//                new InternetAddress(mail.getTo()),
-//                new InternetAddress(mail.getCopyTo())});
+            Session session = Session.getDefaultInstance(getProperties(),
+                new javax.mail.Authenticator() {
+                    @Override
+                    public javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                        return new javax.mail.PasswordAuthentication(address, password);
+//                        return new javax.mail.PasswordAuthentication("panda.roux.corp@gmail.com", "Panda123456789");
+                    }
+                }
+            );
+            
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(address));
+//            message.setFrom(new InternetAddress("panda.roux.corp@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO,
+                InternetAddress.parse(currentMail.getTo()));
+//                InternetAddress.parse("yehouda_arnauve@hotmail.com"));
+            message.setSubject(currentMail.getSubject());
+            message.setText(currentMail.getBody());
+//            message.setSubject("Testing Subject");
+//            message.setText("Dear Mail Crawler,"
+//                + "\n\n No spam to my email, please!");
+            
+            
+            System.out.println("before send");
+            
+            Transport.send(message);
+            
+            System.out.println("after send");
+            return true;
         } catch (MessagingException e) {
             e.printStackTrace();
-            return false;
-        } finally {
-            try {
-                if (transport != null) {
-                    transport.close();
-                }
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
         }
-        return true;
+        return false;
     }
-    
+
     public void setMail(Mail mail) {
         currentMail = mail;
     }
@@ -313,13 +326,13 @@ public class MailAccount {
     public boolean deleteMail(Mail mail) {
         return false;
     }
-    
-    public void addAttachement( File file ) {
+
+    public void addAttachement(File file) {
         currentMail.addAttachement(file);
     }
-    
-    public void addAttachement( String filename ) {
-        currentMail.addAttachement( new File(filename) );
+
+    public void addAttachement(String filename) {
+        currentMail.addAttachement(new File(filename));
     }
 
     // Getter & setter
@@ -402,32 +415,32 @@ public class MailAccount {
     public void setListOfmail(ArrayList<Mail> listOfmail) {
         this.listOfmail = listOfmail;
     }
-    
+
     //response & forward mail
     public Mail response(Mail mail) {
-    	Mail resp = new Mail();
-    	resp.setBody(mailTranfer(mail));
-    	resp.setTo(mail.getFrom());
-    	resp.setFrom(mail.getTo());
-    	resp.setSubject("FW : " + mail.getSubject());
-    	return resp;
+        Mail resp = new Mail();
+        resp.setBody(mailTranfer(mail));
+        resp.setTo(mail.getFrom());
+        resp.setFrom(mail.getTo());
+        resp.setSubject("FW : " + mail.getSubject());
+        return resp;
     }
-    
+
     public Mail forward(Mail mail) {
-    	Mail resp = new Mail();
-    	resp.setAttachement(mail.getAttachement());
-    	resp.setBody(mailTranfer(mail));
-    	resp.setSubject("FW : " + mail.getSubject());
-    	return resp;
+        Mail resp = new Mail();
+        resp.setAttachement(mail.getAttachement());
+        resp.setBody(mailTranfer(mail));
+        resp.setSubject("FW : " + mail.getSubject());
+        return resp;
     }
-    
+
     private String mailTranfer(Mail mail) {
-    	return "------------------------\n"
-    		+ "From : " + mail.getFrom() + "\n"
-    	    	+ "To : "   + mail.getTo()   + "\n"
-    	    	+ "Date : " + mail.getDate() + "\n\n"
-    	    	+  mail.getBody()
-    		+ "";
+        return "------------------------\n"
+                + "From : " + mail.getFrom() + "\n"
+                + "To : " + mail.getTo() + "\n"
+                + "Date : " + mail.getDate() + "\n\n"
+                + mail.getBody()
+                + "";
     }
 
     // equals & hashcode
