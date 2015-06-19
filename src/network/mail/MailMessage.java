@@ -6,15 +6,17 @@
 package network.mail;
 
 import model.Mail;
-import network.messageFramework.Message;
+import network.messageFramework.FrameworkMessage;
 
 /**
  *
  * @author mickx
  */
-public class MailMessage extends Message<Mail> {
+public class MailMessage extends FrameworkMessage<Mail> {
     
-    private final Mail mail;
+	private static final long serialVersionUID = 8652147893593717834L;
+	
+	private final Mail mail;
 
     public MailMessage(Mail mail) {
         this.mail = mail;

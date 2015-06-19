@@ -87,11 +87,7 @@ public class User {
      * @return Utilisateur connecté
      */
     public int connect() {
-        int returnCode = dao.DAOUser.connectUser(this);
-        if(CodeError.SUCESS == returnCode) {
-            retrieveMails();
-        }
-        return returnCode;
+    	return dao.DAOUser.connectUser(this);
     }
 
     /**
@@ -282,16 +278,15 @@ public class User {
         }
     }
     
-    private void notifyMailListChanged(MailAccount mc) {
+    public void notifyMailListChanged(MailAccount mc) {
         for(ListMailAccountListener listener : mailAccountListeners) {
             listener.notifyMailListChanged(mc);
         }
     }
 
-    private void retrieveMails() {
+    public void retrieveMails() {
         for(MailAccount mc : listOfMailAccount) {
-            DAOMailAccount.loadMail(mc);
-            notifyMailListChanged(mc);
+            DAOMailAccount.loadMails(mc);
         }
     }
 

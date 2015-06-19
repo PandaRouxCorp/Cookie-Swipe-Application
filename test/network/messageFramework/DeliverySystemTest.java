@@ -49,7 +49,7 @@ public class DeliverySystemTest {
             isActived = DeliverySystem.class.getDeclaredMethod("isActived");
             hardStop = DeliverySystem.class.getDeclaredMethod("hardStop");
             safeStop = DeliverySystem.class.getDeclaredMethod("safeStop");
-            addTask = DeliverySystem.class.getDeclaredMethod("addTask", Message.class);
+            addTask = DeliverySystem.class.getDeclaredMethod("addTask", FrameworkMessage.class);
             launchListener = DeliverySystem.class.getDeclaredMethod("launchListener");
             saveState = DeliverySystem.class.getDeclaredMethod("saveState");
             retreiveState = DeliverySystem.class.getDeclaredMethod("retreiveState");
@@ -199,7 +199,7 @@ public class DeliverySystemTest {
             
             assertTrue("Il n'y a aucun future en début de test", futures.isEmpty());
             
-            for(Message<?> m : messages) {
+            for(FrameworkMessage<?> m : messages) {
                 m.setSenderId(sender.getSenderId());
                 addTask.invoke(deliverySystem, m);
             }
@@ -236,7 +236,7 @@ public class DeliverySystemTest {
         
         try {
              
-            for(Message<?> m : messages) {
+            for(FrameworkMessage<?> m : messages) {
                 m.setSenderId(sender.getSenderId());
                 addTask.invoke(deliverySystem, m);
             }

@@ -34,17 +34,17 @@ public class Postman {
         senders = new HashMap<>();
     }
     
-    private void relayMessage(Message<?> message) {
+    private void relayMessage(FrameworkMessage<?> message) {
         DeliverySystem.launch(message);
     }
     
-    private void relayResponse(String senderID, Future<?> response) {
+    private void relayResponse(String senderID, Future<?> response, FrameworkMessage<?> frameworkMessage) {
         AbstractSender s = senders.get(senderID);
         if(s != null) {
-            s.onGenericMessageReceived(response);
+            s.onGenericMessageReceived(response, frameworkMessage);
         }
         else {
-            LOGGER.log(Level.WARNING, "Unknow sender {0}. Message response not relay", senderID);
+            LOGGER.log(Level.WARNING, "Unknow sender {0}. FrameworkMessage response not relay", senderID);
         }
     }
     
@@ -81,25 +81,25 @@ public class Postman {
         return INSTANCE.isSenderRegistered(sender.getSenderId());
     }
     
-    public static void sendMessage(Message<?> message) {
+    public static void sendMessage(FrameworkMessage<?> message) {
         if(INSTANCE == null) {
             INSTANCE = new Postman();
         }
         INSTANCE.relayMessage(message);
     }
 
-    static void sendResponse(String senderID, Future<?> response) {
+    static void sendResponse(String senderID, Future<?> response, FrameworkMessage<?> frameworkMessage) {
         if(INSTANCE != null) {
-            INSTANCE.relayResponse(senderID, response);
+            INSTANCE.relayResponse(senderID, response, frameworkMessage);
         }
         else {
             throw new UnsupportedOperationException("Postman instance null");
         }
     }
     
-    static void serializeMessages(List<Message> messages) {
+    static void serializeMessages(List<FrameworkMessage<?>> frameworkMessages) {
         if(INSTANCE != null) {
-            INSTANCE.serialize(messages);
+            INSTANCE.serialize(frameworkMessages);
         }
         else {
             throw new UnsupportedOperationException("Postman instance null");
@@ -113,7 +113,7 @@ public class Postman {
         INSTANCE.deserializedMessages();
     }
 
-    private void serialize(List<Message> messages) {
+    private void serialize(List<FrameworkMessage<?>> frameworkMessages) {
         ObjectOutputStream oos = null;
         try {
             File file = new File(COOKIE_SWIPE_DIR);
@@ -123,21 +123,21 @@ public class Postman {
             }
             FileOutputStream fout = new FileOutputStream(file);
             oos = new ObjectOutputStream(fout);
-            Map<Message,AbstractSender> mapToSerialized = new HashMap<>();
-            messages.stream().forEach((m) -> {
-                AbstractSender sender = senders.get(m.getSenderId());
+            Map<FrameworkMessage<?>,AbstractSender<?>> mapToSerialized = new HashMap<>();
+            frameworkMessages.stream().forEach((m) -> {
+                AbstractSender<?> sender = senders.get(m.getSenderId());
                 if(sender != null && m.shouldBeSavedIfNotExecuted() && sender instanceof AbstractSerializableSender) {
-                    ((AbstractSerializableSender)sender).beforeSerialisation();
+                    ((AbstractSerializableSender<?>)sender).beforeSerialisation();
                     mapToSerialized.put(m,sender);
                 }
                 else {
                     Logger.getLogger(DeliverySystem.class.getName())
                             .log(Level.SEVERE,
-                                    "Serialisation error: sender have been unregistered. Message is lost");
+                                    "Serialisation error: sender have been unregistered. FrameworkMessage is lost");
                 }
             });
             
-//            for(Message m : messages) {
+//            for(FrameworkMessage m : messages) {
 //               AbstractSender sender = senders.get(m.getSenderId());
 //                if(sender != null && m.shouldBeSavedIfNotExecuted() && sender instanceof AbstractSerializableSender) {
 //                    ((AbstractSerializableSender)sender).beforeSerialisation();
@@ -146,7 +146,7 @@ public class Postman {
 //                else {
 //                    Logger.getLogger(DeliverySystem.class.getName())
 //                            .log(Level.SEVERE,
-//                                    "Serialisation error: sender have been unregistered. Message is lost");
+//                                    "Serialisation error: sender have been unregistered. FrameworkMessage is lost");
 //                } 
 //            }
             
@@ -173,7 +173,7 @@ public class Postman {
         try {
             FileInputStream fis = new FileInputStream(file);
             ois = new ObjectInputStream(fis);
-            Map<Message,AbstractSender> map = (Map<Message,AbstractSender>) ois.readObject();
+            Map<FrameworkMessage,AbstractSender> map = (Map<FrameworkMessage,AbstractSender>) ois.readObject();
             map.keySet().stream().forEach((m) -> {
                 AbstractSerializableSender sender = (AbstractSerializableSender) map.get(m);
                 Object pendingActions = sender.getPendingAction();
@@ -187,7 +187,7 @@ public class Postman {
                 sendMessage(m);
             });
             
-//            for(Message m : map.keySet()) {
+//            for(FrameworkMessage m : map.keySet()) {
 //                AbstractSerializableSender sender = (AbstractSerializableSender) map.get(m);
 //                Object pendingActions = sender.getPendingAction();
 //                sender = sender.getSingletonSender();

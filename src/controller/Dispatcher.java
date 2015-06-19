@@ -22,6 +22,8 @@ import module.ihm.MainFrameInitializer;
 import module.ihm.UpdateAccountCSFrameInitializer;
 import module.ihm.UpdateMailAccountFrameInitializer;
 import module.ihm.WriteMailFrameInitializer;
+import network.messageFramework.DeliverySystem;
+import network.messageFramework.FrameworkMessage;
 import view.AccountCSFrame;
 import view.AcountMailCSFrame;
 import view.MailCSFrame;
@@ -62,6 +64,14 @@ public class Dispatcher implements ActionListener {
             application.getUser().addListMailAccountListeneur(frame);
             application.setMainFrame(frame);
             new MainFrameInitializer(frame).execute();
+            DeliverySystem.launchTask(new FrameworkMessage<Object>() {
+				private static final long serialVersionUID = -1840411908522351726L;
+				@Override
+				public Object call() throws Exception {
+					application.getUser().retrieveMails();
+					return null;
+				}
+			});
         }
     }
 

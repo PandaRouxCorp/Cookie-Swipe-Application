@@ -5,16 +5,22 @@
  */
 package model;
 
-import java.sql.Date;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.mail.Address;
 import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
@@ -22,9 +28,11 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import network.mail.MailRetrievingAsk;
+import network.messageFramework.AbstractSender;
+import network.messageFramework.FrameworkMessage;
+import network.messageFramework.Postman;
 import errorMessage.CodeError;
-import java.io.File;
-import javax.mail.Message;
 
 /**
  *
@@ -37,7 +45,7 @@ public class MailAccount {
     private String address, CSName, password, color, mailSignature;
     private Domain domain;
     private Date lastSynch;
-    private ArrayList<Mail> listOfmail;
+    private LinkedHashSet<Mail> listOfmail;
     private Mail currentMail;
 
     // Constructeur
@@ -46,7 +54,7 @@ public class MailAccount {
      */
     public MailAccount() {
         domain = new Domain();
-        listOfmail = new ArrayList<>();
+        listOfmail = new LinkedHashSet<Mail>();
     }
 
     /**
@@ -71,7 +79,7 @@ public class MailAccount {
                     null, ex);
         }
         this.color = color;
-        listOfmail = new ArrayList<>();
+        listOfmail = new LinkedHashSet<>();
     }
 
     /**
@@ -92,7 +100,7 @@ public class MailAccount {
      */
     public MailAccount(int id, String CSName, String address, String password,
             String color, Domain domain, String mailSignature, Date lastSynch,
-            ArrayList<Mail> listOfMail) {
+            Collection<Mail> listOfMail) {
         this.id = id;
         this.address = address;
         this.CSName = CSName;
@@ -106,7 +114,7 @@ public class MailAccount {
         this.domain = domain;
         this.mailSignature = mailSignature;
         this.lastSynch = lastSynch;
-        this.listOfmail = listOfMail;
+        this.listOfmail = new LinkedHashSet<>(listOfMail);
     }
 
     // Fonction membre public
@@ -162,37 +170,51 @@ public class MailAccount {
      * @throws Exception
      */
     public void getMessages() throws Exception {
-
-        Store store = getClientConnection();
-
+    	
+    	Store store = getClientConnection();
+    	
         // Ouverture de la boite de reception
         Folder inbox = store.getFolder("INBOX");
         if (inbox == null) {
             System.out.println("Boite de Reception introuvale");
         }
         inbox.open(Folder.READ_ONLY);
-        int count = inbox.getMessageCount();
+        Message[] messages = inbox.getMessages();
+        
+        AbstractSender<List<Mail>> requestsSender = new AbstractSender<List<Mail>>() {
+			@Override
+			public void onMessageReceived(Future<List<Mail>> receivedMessage) {
+				try {
+					listOfmail.addAll(receivedMessage.get());
+				} catch (InterruptedException | ExecutionException ex) {
+		            Logger.getLogger(getClass().getName())
+		                    .log(Level.SEVERE, "Erreur lors de la récupération des mails", ex);
+		        }
+			}
 
-        // recuperation de tous les mails et les mettres dans la liste
-        for (int i = 0; i < count; i++) {
-            javax.mail.Message message = inbox.getMessage(i);
-            Mail mail = new Mail();
-            mail.setBody(message.getDescription());
-            mail.setSubject(message.getSubject());
-            System.out.println(mail.getSubject());
-            mail.setDate((Date) message.getReceivedDate());
-            String from = "";
-            for (Address f : message.getFrom()) {
-                from += f.toString() + "; ";
-            }
-            mail.setFrom(from);
-            // verifier doublons avant ou clear la list.
-            listOfmail.add(mail);
+			@Override
+			public void onAllMessagesReceived() {
+				try {
+					store.close();
+				} catch (MessagingException e) {
+					Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error while closing store", e);
+				}
+				Postman.registerSender(this);
+			}	
+    	}; 
+        
+        int nbMailRetrievedByRequest = 10, nbRequests = messages.length/nbMailRetrievedByRequest 
+        		+ (messages.length%nbMailRetrievedByRequest == 0 ? 0 : 1);
+        
+        List<FrameworkMessage<?>> requests = new ArrayList<>();
+        
+        for(int i = 0; i < nbRequests; i++) {
+        	requests.add(new MailRetrievingAsk(i, i*nbMailRetrievedByRequest , messages));
         }
-        store.close();
-
+        
+        requestsSender.sendMessages(requests);
     }
-
+    
     public void readMessage() throws Exception {
         // Definir les parametres de connexion
         Session session = Session.getDefaultInstance(new Properties(),
@@ -202,7 +224,7 @@ public class MailAccount {
                         return new javax.mail.PasswordAuthentication(address, password);
                     }
                 });
-        Store store = session.getStore("pop3");
+        Store store = session.getStore(domain.getStoreProtocol());
 
         // Ouvrir la connexion
         store.connect(domain.getServerIn(), address, password);
@@ -421,12 +443,12 @@ public class MailAccount {
         this.lastSynch = lastSynch;
     }
 
-    public ArrayList<Mail> getListOfmail() {
-        return listOfmail;
+    public Mail[] getListOfmail() {
+        return listOfmail.toArray(new Mail[listOfmail.size()]);
     }
 
-    public void setListOfmail(ArrayList<Mail> listOfmail) {
-        this.listOfmail = listOfmail;
+    public void setListOfmail(List<Mail> listOfmail) {
+        this.listOfmail.addAll(listOfmail);
     }
 
     //response & forward mail

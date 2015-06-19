@@ -176,9 +176,6 @@ public class MainFrameInitializer extends AbstractIHMAction {
 //            } catch (Exception ex) {
 //                Logger.getLogger(MainFrameInitializer.class.getName()).log(Level.SEVERE, null, ex);
 //            }
-            mailAccount.getListOfmail().add(new Mail(i, new Date(2014, 12, 22), mailAccount.getAddress(),
-                    "lucas.girardin@ipsen.com", "Sans objet", "low", "Hello panda", null));
-            i++;
         }
         list.setModel(new javax.swing.AbstractListModel() {
             ArrayList<Mail> mailList = new ArrayList<>();

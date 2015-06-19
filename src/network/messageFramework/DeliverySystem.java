@@ -30,7 +30,7 @@ public class DeliverySystem {
     private final ConcurrentLinkedQueue<Future<?>> futures;
     private ExecutorService slaveExecutor;
     private ExecutorService masterExecutor;
-    private final Map<Future, Message<?>> matcher;
+    private final Map<Future<?>, FrameworkMessage<?>> matcher;
     private volatile boolean isLaunched;
     private volatile boolean shouldStop;
     private volatile boolean safeStop;
@@ -47,25 +47,37 @@ public class DeliverySystem {
         matcher = new HashMap<>();
     }
 
-    private void link(Message<?> callable, Future f) {
+    private void link(FrameworkMessage<?> callable, Future<?> f) {
         matcher.put(f, callable);
     }
+    
+    private void addTask(FrameworkMessage<?> callable) {
+    	addTask(callable,true);
+    }
 
-    private void addTask(Message<?> callable) {     
-        if(slaveExecutor.isShutdown()) {
+    private void addTask(FrameworkMessage<?> callable, boolean shouldAnswer) {     
+    	if(slaveExecutor.isShutdown()) {
             slaveExecutor = Executors.newFixedThreadPool(4);
             completionService = new ExecutorCompletionService<>(slaveExecutor);
         }
         if(callable != null) {
-            Future f = completionService.submit((Message<Object>) callable);
-            link(callable, f);
+            @SuppressWarnings("unchecked")
+			Future<Object> f = completionService.submit((FrameworkMessage<Object>) callable);
+            if(shouldAnswer) link(callable, f);
             futures.add(f);
         }
+    }
+    
+    public static void launchTask(FrameworkMessage<?> callable) {
+    	if (INSTANCE.isActived() == false) {
+            INSTANCE.launchListener();
+        }
+        INSTANCE.addTask(callable,false);
     }
 
     private void onRecieveResponse(Future<?> f) {
         futures.remove(f);
-        Postman.sendResponse(matcher.get(f).getSenderId(), f);
+        Postman.sendResponse(matcher.get(f).getSenderId(), f, matcher.get(f));
         matcher.remove(f);
     }
 
@@ -146,17 +158,17 @@ public class DeliverySystem {
     }
 
     private void saveState() {
-        List<Message> messages = new ArrayList<>();
+        List<FrameworkMessage<?>> frameworkMessages = new ArrayList<>();
         
         futures.stream().forEach((f) -> {
-            messages.add(matcher.get(f));
+            frameworkMessages.add(matcher.get(f));
         });
         
 //        for(Future<?> f : futures) {
 //            messages.add(matcher.get(f));
 //        }
         
-        Postman.serializeMessages(messages);
+        Postman.serializeMessages(frameworkMessages);
     }
 
     private void retreiveState() {
@@ -183,11 +195,11 @@ public class DeliverySystem {
         return INSTANCE.getTaskNumber();
     }
 
-    static void launch(Message<?> message) { // Droit package ... Passer par Postman
+    static void launch(FrameworkMessage<?> message) { // Droit package ... Passer par Postman
         if (INSTANCE.isActived() == false) {
             INSTANCE.launchListener();
         }
-        INSTANCE.addTask((Message<Object>) message);
+        INSTANCE.addTask((FrameworkMessage<?>) message);
     }
     
     public static void init() {

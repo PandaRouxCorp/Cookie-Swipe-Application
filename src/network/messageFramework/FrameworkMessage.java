@@ -12,9 +12,11 @@ import java.util.concurrent.Callable;
  *
  * @author mickx
  */
-public abstract class Message<T> implements Callable<T>, Serializable {
+public abstract class FrameworkMessage<T> implements Callable<T>, Serializable {
 
-    private String senderId;
+	private static final long serialVersionUID = -951943707626400708L;
+
+	private String senderId;
     
     public void setSenderId(String senderId) {
         this.senderId = senderId;

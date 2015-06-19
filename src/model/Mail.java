@@ -8,8 +8,8 @@ package model;
 
 import java.io.File;
 import java.io.Serializable;
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -17,7 +17,11 @@ import java.util.ArrayList;
  */
 public class Mail implements Serializable {
     
-    //Variable membre
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	//Variable membre
     private int id;
     private Date date;
     private String to, from, subject, priority, body, copyTo;

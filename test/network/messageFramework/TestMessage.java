@@ -11,7 +11,7 @@ import model.Mail;
  *
  * @author mickx
  */
-public class TestMessage extends Message<Object> {
+public class TestMessage extends FrameworkMessage<Object> {
     int messageDuration;
     Object m;
 

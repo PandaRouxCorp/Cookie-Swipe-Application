@@ -1,7 +1,9 @@
 package dao;
 
 import errorMessage.CodeError;
+
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import model.MailAccount;
 import model.User;
 
@@ -220,7 +223,7 @@ public class DAOMailAccount {
             statementInstance.setString(2, mailaccount.getCSName());
             statementInstance.setInt(3, mailaccount.getDomain().getId());
             statementInstance.setString(4, mailaccount.getPassword());
-            statementInstance.setDate(5, mailaccount.getLastSynch());
+            statementInstance.setDate(5, new Date(mailaccount.getLastSynch().getTime()));
             statementInstance.setString(6, mailaccount.getMailSignature());
             statementInstance.setString(7, mailaccount.getColor());
             statementInstance.setInt(8, mailaccount.getId());
@@ -252,7 +255,7 @@ public class DAOMailAccount {
      * @param mailAccount compte courriel concerné
      * @return Code d'erreur
      */
-    public static int loadMail(MailAccount mailAccount) {
+    public static int loadMails(MailAccount mailAccount) {
         try {
             mailAccount.getMessages();
         } catch (Exception ex) {
