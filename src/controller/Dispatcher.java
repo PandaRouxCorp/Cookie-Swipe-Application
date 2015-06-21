@@ -70,7 +70,7 @@ public class Dispatcher {
     private Dispatcher() {
 
         user = new User();
-        this.mainFrame = new LoginJFrame();
+        this.mainFrame = new MainCSFrame();
         IActionIHM initLoginFrame = InitLoginFrame.getInstance();
         initLoginFrame.setDispatcher(this);
         initLoginFrame.setJComponent(mainFrame.getJComponent());
