@@ -28,6 +28,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import cookie.swipe.application.CookieSwipeApplication;
 import network.mail.MailRetrievingAsk;
 import network.messageFramework.AbstractSender;
 import network.messageFramework.FrameworkMessage;
@@ -153,7 +154,7 @@ public class MailAccount {
 
         // Get a Session object
         Session session = Session.getInstance(props, null);
-        session.setDebug(true);
+        session.setDebug(false);
         
         Store store = session.getStore(domain.getStoreProtocol());
         
@@ -186,6 +187,7 @@ public class MailAccount {
 			public void onMessageReceived(Future<List<Mail>> receivedMessage) {
 				try {
 					listOfmail.addAll(receivedMessage.get());
+					CookieSwipeApplication.getApplication().getUser().notifyMailListChanged(MailAccount.this);
 				} catch (InterruptedException | ExecutionException ex) {
 		            Logger.getLogger(getClass().getName())
 		                    .log(Level.SEVERE, "Erreur lors de la récupération des mails", ex);
@@ -213,46 +215,6 @@ public class MailAccount {
         }
         
         requestsSender.sendMessages(requests);
-    }
-    
-    public void readMessage() throws Exception {
-        // Definir les parametres de connexion
-        Session session = Session.getDefaultInstance(new Properties(),
-                new javax.mail.Authenticator() {
-                    @Override
-                    public javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                        return new javax.mail.PasswordAuthentication(address, password);
-                    }
-                });
-        Store store = session.getStore(domain.getStoreProtocol());
-
-        // Ouvrir la connexion
-        store.connect(domain.getServerIn(), address, password);
-
-        System.out.println("Vous etes connecte a " + domain.getServerIn());
-
-        // Ouverture de la boite de reception
-        Folder inbox = store.getFolder("INBOX");
-        if (inbox == null) {
-            System.out.println("Boite de Reception introuvale");
-        }
-        inbox.open(Folder.READ_ONLY);
-
-        // Selectionner tous les messages du repertoire ouvert
-        javax.mail.Message[] messages = inbox.getMessages();
-
-        // Afficher le nombre de message
-        System.out.println("Vous avez: " + messages.length + " message(s)");
-
-        System.out.println("Voici le contenu d'un message:");
-        System.out.println();
-
-        // Afficher le contenu d'un message
-        if (messages.length >= 1) {
-            // messages[1].writeTo(System.out);
-        }
-
-        store.close();
     }
 
     private Properties getProperties() {

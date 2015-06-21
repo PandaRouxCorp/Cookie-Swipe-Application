@@ -77,7 +77,9 @@ public class DeliverySystem {
 
     private void onRecieveResponse(Future<?> f) {
         futures.remove(f);
-        Postman.sendResponse(matcher.get(f).getSenderId(), f, matcher.get(f));
+        if(matcher.get(f) != null) {
+        	Postman.sendResponse(matcher.get(f).getSenderId(), f, matcher.get(f));
+        }
         matcher.remove(f);
     }
 
