@@ -49,7 +49,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
 	}
     
     public void deleteMailAccountInTree(MailAccount mc) {
-        CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAcountMail");
+        CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
         DefaultTreeModel model = (DefaultTreeModel) myTree.getModel();
         DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) model.getRoot();
         @SuppressWarnings("unchecked")
@@ -66,7 +66,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
     }
     
     public void addMailAccountInTree(MailAccount mc) {
-        CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAcountMail");
+        CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
         DefaultTreeModel model = (DefaultTreeModel) myTree.getModel();
         DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) model.getRoot();
         rootNode.add(createMailAccountFolder(mc));
@@ -107,7 +107,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
         DefaultTreeModel myModel = new DefaultTreeModel(myRoot);
 
         // Construction de l'arbre.
-        CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAcountMail");
+        CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
         myTree.setModel(myModel);
         
         if(firstMailAccount != null) {
@@ -120,7 +120,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
         }
         
         myTree.addMouseListener(new MouseListener() {
-            CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAcountMail");
+            CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
             @Override
             public void mouseClicked(MouseEvent e) {}
 			@Override
@@ -191,8 +191,8 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.setActionCommand(ActionName.writeMail);
         button.addActionListener(dispatcher);
 
-        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonAnswer");
-        button.setActionCommand(ActionName.answerMail);
+        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonReply");
+        button.setActionCommand(ActionName.replyMail);
         button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonDeleteMail");
@@ -224,7 +224,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
     }
 
     private void displayMailButton() {
-        CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonAnswer");
+        CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonReply");
         button.setVisible(true);
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonDeleteMail");
         button.setVisible(true);
@@ -233,7 +233,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
     }
 
     private void hiddeMailButton() {
-        CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonAnswer");
+        CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonReply");
         button.setVisible(false);
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonDeleteMail");
         button.setVisible(false);

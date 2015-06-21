@@ -1,9 +1,14 @@
 package cookie.swipe.application;
 
+
 import java.util.HashMap;
+
+import javax.swing.UnsupportedLookAndFeelException;
+
 import model.User;
 import module.ihm.LoginFrameInitializer;
 import view.LoginJFrame;
+import view.MainCSFrame;
 import view.component.CookieSwipeFrame;
 
 /**
@@ -27,13 +32,30 @@ public class CookieSwipeApplication {
     }
     
     private void start() {
+    	initLookAndFeel();
         user = new User();
         LoginJFrame loginFrame = new LoginJFrame();
         this.mainFrame = loginFrame;
         new LoginFrameInitializer(loginFrame).execute();
     }
     
-    public void setMainFrame(CookieSwipeFrame mainCSFrame) {
+    private void initLookAndFeel() {
+    	try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException
+        		|InstantiationException
+        		|IllegalAccessException
+        		|UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MainCSFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }	
+    }
+
+	public void setMainFrame(CookieSwipeFrame mainCSFrame) {
         if(this.mainFrame != null) this.mainFrame.dispose();
         this.mainFrame = mainCSFrame;
     }

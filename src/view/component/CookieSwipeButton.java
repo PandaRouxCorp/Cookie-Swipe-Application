@@ -2,6 +2,7 @@ package view.component;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Graphics;
 
 import javax.swing.JButton;
@@ -27,9 +28,15 @@ public class CookieSwipeButton extends JButton{
 	    super();
 	    initComponent();
 	}
+	
+	public CookieSwipeButton(Color background){
+		super();
+		buttonColor = background;
+		initComponent();
+	}
  
 	protected void initComponent(){	
-		setForeground(Color.WHITE);
+		setForeground(CookieSwipeColor.LETTER);
 		
 		setFocusPainted(false);
 		
@@ -61,6 +68,7 @@ public class CookieSwipeButton extends JButton{
         	width = (int) getSize().getWidth() + 20;
         	sizeUpdated = true;
         }
+        setPreferredSize(new Dimension(width, height));
         setSize(width, height);
         
         super.paintComponent(g);

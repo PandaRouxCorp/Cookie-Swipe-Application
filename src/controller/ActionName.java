@@ -15,7 +15,7 @@ public class ActionName {
                 deleteMailAccount = "deleteMailAccount", writeMail = "writeMail",
                 readMail = "readMail", selectMail = "selectMail", deleteMail = "deleteMail",
                 addBlackListSender = "addBlackListSender", removeBlacklistSender = "removeBlacklistSender",
-                answerMail = "answerMail", forwardMail = "forwardMail", sendMail = "sendMail",
+                replyMail = "answerMail", forwardMail = "forwardMail", sendMail = "sendMail",
                 downloadPicture = "downloadPicture", logout = "logout", createMailAccount = "createMailAccount";  
 
         public static final Color bg = new Color(1, 1, 1);
