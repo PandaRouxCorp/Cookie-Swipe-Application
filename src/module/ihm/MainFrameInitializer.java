@@ -111,12 +111,12 @@ public class MainFrameInitializer extends AbstractIHMAction {
         myTree.setModel(myModel);
         
         if(firstMailAccount != null) {
-	        @SuppressWarnings("unchecked")
-			Enumeration<DefaultMutableTreeNode> en = myRoot.breadthFirstEnumeration();
-	        en.nextElement();
-	        DefaultMutableTreeNode node = en.nextElement();
-	        myTree.setSelectionPath(new TreePath(node));
-	        CookieSwipeApplication.getApplication().setParam("mailAccountSelected", firstMailAccount);
+	    @SuppressWarnings("unchecked")
+	    Enumeration<DefaultMutableTreeNode> en = myRoot.breadthFirstEnumeration();
+	    en.nextElement();
+	    DefaultMutableTreeNode node = en.nextElement();
+	    myTree.setSelectionPath(new TreePath(node));
+	    CookieSwipeApplication.getApplication().setParam("mailAccountSelected", firstMailAccount);
         }
         
         myTree.addMouseListener(new MouseListener() {
