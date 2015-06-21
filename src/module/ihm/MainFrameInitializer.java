@@ -5,17 +5,16 @@
  */
 package module.ihm;
 
+import interfaces.AbstractIHMAction;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -25,8 +24,8 @@ import javax.swing.tree.TreePath;
 import model.Mail;
 import model.MailAccount;
 import model.User;
-import view.MainCSFrame;
 import view.component.CookieSwipeButton;
+import view.component.CookieSwipeFrame;
 import view.component.CookieSwipeTree;
 import controller.ActionName;
 import controller.Dispatcher;
@@ -36,18 +35,18 @@ import cookie.swipe.application.CookieSwipeApplication;
  *
  * @author Lucas
  */
-public class MainFrameInitializer {
+public class MainFrameInitializer extends AbstractIHMAction { 
     
-	private HashMap<String, Object> hsJcomponent;
+    public MainFrameInitializer(CookieSwipeFrame csFrame) {
+		super(csFrame);
+	}
 	
-    public MainFrameInitializer(MainCSFrame frame) {
-    	hsJcomponent = frame.getJComponent();
-    }
-    
-    public void init() {
-        initMailAccount();
+	@Override
+	public boolean execute(Object... object) {
+		initMailAccount();
         initButton();
-    }
+		return true;
+	}
     
     public void deleteMailAccountInTree(MailAccount mc) {
         CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAcountMail");

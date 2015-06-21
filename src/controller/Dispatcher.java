@@ -63,7 +63,7 @@ public class Dispatcher implements ActionListener {
             MainCSFrame frame = new MainCSFrame();
             application.getUser().addListMailAccountListeneur(frame);
             application.setMainFrame(frame);
-            new MainFrameInitializer(frame).init();
+            new MainFrameInitializer(frame).execute();
             DeliverySystem.launchTask(new FrameworkMessage<Object>() {
 				private static final long serialVersionUID = -1840411908522351726L;
 				@Override
