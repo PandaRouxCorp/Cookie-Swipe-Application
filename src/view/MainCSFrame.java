@@ -6,7 +6,13 @@
 package view;
 
 import interfaces.IJFrame;
+
+import java.util.List;
+
+import javax.swing.DefaultListModel;
+
 import model.ListMailAccountListener;
+import model.Mail;
 import model.MailAccount;
 import module.ihm.MainFrameInitializer;
 import view.component.CookieSwipeButtonSprite;
@@ -63,7 +69,8 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
         cookieSwipeButtonDeleteMail = new view.component.CookieSwipeButtonSprite();
         cookieSwipeButtonNewMail = new view.component.CookieSwipeButtonSprite();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jListMail = new view.component.CookieSwipeList();
+        jListMail = new view.component.CookieSwipeList<Mail>();
+        jListMail.setModel(new DefaultListModel<Mail>());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -109,11 +116,6 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
             }
         });
 
-        jListMail.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane3.setViewportView(jListMail);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -240,7 +242,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
     private view.component.CookieSwipeButton cookieSwipeButtonUpdateCSAccount;
     private view.component.CookieSwipeButton cookieSwipeButtonUpdateMailAccount;
     private view.component.CookieSwipeTree cookieSwipeTreeAcountMail;
-    private view.component.CookieSwipeList jListMail;
+    private view.component.CookieSwipeList<Mail> jListMail;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
@@ -262,18 +264,18 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
     }
 
     @Override
-    public void notifyMailDeleted(MailAccount mc) {
+    public void notifyMailsDeleted(MailAccount mc, List<Mail> mails) {
         System.err.println("Not supported yet.");
     }
 
     @Override
-    public void notifyMailAdded(MailAccount mc) {
-        System.err.println("Not supported yet.");
+    public void notifyMailsAdded(MailAccount mc, List<Mail> mails) {
+    	new MainFrameInitializer(this).addMailsToList(mc, mails);
     }
 
     @Override
     public void notifyMailListChanged(MailAccount mc) {
-    	new MainFrameInitializer(this).updateMailAccountMailList(mc);
+    	System.err.println("Not supported yet.");
     }
 
 }

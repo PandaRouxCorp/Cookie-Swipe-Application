@@ -9,9 +9,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -127,7 +131,6 @@ public class MainFrameInitializer {
                     if (node.getUserObject() instanceof MailAccount) {
                         displayMailAccountButton();
                         CookieSwipeApplication.getApplication().setParam("mailAccountSelected", node.getUserObject());
-                        updateMailAccountMailList((MailAccount) node.getUserObject());
                     } else {
                         hiddeMailAccountButton();
                     }
@@ -239,14 +242,16 @@ public class MainFrameInitializer {
         button.setVisible(false);
 
     }
+    
+    @SuppressWarnings("unchecked")
+	public void addMailsToList(MailAccount mc, List<Mail> mails) {
+		DefaultListModel<Mail> model = (DefaultListModel<Mail>) ((JList<Mail>) hsJcomponent.get("jListMail")).getModel();
+		for(Mail mail : mails) {
+			model.addElement(mail);
+		}
+    }
 
-	@SuppressWarnings("unchecked")
 	public void updateMailAccountMailList(MailAccount mc) {
-		System.out.println(CookieSwipeApplication.getApplication().getParam("mailAccountSelected"));
-		((JList<Mail>) hsJcomponent.get("jListMail")).setModel(
-        	new MailListViewModel(
-        			(MailAccount)CookieSwipeApplication.getApplication().getParam("mailAccountSelected")
-        	)
-        );
+		System.err.println("Not implemented yet");
 	}
 }

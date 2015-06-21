@@ -278,6 +278,12 @@ public class User {
         }
     }
     
+    public void notifyMailsAddedToList(MailAccount mc, List<Mail> newMails) {
+        for(ListMailAccountListener listener : mailAccountListeners) {
+            listener.notifyMailsAdded(mc, newMails);
+        }
+    }
+    
     public void notifyMailListChanged(MailAccount mc) {
         for(ListMailAccountListener listener : mailAccountListeners) {
             listener.notifyMailListChanged(mc);

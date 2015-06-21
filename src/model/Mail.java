@@ -179,4 +179,8 @@ public class Mail implements Serializable {
         return this.id == other.id;
     }
 
+    @Override
+    public String toString() {
+    	return this.subject;
+    }
 }

@@ -27,12 +27,13 @@ import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.swing.SwingUtilities;
 
-import cookie.swipe.application.CookieSwipeApplication;
 import network.mail.MailRetrievingAsk;
 import network.messageFramework.AbstractSender;
 import network.messageFramework.FrameworkMessage;
 import network.messageFramework.Postman;
+import cookie.swipe.application.CookieSwipeApplication;
 import errorMessage.CodeError;
 
 /**
@@ -186,8 +187,15 @@ public class MailAccount {
 			@Override
 			public void onMessageReceived(Future<List<Mail>> receivedMessage) {
 				try {
-					listOfmail.addAll(receivedMessage.get());
-					CookieSwipeApplication.getApplication().getUser().notifyMailListChanged(MailAccount.this);
+					List<Mail> newMails = receivedMessage.get();
+					listOfmail.addAll(newMails);
+					SwingUtilities.invokeLater(new Runnable() {		
+						@Override
+						public void run() {
+							CookieSwipeApplication.getApplication().getUser()
+								.notifyMailsAddedToList(MailAccount.this, newMails);
+						}
+					});
 				} catch (InterruptedException | ExecutionException ex) {
 		            Logger.getLogger(getClass().getName())
 		                    .log(Level.SEVERE, "Erreur lors de la récupération des mails", ex);

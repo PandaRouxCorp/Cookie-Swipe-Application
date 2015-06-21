@@ -7,8 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-public class CookieSwipeListCellRenderer extends CookieSwipeLabel implements ListCellRenderer<String>{
-
+public class CookieSwipeListCellRenderer<T> extends CookieSwipeLabel implements ListCellRenderer<T>{
+	private static final long serialVersionUID = 2394066233067649610L;
 	private DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
 	
 	public CookieSwipeListCellRenderer(){
@@ -20,8 +20,8 @@ public class CookieSwipeListCellRenderer extends CookieSwipeLabel implements Lis
 	}
 	
 	@Override
-	public Component getListCellRendererComponent(JList<? extends String> list,
-			String value, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList<? extends T> list,
+			T value, int index, boolean isSelected, boolean cellHasFocus) {
 		JLabel renderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, hasFocus());
 		if(cellHasFocus){
 			renderer.setBackground(CookieSwipeColor.BUTTON);
@@ -29,6 +29,7 @@ public class CookieSwipeListCellRenderer extends CookieSwipeLabel implements Lis
 			renderer.setBackground(CookieSwipeColor.BACKGROUND_FRAME);
 		}
 		renderer.setForeground(CookieSwipeColor.LETTER);
+		renderer.setText(value.toString());
 		
 		return renderer;
 	}
