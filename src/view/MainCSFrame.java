@@ -140,7 +140,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 //	
 //			    }
 //			}
-//		);
+//		); // A supprimer une fois le probleme reglé
 	
 		//lorsque l'on clique sur le background (pour faire disparaitre les boutons
 		getContentPane().addMouseListener(new MouseAdapter() {
@@ -173,53 +173,25 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		cookieSwipeButtonArchive = new CookieSwipeButtonSprite();
 	
 		cookieSwipeButtonForward.setText(CookieSwipeButtonSprite.FORWARD);
-		cookieSwipeButtonForward.addActionListener(new java.awt.event.ActionListener() {
-		    public void actionPerformed(java.awt.event.ActionEvent evt) {
-			cookieSwipeButtonForwardActionPerformed(evt);
-		    }
-		});
+
 	
 		cookieSwipeButtonDeleteMail.setText(CookieSwipeButtonSprite.DELETE);
-		cookieSwipeButtonDeleteMail.addActionListener(new java.awt.event.ActionListener() {
-		    public void actionPerformed(java.awt.event.ActionEvent evt) {
-			cookieSwipeButtonDeleteMailActionPerformed(evt);
-		    }
-		});
+
 	
 		cookieSwipeButtonNewMail.setText(CookieSwipeButtonSprite.NEW);
-		cookieSwipeButtonNewMail.addActionListener(new java.awt.event.ActionListener() {
-		    public void actionPerformed(java.awt.event.ActionEvent evt) {
-			cookieSwipeButtonNewMailActionPerformed(evt);
-		    }
-		});
+
 	
 		cookieSwipeButtonReply.setText(CookieSwipeButtonSprite.REPLY);
-		cookieSwipeButtonReply.addActionListener(new java.awt.event.ActionListener() {
-		    public void actionPerformed(java.awt.event.ActionEvent evt) {
-			cookieSwipeButtonReplyActionPerformed(evt);
-		    }
-		});
+
 	
 		cookieSwipeButtonReplyToAll.setText(CookieSwipeButtonSprite.REPLY_ALL);
-		cookieSwipeButtonReplyToAll.addActionListener(new java.awt.event.ActionListener() {
-		    public void actionPerformed(java.awt.event.ActionEvent evt) {
-			cookieSwipeButtonReplyToAllActionPerformed(evt);
-		    }
-		});
-	
+
+		
 		cookieSwipeButtonArchive.setText(CookieSwipeButtonSprite.ARCHIVE);
-		cookieSwipeButtonArchive.addActionListener(new java.awt.event.ActionListener() {
-		    public void actionPerformed(java.awt.event.ActionEvent evt) {
-			cookieSwipeButtonArchiveActionPerformed(evt);
-		    }
-		});
+
 	
 		cookieSwipeButtonRefresh.setText(CookieSwipeButtonSprite.REFRESH);
-		cookieSwipeButtonRefresh.addActionListener(new java.awt.event.ActionListener() {
-		    public void actionPerformed(java.awt.event.ActionEvent evt) {
-			cookieSwipeButtonRefreshActionPerformed(evt);
-		    }
-		});
+
 	
 		//Delaration du listener en cas de changement de la taille de la fenetre
 		addComponentListener(new ComponentListener() {
