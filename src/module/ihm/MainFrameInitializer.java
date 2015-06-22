@@ -219,6 +219,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
 
         setMailAccountButtonsVisible(false);
         setMailButtonsVisible(false);
+        csFrame.pack();
     }
 
     private void setMailAccountButtonsVisible(boolean b) {

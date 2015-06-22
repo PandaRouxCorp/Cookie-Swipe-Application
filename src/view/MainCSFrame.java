@@ -42,7 +42,6 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
      */
     public MainCSFrame() {
         initComponents();
-        this.pack();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setVisible(true);
@@ -61,6 +60,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
         hsJcomponent.put("cookieSwipeButtonUpdateMailAccount", cookieSwipeButtonUpdateMailAccount);
         hsJcomponent.put("cookieSwipeButtonRefresh", cookieSwipeButtonRefresh);
         hsJcomponent.put("jListMail", jListMail);
+        
     }
 
     /**
