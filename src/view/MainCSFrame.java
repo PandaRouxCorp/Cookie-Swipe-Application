@@ -121,26 +121,26 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 			    }
 			}
 		);
-		cookieSwipeButtonPseudo.addFocusListener(
-			new FocusListener() {
-	
-			    @Override
-			    public void focusLost(FocusEvent e) {
-				cookieSwipeButtonLogout.setVisible(false);
-				cookieSwipeButtonUpdateCSAccount.setVisible(false);
-				cookieSwipeButtonAddMailAccount.setVisible(false);
-				cookieSwipeButtonUpdateMailAccount.setVisible(false);
-				cookieSwipeButtonDeleteMailAccount.setVisible(false);
-				isMenuActivated = false;
-			    }
-	
-			    @Override
-			    public void focusGained(FocusEvent e) {
-				// TODO Auto-generated method stub
-	
-			    }
-			}
-		);
+//		cookieSwipeButtonPseudo.addFocusListener(
+//			new FocusListener() {
+//	
+//			    @Override
+//			    public void focusLost(FocusEvent e) {
+//				cookieSwipeButtonLogout.setVisible(false);
+//				cookieSwipeButtonUpdateCSAccount.setVisible(false);
+//				cookieSwipeButtonAddMailAccount.setVisible(false);
+//				cookieSwipeButtonUpdateMailAccount.setVisible(false);
+//				cookieSwipeButtonDeleteMailAccount.setVisible(false);
+//				isMenuActivated = false;
+//			    }
+//	
+//			    @Override
+//			    public void focusGained(FocusEvent e) {
+//				// TODO Auto-generated method stub
+//	
+//			    }
+//			}
+//		);
 	
 		//lorsque l'on clique sur le background (pour faire disparaitre les boutons
 		getContentPane().addMouseListener(new MouseAdapter() {
@@ -300,7 +300,6 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		 */
 	
 		jListMail = new view.component.CookieSwipeList<Mail>();
-	    jListMail.setModel(new DefaultListModel<Mail>());
 	    
 		cookieSwipeTreeAccountMail = new CookieSwipeTree();
 	
