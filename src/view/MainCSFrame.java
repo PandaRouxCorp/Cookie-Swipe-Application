@@ -10,13 +10,10 @@ import interfaces.IJFrame;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
@@ -51,6 +48,8 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
         this.setVisible(true);
         
         hsJcomponent.put("cookieSwipeButtonReply", cookieSwipeButtonReply);
+        hsJcomponent.put("cookieSwipeButtonReplyToAll", cookieSwipeButtonReplyToAll);
+        hsJcomponent.put("cookieSwipeButtonArchive", cookieSwipeButtonArchive);
         hsJcomponent.put("cookieSwipeButtonDeleteMail", cookieSwipeButtonDeleteMail);
         hsJcomponent.put("cookieSwipeButtonForward", cookieSwipeButtonForward);
         hsJcomponent.put("cookieSwipeButtonNewMail", cookieSwipeButtonNewMail);
@@ -60,6 +59,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
         hsJcomponent.put("cookieSwipeButtonLogout", cookieSwipeButtonLogout);
         hsJcomponent.put("cookieSwipeButtonUpdateCSAccount", cookieSwipeButtonUpdateCSAccount);
         hsJcomponent.put("cookieSwipeButtonUpdateMailAccount", cookieSwipeButtonUpdateMailAccount);
+        hsJcomponent.put("cookieSwipeButtonRefresh", cookieSwipeButtonRefresh);
         hsJcomponent.put("jListMail", jListMail);
     }
 
@@ -336,34 +336,6 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		);
 
     }// </editor-fold>//GEN-END:initComponents
-
-    private void cookieSwipeButtonReplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cookieSwipeButtonAnswerActionPerformed
-	// TODO add your handling code here:
-    }//GEN-LAST:event_cookieSwipeButtonAnswerActionPerformed
-
-    private void cookieSwipeButtonDeleteMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cookieSwipeButtonDeleteMailActionPerformed
-	// TODO add your handling code here:
-    }//GEN-LAST:event_cookieSwipeButtonDeleteMailActionPerformed
-
-    private void cookieSwipeButtonNewMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cookieSwipeButtonNewMailActionPerformed
-	// TODO add your handling code here:
-    }//GEN-LAST:event_cookieSwipeButtonNewMailActionPerformed
-
-    private void cookieSwipeButtonForwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cookieSwipeButtonForwardActionPerformed
-	// TODO add your handling code here:
-    }//GEN-LAST:event_cookieSwipeButtonForwardActionPerformed
-
-    private void cookieSwipeButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cookieSwipeButtonForwardActionPerformed
-	// TODO add your handling code here:
-    }//GEN-LAST:event_cookieSwipeButtonForwardActionPerformed
-
-    private void cookieSwipeButtonReplyToAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cookieSwipeButtonForwardActionPerformed
-	// TODO add your handling code here:
-    }//GEN-LAST:event_cookieSwipeButtonForwardActionPerformed
-
-    private void cookieSwipeButtonArchiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cookieSwipeButtonForwardActionPerformed
-	// TODO add your handling code here:
-    }//GEN-LAST:event_cookieSwipeButtonForwardActionPerformed
 
     /**
      * @param args the command line arguments

@@ -7,6 +7,8 @@ package module.ihm;
 
 import interfaces.AbstractIHMAction;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import model.MailAccount;
 import model.User;
 import view.component.CookieSwipeButton;
 import view.component.CookieSwipeFrame;
+import view.component.CookieSwipeList;
 import view.component.CookieSwipeTree;
 import controller.ActionName;
 import controller.Dispatcher;
@@ -48,20 +51,40 @@ public class MainFrameInitializer extends AbstractIHMAction {
 		folderNames.add("Boite d'envoie");
 		folderNames.add("Corbeille"); 
 	}
+
+	private CookieSwipeFrame csFrame;
     
     public MainFrameInitializer(CookieSwipeFrame csFrame) {
 		super(csFrame);
+		this.csFrame = csFrame;
 	}
 	
 	@Override
 	public boolean execute(Object... object) {
 		initMailAccount();
         initButton();
-        displayMailButton();
+        initMailList();
 		return true;
 	}
     
-    public void deleteMailAccountInTree(MailAccount mc) {
+    private void initMailList() {
+    	@SuppressWarnings("unchecked")
+		CookieSwipeList<Mail> jListMail = (CookieSwipeList<Mail>) hsJcomponent.get("jListMail");
+    	jListMail.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				setMailButtonsVisible(false);
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				setMailButtonsVisible(true);
+			}
+		});
+	}
+
+	public void deleteMailAccountInTree(MailAccount mc) {
         CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
         DefaultTreeModel model = (DefaultTreeModel) myTree.getModel();
         DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) model.getRoot();
@@ -194,43 +217,30 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.setActionCommand(ActionName.forwardMail);
         button.addActionListener(dispatcher);
 
-        hiddeMailAccountButton();
-        hiddeMailButton();
-
+        setMailAccountButtonsVisible(false);
+        setMailButtonsVisible(false);
     }
 
-    private void displayMailAccountButton() {
+    private void setMailAccountButtonsVisible(boolean b) {
         CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonUpdateMailAccount");
-        button.setVisible(true);
+        button.setVisible(b);
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonDeleteMailAccount");
-        button.setVisible(true);
+        button.setVisible(b);
+        csFrame.pack();
     }
 
-    private void hiddeMailAccountButton() {
-        CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonUpdateMailAccount");
-        button.setVisible(false);
-        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonDeleteMailAccount");
-        button.setVisible(false);
-
-    }
-
-    private void displayMailButton() {
+    private void setMailButtonsVisible(boolean b) {
         CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonReply");
-        button.setVisible(true);
+        button.setVisible(b);
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonDeleteMail");
-        button.setVisible(true);
+        button.setVisible(b);
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonForward");
-        button.setVisible(true);
-    }
-
-    private void hiddeMailButton() {
-        CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonReply");
-        button.setVisible(false);
-        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonDeleteMail");
-        button.setVisible(false);
-        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonForward");
-        button.setVisible(false);
-
+        button.setVisible(b);
+        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonReplyToAll");
+        button.setVisible(b);
+        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonArchive");
+        button.setVisible(b);
+        csFrame.pack();
     }
     
     @SuppressWarnings("unchecked")
@@ -273,12 +283,12 @@ public class MainFrameInitializer extends AbstractIHMAction {
 			if (node != null) {
 	        	Object userObject = node.getUserObject();
 	            if (userObject instanceof MailAccount) {
-	                displayMailAccountButton();
+	            	setMailAccountButtonsVisible(true);
 	                CookieSwipeApplication.getApplication().setParam("mailAccountSelected", node.getUserObject());
 	                keyAccount = ((MailAccount)userObject).getCSName();
 	                keyFolder = folderNames.get(0);
 	            } else {
-	                hiddeMailAccountButton();
+	            	setMailAccountButtonsVisible(false);
 	                if(node.getUserObject() instanceof String) {
 	                	String label = (String) node.getUserObject();
 	                	if(folderNames.contains(label)) {
