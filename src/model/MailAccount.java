@@ -287,30 +287,25 @@ public class MailAccount {
                 new javax.mail.Authenticator() {
                     @Override
                     public javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                        return new javax.mail.PasswordAuthentication(address, password);
-//                        return new javax.mail.PasswordAuthentication("panda.roux.corp@gmail.com", "Panda123456789");
+                        String pwd = "";
+                        try {
+                            pwd = new Encryption().decrypt(password);
+                        } catch (Exception ex) {
+                            Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        return new javax.mail.PasswordAuthentication(address, pwd);
                     }
                 }
             );
             
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(address));
-//            message.setFrom(new InternetAddress("panda.roux.corp@gmail.com"));
             message.setRecipients(Message.RecipientType.TO,
-                InternetAddress.parse(currentMail.getTo()));
-//                InternetAddress.parse("yehouda_arnauve@hotmail.com"));
+            InternetAddress.parse(currentMail.getTo()));
             message.setSubject(currentMail.getSubject());
             message.setText(currentMail.getBody());
-//            message.setSubject("Testing Subject");
-//            message.setText("Dear Mail Crawler,"
-//                + "\n\n No spam to my email, please!");
-            
-            
-            System.out.println("before send");
             
             Transport.send(message);
-            
-            System.out.println("after send");
             return true;
         } catch (MessagingException e) {
             e.printStackTrace();
