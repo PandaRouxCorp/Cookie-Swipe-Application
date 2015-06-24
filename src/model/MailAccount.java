@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -34,6 +33,8 @@ import network.messageFramework.AbstractSender;
 import network.messageFramework.FrameworkMessage;
 import network.messageFramework.Postman;
 import cookie.swipe.application.CookieSwipeApplication;
+import cookie.swipe.application.utils.LinkedHashSetPriorityQueueObserver;
+import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 import errorMessage.CodeError;
 
 /**
@@ -42,13 +43,28 @@ import errorMessage.CodeError;
  */
 public class MailAccount {
 
+	public static final String ALL = "Tous";
+	public static final String INBOX = "Boite de réception";
+	public static final String OUTBOX = "Boite d'envoie";
+	public static final String TRASH = "Corbeille";
+	public static final String JUNK = "Indésirables";
+	public static List<String> folderNames;
+	
+	static {
+		folderNames = new ArrayList<>();
+		folderNames.add(INBOX);
+		folderNames.add(OUTBOX);
+		folderNames.add(TRASH); 
+		folderNames.add(JUNK);
+	}
+	
     // Variable membre
     private int id;
     private String address, CSName, password, color, mailSignature;
     private Domain domain;
     private Date lastSynch;
-    private LinkedHashSet<Mail> listOfmail;
     private Mail currentMail;
+    private HashMap<String,ObservableLinkedHashSetPriorityQueue<Mail>> folderListModels;
 
     // Constructeur
     /**
@@ -56,10 +72,22 @@ public class MailAccount {
      */
     public MailAccount() {
         domain = new Domain();
-        listOfmail = new LinkedHashSet<Mail>();
+        initModels();
     }
 
-    /**
+    private void initModels() {
+    	folderListModels = new HashMap<>();
+		for(String name : folderNames) {
+			folderListModels.put(name, new ObservableLinkedHashSetPriorityQueue<Mail>(new MailComparator()));
+		}
+	}
+    
+    private void initModels(Collection<Mail> listOfMail) {
+    	initModels();
+    	folderListModels.get(INBOX).addAll(listOfMail);
+	}
+
+	/**
      * Constructeur a utiliser lors de l'ajout d'une boite courriel
      *
      * @param CSName nom donne a la botie courriel
@@ -81,7 +109,7 @@ public class MailAccount {
                     null, ex);
         }
         this.color = color;
-        listOfmail = new LinkedHashSet<>();
+        initModels();
     }
 
     /**
@@ -116,10 +144,10 @@ public class MailAccount {
         this.domain = domain;
         this.mailSignature = mailSignature;
         this.lastSynch = lastSynch;
-        this.listOfmail = new LinkedHashSet<>(listOfMail);
+        initModels(listOfMail);
     }
 
-    // Fonction membre public
+	// Fonction membre public
     /**
      * Renvoie les toutes donnees du compte courriel
      *
@@ -188,14 +216,14 @@ public class MailAccount {
 			public void onMessageReceived(Future<List<Mail>> receivedMessage) {
 				try {
 					List<Mail> newMails = receivedMessage.get();
-					listOfmail.addAll(newMails);
-					SwingUtilities.invokeLater(new Runnable() {		
-						@Override
-						public void run() {
-							CookieSwipeApplication.getApplication().getUser()
-								.notifyMailsAddedToList(MailAccount.this, newMails);
-						}
-					});
+					addToListOfmail(newMails);
+//					SwingUtilities.invokeLater(new Runnable() {		
+//						@Override
+//						public void run() {
+//							CookieSwipeApplication.getApplication().getUser()
+//								.notifyMailsAddedToList(MailAccount.this, newMails);
+//						}
+//					});
 				} catch (InterruptedException | ExecutionException ex) {
 		            Logger.getLogger(getClass().getName())
 		                    .log(Level.SEVERE, "Erreur lors de la récupération des mails", ex);
@@ -414,11 +442,11 @@ public class MailAccount {
     }
 
     public Mail[] getListOfmail() {
-        return listOfmail.toArray(new Mail[listOfmail.size()]);
+        return folderListModels.get(INBOX).toArray(new Mail[folderListModels.get(INBOX).size()]);
     }
 
-    public void setListOfmail(List<Mail> listOfmail) {
-        this.listOfmail.addAll(listOfmail);
+    public void addToListOfmail(List<Mail> listOfmail) {
+    	folderListModels.get(INBOX).addAll(listOfmail);
     }
 
     //response & forward mail
@@ -446,6 +474,15 @@ public class MailAccount {
                 + "Date : " + mail.getDate() + "\n\n"
                 + mail.getBody()
                 + "";
+    }
+    
+    public void addObservableTo(String observableName, LinkedHashSetPriorityQueueObserver obs) {
+    	if(folderNames.contains(observableName) || ALL.equals(observableName)) {
+    		folderListModels.get(observableName).addObserver(obs);
+    	}
+    	else {
+    		throw new IllegalArgumentException("Ask for unknown observable: " + observableName);
+    	}
     }
 
     // equals & hashcode
@@ -479,5 +516,9 @@ public class MailAccount {
     public String toString() {
         return CSName;
     }
+
+	public ObservableLinkedHashSetPriorityQueue<Mail> getListModelFor(String folderName) {
+		return this.folderListModels.get(folderName);
+	}
 
 }
