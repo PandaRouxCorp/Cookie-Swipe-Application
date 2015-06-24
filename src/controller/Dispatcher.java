@@ -32,6 +32,7 @@ import view.component.CookieSwipeFrame;
 import view.component.CookieSwipePasswordField;
 import view.component.CookieSwipeTextField;
 import cookie.swipe.application.CookieSwipeApplication;
+import module.backoffice.SendMailAction;
 
 
 public class Dispatcher implements ActionListener {
@@ -41,6 +42,7 @@ public class Dispatcher implements ActionListener {
      *
      * @param e Evénement décrivant l'action à réaliser
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         String actionName = e.getActionCommand() + "Action";
         try {
@@ -170,6 +172,7 @@ public class Dispatcher implements ActionListener {
     }
 
     public void sendMailAction() {
-        System.err.println("NOT IMPLEMENTED");
+        CookieSwipeFrame focusFrame = CookieSwipeApplication.getApplication().getFocusFrame();
+        new SendMailAction(focusFrame).execute();
     }
 }
