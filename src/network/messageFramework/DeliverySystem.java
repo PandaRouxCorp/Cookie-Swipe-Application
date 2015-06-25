@@ -57,7 +57,7 @@ public class DeliverySystem {
 
     private void addTask(FrameworkMessage<?> callable, boolean shouldAnswer) {     
     	if(slaveExecutor.isShutdown()) {
-            slaveExecutor = Executors.newFixedThreadPool(4);
+            slaveExecutor = Executors.newFixedThreadPool(8);
             completionService = new ExecutorCompletionService<>(slaveExecutor);
         }
         if(callable != null) {

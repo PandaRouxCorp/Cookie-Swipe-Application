@@ -54,13 +54,13 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 
         Object[] arrLocal;
 
-        synchronized (this) {
+        //synchronized (this) {
 
             if (!changed)
                 return;
             arrLocal = obs.toArray();
             clearChanged();
-        }
+        //}
 
         for (int i = arrLocal.length-1; i>=0; i--)
             ((LinkedHashSetPriorityQueueObserver)arrLocal[i]).update(this, data);
@@ -114,6 +114,15 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 	}
 	
 	@Override
+	public boolean add(T e) {
+		boolean b = false;
+		synchronized (this) {
+			b = super.add(e);
+		}
+		return b;
+	}
+	
+	@Override
 	public boolean offer(T e) {
 		if (contains(e)) return false;
 		setChanged();
@@ -124,33 +133,44 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 	
 	@Override
 	public T poll() {
-		T t = super.poll();
-		if(t != null) {
-			EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, indexOf(t), indexOf(t) + 1, t);
-			notifyObservers(data);
+		T t = null;
+		synchronized (this) {
+			t = super.poll();
+			if(t != null) {
+				setChanged();
+				EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, indexOf(t), indexOf(t) + 1, t);
+				notifyObservers(data);
+			}
 		}
 		return t;
 	}
 	
 	@Override
 	public void clear() {
-		if(size() != 0) {
-			List<Object> list = toList();
-			EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, 0, list.size(), toList());
-			notifyObservers(data);
+		synchronized (this) {
+			if(size() != 0) {
+				setChanged();
+				List<Object> list = toList();
+				EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, 0, list.size(), list);
+				notifyObservers(data);
+			}
+			super.clear();
 		}
-		super.clear();
 	}
 		
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		List<Object> all = toList();
-		boolean hasChanged = super.retainAll(c);
-		if(hasChanged) {
-			all.removeAll(c);
-			for(Object o : all) {
-				EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, indexOf(o), indexOf(o) + 1, o);
-				notifyObservers(data);
+		boolean hasChanged = false;
+		synchronized (this) {
+			List<Object> all = toList();
+			hasChanged = super.retainAll(c);
+			if(hasChanged) {
+				all.removeAll(c);
+				for(Object o : all) {
+					setChanged();
+					EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, indexOf(o), indexOf(o) + 1, o);
+					notifyObservers(data);
+				}
 			}
 		}
 		return hasChanged;
@@ -158,13 +178,17 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 	
 	@Override
 	public boolean removeIf(Predicate<? super T> predic) {
-		List<Object> all = toList();
-		boolean hasChanged = super.removeIf(predic);
-		if(hasChanged) {
-			all.removeAll(toList());
-			for(Object o : all) {
-				EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, indexOf(o), indexOf(o) + 1, o);
-				notifyObservers(data);
+		boolean hasChanged = false;
+		synchronized (this) {
+			List<Object> all = toList();
+			hasChanged = super.removeIf(predic);
+			if(hasChanged) {
+				all.removeAll(toList());
+				for(Object o : all) {
+					setChanged();
+					EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, indexOf(o), indexOf(o) + 1, o);
+					notifyObservers(data);
+				}
 			}
 		}
 		return hasChanged;
@@ -172,11 +196,29 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 	
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		List<Object> all = toList();
-		boolean hasChanged = super.removeAll(c);
-		if(hasChanged) {
-			all.removeAll(toList());
-			for(Object o : all) {
+		boolean hasChanged = false;
+		synchronized (this) {
+			List<Object> all = toList();
+			hasChanged = super.removeAll(c);
+			if(hasChanged) {
+				all.removeAll(toList());
+				for(Object o : all) {
+					setChanged();
+					EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, indexOf(o), indexOf(o) + 1, o);
+					notifyObservers(data);
+				}
+			}
+		}
+		return hasChanged;
+	}
+	
+	@Override
+	public boolean remove(Object o) {
+		boolean hasChanged = false;
+		synchronized (this) {
+			hasChanged = super.remove(o);
+			if(hasChanged) {
+				setChanged();
 				EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, indexOf(o), indexOf(o) + 1, o);
 				notifyObservers(data);
 			}
@@ -185,22 +227,17 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 	}
 	
 	@Override
-	public boolean remove(Object o) {
-		boolean hasChanged = super.remove(o);
-		if(hasChanged) {
-			EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, indexOf(o), indexOf(o) + 1, o);
-			notifyObservers(data);
-		}
-		return hasChanged;
-	}
-	
-	@Override
 	public T remove() {
-		if(size() != 0) {
-			EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, 0, 1, toList().get(0));
-			notifyObservers(data);
+		T e = null;
+		synchronized (this) {
+			if(size() != 0) {
+				setChanged();
+				EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.REMOVED, 0, 1, toList().get(0));
+				notifyObservers(data);
+			}
+			e = super.remove();
 		}
-		return super.remove();
+		return e;
 	}
 	
 }

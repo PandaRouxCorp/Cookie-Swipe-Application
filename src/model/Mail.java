@@ -176,7 +176,23 @@ public class Mail implements Serializable {
             return false;
         }
         final Mail other = (Mail) obj;
-        return this.id == other.id;
+        boolean isEquals = date.equals(other.date);
+        if(to == null)
+        	isEquals &= other.to == null;
+        else
+        	isEquals &= to.equals(other.to);
+        isEquals &= from.equals(other.from);
+        if(subject == null)
+        	isEquals &= other.subject == null;
+        else
+        	isEquals &= subject.equals(other.subject);
+        if(priority == null)
+        	isEquals &= other.priority == null;
+        else
+        	isEquals &= priority.equals(other.priority);
+        //isEquals &= body.equals(other.body);
+        //isEquals &= copyTo.equals(other.copyTo);
+        return isEquals;
     }
 
     @Override

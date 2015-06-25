@@ -32,8 +32,7 @@ public class CookieSwipeApplication {
     }
     
     private void start() {
-    	initLookAndFeel();
-        user = new User();
+    	initLookAndFeel();       
         LoginJFrame loginFrame = new LoginJFrame();
         this.mainFrame = loginFrame;
         new LoginFrameInitializer(loginFrame).execute();

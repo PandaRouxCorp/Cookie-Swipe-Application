@@ -217,13 +217,6 @@ public class MailAccount {
 				try {
 					List<Mail> newMails = receivedMessage.get();
 					addToListOfmail(newMails);
-//					SwingUtilities.invokeLater(new Runnable() {		
-//						@Override
-//						public void run() {
-//							CookieSwipeApplication.getApplication().getUser()
-//								.notifyMailsAddedToList(MailAccount.this, newMails);
-//						}
-//					});
 				} catch (InterruptedException | ExecutionException ex) {
 		            Logger.getLogger(getClass().getName())
 		                    .log(Level.SEVERE, "Erreur lors de la récupération des mails", ex);

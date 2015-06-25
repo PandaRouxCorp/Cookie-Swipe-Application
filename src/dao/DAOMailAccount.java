@@ -1,19 +1,29 @@
 package dao;
 
-import errorMessage.CodeError;
-
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.mail.MessagingException;
+import javax.mail.Store;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 import model.MailAccount;
 import model.User;
+import errorMessage.CodeError;
 
 /**
  * Classe statique faisant office de passerelle entre les objet MailAccount du
@@ -255,17 +265,34 @@ public class DAOMailAccount {
      * @param mailAccount compte courriel concerné
      * @return Code d'erreur
      */
-    public static int loadMails(MailAccount mailAccount) {
+    public static int loadMails(List<MailAccount> mailAccounts) {
         try {
-            mailAccount.getMessages();
+        	Map<MailAccount,Store> stores = getMailAccountStores(mailAccounts);
+        	Map<MailAccount,List<Folder>> folders = getMailAccountFolders(stores);
         } catch (Exception ex) {
-            Logger.getLogger(DAOMailAccount.class.getName()).log(Level.SEVERE, "An error occured when retreiving mail for " + mailAccount.getCSName(), ex);
+            Logger.getLogger(DAOMailAccount.class.getName()).log(Level.SEVERE, "An error occured when retreiving mails", ex);
             return CodeError.FAILLURE;
         }
         return CodeError.SUCESS;
     }
 
-    public static int deleteMailAccount(MailAccount mailAccount) {
+    private static Map<MailAccount, List<Folder>> getMailAccountFolders(Map<MailAccount, Store> stores) {
+    	Map<MailAccount,List<Folder>> folders = new HashMap<>();
+    	for(stores.) {
+    		
+    	}
+    	folders.put();
+	}
+
+	private static Map<MailAccount, Store> getMailAccountStores(List<MailAccount> mailAccounts) throws MessagingException, Exception {
+		HashMap<MailAccount, Store> stores = new HashMap<>();
+		for(MailAccount mc : mailAccounts) {
+			stores.put(mc,mc.getClientConnection());
+		}
+		return stores;
+	}
+
+	public static int deleteMailAccount(MailAccount mailAccount) {
         int error;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
