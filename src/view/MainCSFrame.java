@@ -88,12 +88,6 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		cookieSwipeButtonUpdateMailAccount.setText("Modifier boite");
 		cookieSwipeButtonDeleteMailAccount.setText("Supprimer boite");
 	
-//		cookieSwipeButtonLogout.setForeground(CookieSwipeColor.BUTTON);
-//		cookieSwipeButtonUpdateCSAccount.setForeground(CookieSwipeColor.BUTTON);
-//		cookieSwipeButtonAddMailAccount.setForeground(CookieSwipeColor.BUTTON);
-//		cookieSwipeButtonUpdateMailAccount.setForeground(CookieSwipeColor.BUTTON);
-//		cookieSwipeButtonDeleteMailAccount.setForeground(CookieSwipeColor.BUTTON);
-	
 		cookieSwipeButtonPseudo.setText("Kae"); //Temporaire //TODO
 		cookieSwipeButtonPseudo.addMouseListener(
 			new MouseAdapter() {
@@ -121,41 +115,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 			    }
 			}
 		);
-//		cookieSwipeButtonPseudo.addFocusListener(
-//			new FocusListener() {
-//	
-//			    @Override
-//			    public void focusLost(FocusEvent e) {
-//				cookieSwipeButtonLogout.setVisible(false);
-//				cookieSwipeButtonUpdateCSAccount.setVisible(false);
-//				cookieSwipeButtonAddMailAccount.setVisible(false);
-//				cookieSwipeButtonUpdateMailAccount.setVisible(false);
-//				cookieSwipeButtonDeleteMailAccount.setVisible(false);
-//				isMenuActivated = false;
-//			    }
-//	
-//			    @Override
-//			    public void focusGained(FocusEvent e) {
-//				// TODO Auto-generated method stub
-//	
-//			    }
-//			}
-//		);
-	
-		//lorsque l'on clique sur le background (pour faire disparaitre les boutons
-//		getContentPane().addMouseListener(new MouseAdapter() {
-//		    @Override
-//		    public void mousePressed(MouseEvent e) {
-//			cookieSwipeButtonLogout.setVisible(false);
-//			cookieSwipeButtonUpdateCSAccount.setVisible(false);
-//			cookieSwipeButtonAddMailAccount.setVisible(false);
-//			cookieSwipeButtonUpdateMailAccount.setVisible(false);
-//			cookieSwipeButtonDeleteMailAccount.setVisible(false);
-//			isMenuActivated = false;
-//	
-//		    }
-//	
-//		});
+
 		/**
 		 * ********************************
 		 */
