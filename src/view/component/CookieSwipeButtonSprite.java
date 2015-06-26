@@ -5,13 +5,18 @@
  */
 package view.component;
 
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 /**
  *
@@ -29,6 +34,7 @@ public class CookieSwipeButtonSprite extends CookieSwipeButton{
     public static final String ARCHIVE = "archive";
     public static final String REPLY = "reply";
     public static final String REPLY_ALL = "reply_all";
+    
     
     private static Font font;
     
@@ -58,7 +64,24 @@ public class CookieSwipeButtonSprite extends CookieSwipeButton{
 
     public CookieSwipeButtonSprite() {
     	super();
+    	buttonColor = CookieSwipeColor.BACKGROUND_FRAME;
     }
+    
+    protected void initComponent(){	
+		setForeground(CookieSwipeColor.LETTER);
+		
+		setFocusPainted(false);
+		
+		Border thickBorder = new LineBorder(CookieSwipeColor.BACKGROUND_FRAME, 2);
+		setBorder(thickBorder);
+	
+		setContentAreaFilled(false);
+		
+		setCursor(new Cursor(Cursor.HAND_CURSOR));
+		
+		setLayout(null);
+		
+	}
     
     /**
      *
@@ -131,12 +154,13 @@ public class CookieSwipeButtonSprite extends CookieSwipeButton{
 			setToolTipText("Archiver");
 			break;
 		    default:
-			throw new Exception("Unknown sprite");
+		    	throw new Exception("Unknown sprite");
 		    }
+	    
+	    	
     	}catch (Exception e) {
 		    e.printStackTrace();
 		}
     	super.setFont(font);
     }
-
 }
