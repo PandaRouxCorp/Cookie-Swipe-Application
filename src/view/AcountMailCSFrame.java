@@ -22,7 +22,8 @@ public class AcountMailCSFrame extends CookieSwipeFrame implements IJFrame {
         this.pack();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
-        this.setVisible(true);
+        this.setVisible(true); 
+        setResizable(false);
         hsJcomponent.put("cookieSwipeButtonCancel", cookieSwipeButtonCancel);
         hsJcomponent.put("cookieSwipeButtonValidate", cookieSwipeButtonValidate);
         hsJcomponent.put("cookieSwipeLabelMailAddress", cookieSwipeLabelMailAddress);

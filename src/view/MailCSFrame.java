@@ -79,11 +79,25 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
         addComponentListener(new ComponentListener() {
 		    public void componentResized(ComponentEvent e) {
 		    	cookieSwipeTextFieldToCc.setPreferredSize(new Dimension(getWidth() - 150, 35));
+		    	cookieSwipeTextFieldToCc.setMinimumSize(new Dimension(getWidth() - 150, getHeight() - 200));
+		    	cookieSwipeTextFieldToCc.setMaximumSize(new Dimension(getWidth() - 150, getHeight() - 200));
+		    	cookieSwipeTextFieldToCc.setMinimumSize(new Dimension(0, 0));
+		    	
 		    	cookieSwipeTextFieldObject.setPreferredSize(new Dimension(getWidth() - 150, 35));
+		    	cookieSwipeTextFieldObject.setMinimumSize(new Dimension(getWidth() - 150, getHeight() - 200));
+		    	cookieSwipeTextFieldObject.setMaximumSize(new Dimension(getWidth() - 150, getHeight() - 200));
+		    	cookieSwipeTextFieldObject.setMinimumSize(new Dimension(0, 0));
+		    	
 		    	cookieSwipeTextFieldTo.setPreferredSize(new Dimension(getWidth() - 185, 35));
-				jScrollPane1.setPreferredSize(new Dimension(getWidth() - 150, getHeight() - 200));
+		    	cookieSwipeTextFieldTo.setMinimumSize(new Dimension(getWidth() - 150, getHeight() - 200));
+		    	cookieSwipeTextFieldTo.setMaximumSize(new Dimension(getWidth() - 150, getHeight() - 200));
+		    	cookieSwipeTextFieldTo.setMinimumSize(new Dimension(0, 0));
+				
+		    	jScrollPane1.setPreferredSize(new Dimension(getWidth() - 150, getHeight() - 200));
 				jScrollPane1.setMinimumSize(new Dimension(getWidth() - 150, getHeight() - 200));
 				jScrollPane1.setMaximumSize(new Dimension(getWidth() - 150, getHeight() - 200));
+				jScrollPane1.setMinimumSize(new Dimension(0, 0));
+				
 				validate();
 				repaint();
 				revalidate();

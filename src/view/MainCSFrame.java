@@ -185,11 +185,15 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		    public void componentResized(ComponentEvent e) {
 				jListMail.setFixedCellWidth(getWidth() - 45);
 				jListMail.setFixedCellHeight(43);
+				
 				jScrollPane3.setPreferredSize(new Dimension(getWidth() - 258, getHeight() - 135));
 				jScrollPane3.setMinimumSize(new Dimension(getWidth() - 258, getHeight() - 135));
 				jScrollPane3.setMaximumSize(new Dimension(getWidth() - 258, getHeight() - 135));
+				jScrollPane3.setMinimumSize(new Dimension(0, 0));
+				
 				jScrollPane1.setPreferredSize(new Dimension(200, getHeight() - 135));
 				jScrollPane1.setPreferredSize(new Dimension(200, getHeight() - 135));
+				jScrollPane1.setMaximumSize(new Dimension(getWidth() - 258, getHeight() - 135));
 				jScrollPane1.setMinimumSize(new Dimension(0, 0));
 				validate();
 				repaint();
