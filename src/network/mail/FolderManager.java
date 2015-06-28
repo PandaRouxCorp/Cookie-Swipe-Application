@@ -16,13 +16,9 @@ import java.util.logging.Logger;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Store;
-import javax.mail.event.ConnectionEvent;
 import javax.mail.event.ConnectionListener;
-import javax.mail.event.FolderEvent;
 import javax.mail.event.FolderListener;
-import javax.mail.event.MessageChangedEvent;
 import javax.mail.event.MessageChangedListener;
-import javax.mail.event.MessageCountEvent;
 import javax.mail.event.MessageCountListener;
 
 import model.MailAccount;
@@ -35,11 +31,9 @@ public class FolderManager {
 	
 	private Map<IMAPFolder,Entry<Store,MailAccount>> folders;
 	private ScheduledExecutorService synchronizer;
-	private SuperFolderListener superListener;
 
 	public FolderManager() {
 		this.folders = new ConcurrentHashMap<>();
-		this.superListener = new SuperFolderListener();
 		this.synchronizer = Executors.newSingleThreadScheduledExecutor();
 	}
 	
@@ -59,7 +53,7 @@ public class FolderManager {
 		for(Folder f : store.getDefaultFolder().list()) {
 			if(open(f)) {
 				folders.put((IMAPFolder) f, new AbstractMap.SimpleEntry<Store,MailAccount>(store,mc));
-				addListeners((IMAPFolder) f, superListener);
+				addListeners((IMAPFolder) f, mc);
 			}
 		}
 	}
@@ -84,7 +78,7 @@ public class FolderManager {
 
 	private void removeFolderListener(Collection<IMAPFolder> foldersToRemove) {
 		for(IMAPFolder f : foldersToRemove) {
-			removeListeners(f,superListener);
+			removeListeners(f, folders.get(f).getValue());
 		}
 	}
 
@@ -127,66 +121,26 @@ public class FolderManager {
 		return false;
 	}
 
-	private void addListeners(IMAPFolder folder, SuperFolderListener superListener) {
-		folder.addConnectionListener(superListener);
-		folder.addFolderListener(superListener);
-		folder.addMessageCountListener(superListener);
-		folder.addMessageChangedListener(superListener);
+	public void addListeners(IMAPFolder folder, Object listener) {
+		if(listener instanceof ConnectionListener)
+			folder.addConnectionListener((ConnectionListener) listener);
+		if(listener instanceof FolderListener)
+			folder.addFolderListener((FolderListener) listener);
+		if(listener instanceof MessageCountListener)
+			folder.addMessageCountListener((MessageCountListener) listener);
+		if(listener instanceof MessageChangedListener)
+			folder.addMessageChangedListener((MessageChangedListener) listener);
 	}
 	
-	private void removeListeners(IMAPFolder folder, SuperFolderListener superListener) {
-		folder.removeConnectionListener(superListener);
-		folder.removeFolderListener(superListener);
-		folder.removeMessageCountListener(superListener);
-		folder.removeMessageChangedListener(superListener);
-	}
-
-	class SuperFolderListener implements ConnectionListener, MessageChangedListener, MessageCountListener, FolderListener {
-
-		@Override
-		public void messagesAdded(MessageCountEvent arg0) {
-			System.out.println("messagesAdded");
-		}
-
-		@Override
-		public void messagesRemoved(MessageCountEvent arg0) {
-			System.out.println("messagesRemoved");
-		}
-
-		@Override
-		public void messageChanged(MessageChangedEvent arg0) {
-			System.out.println("messageChanged");
-		}
-
-		@Override
-		public void closed(ConnectionEvent arg0) {
-			System.out.println("closed");
-		}
-
-		@Override
-		public void disconnected(ConnectionEvent arg0) {
-			System.out.println("disconnected");
-		}
-
-		@Override
-		public void opened(ConnectionEvent arg0) {
-			System.out.println("ConnectionEvent");
-		}
-
-		@Override
-		public void folderCreated(FolderEvent arg0) {
-			System.out.println("FolderEvent");
-		}
-
-		@Override
-		public void folderDeleted(FolderEvent arg0) {
-			System.out.println("folderDeleted");
-		}
-
-		@Override
-		public void folderRenamed(FolderEvent arg0) {
-			System.out.println("folderRenamed");	
-		}	
+	public void removeListeners(IMAPFolder folder, Object listener) {
+		if(listener instanceof ConnectionListener)
+			folder.removeConnectionListener((ConnectionListener) listener);
+		if(listener instanceof FolderListener)
+			folder.removeFolderListener((FolderListener) listener);
+		if(listener instanceof MessageCountListener)
+			folder.removeMessageCountListener((MessageCountListener) listener);
+		if(listener instanceof MessageChangedListener)
+			folder.removeMessageChangedListener((MessageChangedListener) listener);
 	}
 	
 	class FolderSynchronizationRequest extends FrameworkMessage<Object> {

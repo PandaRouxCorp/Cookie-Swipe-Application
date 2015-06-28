@@ -24,15 +24,21 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
+import javax.mail.event.ConnectionEvent;
+import javax.mail.event.ConnectionListener;
+import javax.mail.event.FolderEvent;
+import javax.mail.event.FolderListener;
+import javax.mail.event.MessageChangedEvent;
+import javax.mail.event.MessageChangedListener;
+import javax.mail.event.MessageCountEvent;
+import javax.mail.event.MessageCountListener;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.swing.SwingUtilities;
 
 import network.mail.MailRetrievingAsk;
 import network.messageFramework.AbstractSender;
 import network.messageFramework.FrameworkMessage;
 import network.messageFramework.Postman;
-import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.LinkedHashSetPriorityQueueObserver;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 import errorMessage.CodeError;
@@ -41,7 +47,7 @@ import errorMessage.CodeError;
  *
  * @author Mary
  */
-public class MailAccount {
+public class MailAccount implements ConnectionListener, MessageChangedListener, MessageCountListener, FolderListener {
 
 	public static final String ALL = "Tous";
 	public static final String INBOX = "Boite de réception";
@@ -477,6 +483,55 @@ public class MailAccount {
     		throw new IllegalArgumentException("Ask for unknown observable: " + observableName);
     	}
     }
+    
+    public ObservableLinkedHashSetPriorityQueue<Mail> getListModelFor(String folderName) {
+		return this.folderListModels.get(folderName);
+	}
+    
+    @Override
+	public void messagesAdded(MessageCountEvent arg0) {
+		System.out.println("messagesAdded");
+	}
+
+	@Override
+	public void messagesRemoved(MessageCountEvent arg0) {
+		System.out.println("messagesRemoved");
+	}
+
+	@Override
+	public void messageChanged(MessageChangedEvent arg0) {
+		System.out.println("messageChanged");
+	}
+
+	@Override
+	public void closed(ConnectionEvent arg0) {
+		System.out.println("closed");
+	}
+
+	@Override
+	public void disconnected(ConnectionEvent arg0) {
+		System.out.println("disconnected");
+	}
+
+	@Override
+	public void opened(ConnectionEvent arg0) {
+		System.out.println("ConnectionEvent");
+	}
+
+	@Override
+	public void folderCreated(FolderEvent arg0) {
+		System.out.println("FolderEvent");
+	}
+
+	@Override
+	public void folderDeleted(FolderEvent arg0) {
+		System.out.println("folderDeleted");
+	}
+
+	@Override
+	public void folderRenamed(FolderEvent arg0) {
+		System.out.println("folderRenamed");	
+	}
 
     // equals & hashcode
     @Override
@@ -509,9 +564,5 @@ public class MailAccount {
     public String toString() {
         return CSName;
     }
-
-	public ObservableLinkedHashSetPriorityQueue<Mail> getListModelFor(String folderName) {
-		return this.folderListModels.get(folderName);
-	}
 
 }
