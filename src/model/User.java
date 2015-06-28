@@ -291,9 +291,7 @@ public class User {
     }
 
     public void retrieveMails() {
-        for(MailAccount mc : listOfMailAccount) {
-            DAOMailAccount.loadMails(mc);
-        }
+    	DAOMailAccount.loadMails(listOfMailAccount);
     }
 
 }

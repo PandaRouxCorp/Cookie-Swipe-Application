@@ -6,23 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.mail.MessagingException;
-import javax.mail.Store;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import model.MailAccount;
 import model.User;
+import network.mail.FolderManager;
+import cookie.swipe.application.CookieSwipeApplication;
 import errorMessage.CodeError;
 
 /**
@@ -267,30 +258,15 @@ public class DAOMailAccount {
      */
     public static int loadMails(List<MailAccount> mailAccounts) {
         try {
-        	Map<MailAccount,Store> stores = getMailAccountStores(mailAccounts);
-        	Map<MailAccount,List<Folder>> folders = getMailAccountFolders(stores);
+        	FolderManager folderManager = new FolderManager();
+        	folderManager.addMailAccounts(mailAccounts);
+        	CookieSwipeApplication.getApplication().setParam("FolderManager", folderManager);
         } catch (Exception ex) {
             Logger.getLogger(DAOMailAccount.class.getName()).log(Level.SEVERE, "An error occured when retreiving mails", ex);
             return CodeError.FAILLURE;
         }
         return CodeError.SUCESS;
     }
-
-    private static Map<MailAccount, List<Folder>> getMailAccountFolders(Map<MailAccount, Store> stores) {
-    	Map<MailAccount,List<Folder>> folders = new HashMap<>();
-    	for(stores.) {
-    		
-    	}
-    	folders.put();
-	}
-
-	private static Map<MailAccount, Store> getMailAccountStores(List<MailAccount> mailAccounts) throws MessagingException, Exception {
-		HashMap<MailAccount, Store> stores = new HashMap<>();
-		for(MailAccount mc : mailAccounts) {
-			stores.put(mc,mc.getClientConnection());
-		}
-		return stores;
-	}
 
 	public static int deleteMailAccount(MailAccount mailAccount) {
         int error;
