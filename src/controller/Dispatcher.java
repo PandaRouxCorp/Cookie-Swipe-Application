@@ -34,6 +34,7 @@ import view.component.CookieSwipeTextField;
 import cookie.swipe.application.CookieSwipeApplication;
 import module.backoffice.CreateCSAccountAction;
 import module.backoffice.SendMailAction;
+import module.ihm.CreateAccountFrameInitializer;
 
 
 public class Dispatcher implements ActionListener {
@@ -48,6 +49,7 @@ public class Dispatcher implements ActionListener {
         String actionName = e.getActionCommand() + "Action";
         try {
             Method actionToPerform = Dispatcher.class.getDeclaredMethod(actionName);
+            System.out.println(actionName);
             actionToPerform.invoke(this);
         } catch (InvocationTargetException 
                 |IllegalArgumentException 
@@ -169,15 +171,39 @@ public class Dispatcher implements ActionListener {
     }
 
     public void createAccountAction() { // compte cookie swipe a créé
+        System.out.println("createAccount la");
         CookieSwipeApplication application = CookieSwipeApplication.getApplication();
-        String login    = ((CookieSwipeTextField)application.getMainFrameJComponent("cookieSwipeTextFieldLoginAdressMail")).getText();
-        // getText() deprecated je trouverais autre chose
-        String pwd    = ((CookieSwipePasswordField)application.getMainFrameJComponent("cookieSwipePasswordFieldPassword")).getText();
-        String backup    = ((CookieSwipeTextField)application.getMainFrameJComponent("cookieSwipeTextFieldBackupMail")).getText();
-        
-        if(new CreateCSAccountAction().execute(login, pwd, backup)) {
-            
+        CookieSwipeFrame frame = application.getFocusFrame();
+        System.out.println("passe getApp");
+        String login    = ((CookieSwipeTextField)application.getFocusFrameJComponent("cookieSwipeTextFieldLoginAdressMail")).getText();
+        String pwd    = new String( ((CookieSwipePasswordField)application.getFocusFrameJComponent("cookieSwipePasswordFieldPassword")).getPassword() );
+        String backup    = ((CookieSwipeTextField)application.getFocusFrameJComponent("cookieSwipeTextFieldBackupMail")).getText();
+        System.out.println("login : " + login + "\npwd : " + pwd + "\nback : " + backup);
+        boolean created = new CreateCSAccountAction().execute(login, pwd, backup);
+        if(created) 
+            frame.dispose();
+        if (created && new ConnectAccountAction().execute(login, pwd)) {
+            System.out.println("connected et created");
+            MainCSFrame mainFrame = new MainCSFrame();
+            application.getUser().addListMailAccountListeneur(mainFrame);
+            application.setMainFrame(mainFrame);
+            new MainFrameInitializer(mainFrame).execute();
+            DeliverySystem.launchTask(new FrameworkMessage<Object>() {
+				@Override
+				public Object call() throws Exception {
+					application.getUser().retrieveMails();
+					return null;
+				}
+			});
         }
+    }
+    
+    public void inscriptionAction() {
+        CookieSwipeApplication application = CookieSwipeApplication.getApplication();
+        AccountCSFrame frame = new AccountCSFrame();
+        application.setFocusFrame(frame);
+//        application.setMainFrame(frame);
+        new CreateAccountFrameInitializer(frame).execute();
     }
 
     public void sendMailAction() {

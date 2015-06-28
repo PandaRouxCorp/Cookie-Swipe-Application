@@ -33,6 +33,9 @@ public class LoginFrameInitializer extends AbstractIHMAction {
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonSendPassword");
         button.addActionListener(dispatcher);
         button.setActionCommand(ActionName.forgottenPassword);
+        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonInscription");
+        button.addActionListener(dispatcher);
+        button.setActionCommand(ActionName.insciption);
         return true;
     }
 
