@@ -2,6 +2,8 @@ package view.component;
 
 import java.awt.Component;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -29,7 +31,18 @@ public class CookieSwipeListCellRenderer<T> extends CookieSwipeLabel implements 
 			renderer.setBackground(CookieSwipeColor.BACKGROUND_FRAME);
 		}
 		renderer.setForeground(CookieSwipeColor.LETTER);
-		renderer.setText(value.toString());
+		if(value instanceof Message) {
+			String render = null;
+			try {
+				render = ((Message)value).getSubject();
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+			if(render == null) render = "<no subject>"; 
+			renderer.setText(render);
+		}
+		else
+			renderer.setText(value.toString());
 		
 		return renderer;
 	}

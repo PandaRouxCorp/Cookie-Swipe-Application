@@ -7,18 +7,16 @@ package model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -35,10 +33,8 @@ import javax.mail.event.MessageCountListener;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import network.mail.MailRetrievingAsk;
-import network.messageFramework.AbstractSender;
-import network.messageFramework.FrameworkMessage;
-import network.messageFramework.Postman;
+import module.ihm.CustomJListModel;
+import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.LinkedHashSetPriorityQueueObserver;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 import errorMessage.CodeError;
@@ -50,19 +46,6 @@ import errorMessage.CodeError;
 public class MailAccount implements ConnectionListener, MessageChangedListener, MessageCountListener, FolderListener {
 
 	public static final String ALL = "Tous";
-	public static final String INBOX = "Boite de réception";
-	public static final String OUTBOX = "Boite d'envoie";
-	public static final String TRASH = "Corbeille";
-	public static final String JUNK = "Indésirables";
-	public static List<String> folderNames;
-	
-	static {
-		folderNames = new ArrayList<>();
-		folderNames.add(INBOX);
-		folderNames.add(OUTBOX);
-		folderNames.add(TRASH); 
-		folderNames.add(JUNK);
-	}
 	
     // Variable membre
     private int id;
@@ -70,7 +53,8 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     private Domain domain;
     private Date lastSynch;
     private Mail currentMail;
-    private HashMap<String,ObservableLinkedHashSetPriorityQueue<Mail>> folderListModels;
+    private HashMap<String,ObservableLinkedHashSetPriorityQueue<Message>> folderListModels;
+    private List<String> folderNames;
 
     // Constructeur
     /**
@@ -78,20 +62,9 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
      */
     public MailAccount() {
         domain = new Domain();
-        initModels();
+        this.folderNames = new ArrayList<>();
+        this.folderListModels = new HashMap<>();
     }
-
-    private void initModels() {
-    	folderListModels = new HashMap<>();
-		for(String name : folderNames) {
-			folderListModels.put(name, new ObservableLinkedHashSetPriorityQueue<Mail>(new MailComparator()));
-		}
-	}
-    
-    private void initModels(Collection<Mail> listOfMail) {
-    	initModels();
-    	folderListModels.get(INBOX).addAll(listOfMail);
-	}
 
 	/**
      * Constructeur a utiliser lors de l'ajout d'une boite courriel
@@ -115,7 +88,8 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                     null, ex);
         }
         this.color = color;
-        initModels();
+        this.folderNames = new ArrayList<>();
+        this.folderListModels = new HashMap<>();
     }
 
     /**
@@ -136,7 +110,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
      */
     public MailAccount(int id, String CSName, String address, String password,
             String color, Domain domain, String mailSignature, Date lastSynch,
-            Collection<Mail> listOfMail) {
+            Collection<Message> listOfMail) {
         this.id = id;
         this.address = address;
         this.CSName = CSName;
@@ -150,29 +124,32 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         this.domain = domain;
         this.mailSignature = mailSignature;
         this.lastSynch = lastSynch;
-        initModels(listOfMail);
+        this.folderNames = new ArrayList<>();
+        this.folderListModels = new HashMap<>();
     }
 
-	// Fonction membre public
-    /**
-     * Renvoie les toutes donnees du compte courriel
-     *
-     * @return table de hash contenant toutes les donnees du compte courriel
-     */
-    public HashMap<String, Object> getData() {
-
-        return null;
-    }
-
-    /**
-     * Modifie les donnees du compte courrie
-     *
-     * @param data table de hash contenant les donnees du compte courriel
-     * @return Si la mise a jours des donnees est correct
-     */
-    public boolean updateData(HashMap<String, Object> data) {
-        return false;
-    }
+    @SuppressWarnings("unchecked")
+	public void createModelFor(String folder) {
+    	this.folderNames.add(folder);
+    	
+    	ObservableLinkedHashSetPriorityQueue<Message> observableList = 
+    			new ObservableLinkedHashSetPriorityQueue<>(new MailComparator());
+    	
+    	folderListModels.put(folder, observableList);
+    	
+    	HashMap<String, HashMap<String, CustomJListModel>> models = 
+				(HashMap<String, HashMap<String, CustomJListModel>>) 
+				CookieSwipeApplication.getApplication().getParam("jListMailModels");
+    	
+    	HashMap<String, CustomJListModel> jListModels = models.get(getCSName());
+    	
+    	if(jListModels == null) {
+    		jListModels = new HashMap<>();
+    		models.put(getCSName(), jListModels);
+    	}
+    	
+    	jListModels.put(folder, new CustomJListModel(observableList));
+	}
     
     public boolean connectionIsOk() {
     	try {
@@ -197,59 +174,6 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         store.connect(domain.getServerIn(), address, new Encryption().decrypt(password));
         
         return store;
-    }
-    
-
-    /**
-     * r�cupere la liste de mails
-     *
-     * @throws Exception
-     */
-    public void getMessages() throws Exception {
-    	
-    	Store store = getClientConnection();
-    	
-        // Ouverture de la boite de reception
-        Folder inbox = store.getFolder("INBOX");
-        if (inbox == null) {
-            System.out.println("Boite de Reception introuvale");
-        }
-        inbox.open(Folder.READ_ONLY);
-        Message[] messages = inbox.getMessages();
-        
-        AbstractSender<List<Mail>> requestsSender = new AbstractSender<List<Mail>>() {
-			@Override
-			public void onMessageReceived(Future<List<Mail>> receivedMessage) {
-				try {
-					List<Mail> newMails = receivedMessage.get();
-					addToListOfmail(newMails);
-				} catch (InterruptedException | ExecutionException ex) {
-		            Logger.getLogger(getClass().getName())
-		                    .log(Level.SEVERE, "Erreur lors de la récupération des mails", ex);
-		        }
-			}
-
-			@Override
-			public void onAllMessagesReceived() {
-				try {
-					store.close();
-				} catch (MessagingException e) {
-					Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error while closing store", e);
-				}
-				Postman.registerSender(this);
-			}	
-    	}; 
-        
-        int nbMailRetrievedByRequest = 10, nbRequests = messages.length/nbMailRetrievedByRequest 
-        		+ (messages.length%nbMailRetrievedByRequest == 0 ? 0 : 1);
-        
-        List<FrameworkMessage<?>> requests = new ArrayList<>();
-        
-        for(int i = 0; i < nbRequests; i++) {
-        	requests.add(new MailRetrievingAsk(i, i*nbMailRetrievedByRequest , messages));
-        }
-        
-        requestsSender.sendMessages(requests);
     }
 
     private Properties getProperties() {
@@ -440,12 +364,24 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         this.lastSynch = lastSynch;
     }
 
-    public Mail[] getListOfmail() {
-        return folderListModels.get(INBOX).toArray(new Mail[folderListModels.get(INBOX).size()]);
+    public Mail[] getListOfmail(String folderName) {
+        return folderListModels.get(folderName).toArray(new Mail[folderListModels.get(folderName).size()]);
     }
+    
+    public void addToListOfmail(String folderName, Message message) {
+    	folderListModels.get(folderName).add(message);
+	}
 
-    public void addToListOfmail(List<Mail> listOfmail) {
-    	folderListModels.get(INBOX).addAll(listOfmail);
+    public void addToListOfmail(String folderName, List<Message> listOfmail) {
+    	folderListModels.get(folderName).addAll(listOfmail);
+    }
+    
+    public void addToListOfmail(String folderName, Message[] listOfmail) {
+    	folderListModels.get(folderName).addAll(Arrays.asList(listOfmail));
+    }
+    
+    public List<String> getFolderNames() {
+    	return this.folderNames;
     }
 
     //response & forward mail
@@ -484,13 +420,14 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     	}
     }
     
-    public ObservableLinkedHashSetPriorityQueue<Mail> getListModelFor(String folderName) {
+    public ObservableLinkedHashSetPriorityQueue<Message> getListModelFor(String folderName) {
 		return this.folderListModels.get(folderName);
 	}
     
     @Override
-	public void messagesAdded(MessageCountEvent arg0) {
-		System.out.println("messagesAdded");
+	public void messagesAdded(MessageCountEvent event) {
+    	event.getSource();
+    	//addToListOfmail(event.getMessages());
 	}
 
 	@Override

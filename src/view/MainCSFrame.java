@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.mail.Message;
 import javax.swing.GroupLayout;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
@@ -26,6 +27,7 @@ import view.component.CookieSwipeButton;
 import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeColor;
 import view.component.CookieSwipeFrame;
+import view.component.CookieSwipeList;
 import view.component.CookieSwipePanel;
 import view.component.CookieSwipeTree;
 
@@ -271,7 +273,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		 * *****************************************
 		 */
 	
-		jListMail = new view.component.CookieSwipeList<Mail>();
+		jListMail = new view.component.CookieSwipeList<Message>();
 	    
 		cookieSwipeTreeAccountMail = new CookieSwipeTree();
 	
@@ -374,7 +376,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private view.component.CookieSwipeTree cookieSwipeTreeAccountMail;
-    private view.component.CookieSwipeList<Mail> jListMail;
+    private CookieSwipeList<Message> jListMail;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private CookieSwipePanel spritePanel;
@@ -411,20 +413,4 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
     public void notifyMailAccountAdded(MailAccount mc) {
         new MainFrameInitializer(this).addMailAccountInTree(mc);
     }
-
-    @Override
-    public void notifyMailsDeleted(MailAccount mc, List<Mail> mails) {
-        System.err.println("Not supported yet.");
-    }
-
-    @Override
-    public void notifyMailsAdded(MailAccount mc, List<Mail> mails) {
-    	new MainFrameInitializer(this).addMailsToList(mc, mails);
-    }
-
-    @Override
-    public void notifyMailListChanged(MailAccount mc) {
-    	System.err.println("Not supported yet.");
-    }
-
 }

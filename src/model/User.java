@@ -277,18 +277,6 @@ public class User {
             listener.notifyMailAccountDeleted(mc);
         }
     }
-    
-    public void notifyMailsAddedToList(MailAccount mc, List<Mail> newMails) {
-        for(ListMailAccountListener listener : mailAccountListeners) {
-            listener.notifyMailsAdded(mc, newMails);
-        }
-    }
-    
-    public void notifyMailListChanged(MailAccount mc) {
-        for(ListMailAccountListener listener : mailAccountListeners) {
-            listener.notifyMailListChanged(mc);
-        }
-    }
 
     public void retrieveMails() {
     	DAOMailAccount.loadMails(listOfMailAccount);

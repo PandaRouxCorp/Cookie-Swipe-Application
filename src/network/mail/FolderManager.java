@@ -3,6 +3,7 @@ package network.mail;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,6 +30,7 @@ import com.sun.mail.imap.IMAPFolder;
 
 public class FolderManager {
 	
+	private static final int preloadedMessagesCount = 30;
 	private Map<IMAPFolder,Entry<Store,MailAccount>> folders;
 	private ScheduledExecutorService synchronizer;
 
@@ -54,6 +56,7 @@ public class FolderManager {
 			if(open(f)) {
 				folders.put((IMAPFolder) f, new AbstractMap.SimpleEntry<Store,MailAccount>(store,mc));
 				addListeners((IMAPFolder) f, mc);
+				mc.createModelFor(f.getName());
 			}
 		}
 	}
@@ -90,6 +93,40 @@ public class FolderManager {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while closing folder", e);
 			}
 		}
+	}
+	
+	public void start() {
+		retrieveMails();
+		startSync();
+	}
+
+	private void retrieveMails() {
+		DeliverySystem.launchTask(new FrameworkMessage<Object>() {
+			
+			private static final long serialVersionUID = 3123849369769712930L;
+
+			@Override
+			public Object call() throws Exception {
+				Map<IMAPFolder,Integer> lengths = new HashMap<>();
+				int index = 0;
+				
+				for(IMAPFolder f : folders.keySet()) {
+					lengths.put(f,f.getMessageCount());
+				}
+				
+				for(int i = 0; i < preloadedMessagesCount; ++i) {
+					for(IMAPFolder f : folders.keySet()) {
+						index = lengths.get(f) - i;
+						if(index > 0) {
+							MailAccount mc = folders.get(f).getValue();
+							mc.addToListOfmail(f.getName(), f.getMessage(index));
+						}
+					}
+				}
+				return null;
+			}
+			
+		});
 	}
 	
 	public void closeSync() {

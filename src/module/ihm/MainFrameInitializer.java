@@ -13,10 +13,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.AbstractListModel;
+import javax.mail.Message;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -36,8 +35,6 @@ import view.component.CookieSwipeTree;
 import controller.ActionName;
 import controller.Dispatcher;
 import cookie.swipe.application.CookieSwipeApplication;
-import cookie.swipe.application.utils.EventData;
-import cookie.swipe.application.utils.LinkedHashSetPriorityQueueObserver;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 
 /**
@@ -108,74 +105,18 @@ public class MainFrameInitializer extends AbstractIHMAction {
     private MutableTreeNode createMailAccountFolder(MailAccount mailAccount) {
         DefaultMutableTreeNode folder = new DefaultMutableTreeNode(mailAccount);
         DefaultMutableTreeNode item;
-		for (String folderName : MailAccount.folderNames) {
+		for (String folderName : mailAccount.getFolderNames()) {
         	item = new DefaultMutableTreeNode(folderName);
         	folder.add(item);
         }
         return folder;
     }
     
-    class CustomListModel extends DefaultListModel<Mail> implements LinkedHashSetPriorityQueueObserver {
-
-		private static final long serialVersionUID = 8376153077264836337L;
-		private ObservableLinkedHashSetPriorityQueue<Mail> list;
-		
-		public CustomListModel(ObservableLinkedHashSetPriorityQueue<Mail> list) {
-			this.list = list;
-			list.addObserver(this);
-//			this.addListDataListener(jList);
-		}
-
-		@Override
-		public int getSize() {
-			return list.size();
-		}
-
-		@Override
-		public Mail getElementAt(int index) {
-			if(getSize() <= index || index < 0) throw new ArrayIndexOutOfBoundsException(); 
-			Iterator<Mail> it = list.iterator();
-			Mail element = null;
-			while(index-- >= 0 && it.hasNext()) {
-				element = it.next();
-			}
-			return element;
-		}
-
-		@Override
-		public void update(ObservableLinkedHashSetPriorityQueue<?> o, EventData data) {
-			if(!data.hasIndexes()) throw new IllegalArgumentException("No indexex in EventData");
-			switch(data.getType()) {
-				case REMOVED:
-					fireIntervalRemoved(this, data.getBeginIndex(), data.getEndIndex());
-					break;
-				case ADDED:
-					System.out.println(data.getBeginIndex() + " " + data.getEndIndex());
-					fireIntervalAdded(this, data.getBeginIndex(), data.getEndIndex());
-					break;
-				case CHANGED:
-					fireContentsChanged(this, data.getBeginIndex(), data.getEndIndex());
-					break;
-			}
-		}
-    	
-    }
-    
     private void initModels() {
-    	HashMap<String, HashMap<String, CustomListModel>> models = new HashMap<>();
+    	HashMap<String, HashMap<String, CustomJListModel>> models = new HashMap<>();
         CookieSwipeApplication.getApplication().setParam(jListMailModels, models);
-        
-        User user = CookieSwipeApplication.getApplication().getUser();
-        for (MailAccount mailAccount : user.getListOfMailAccount()) {
-        	HashMap<String, CustomListModel> map = new HashMap<String, CustomListModel>();
-    		for(String folderName : MailAccount.folderNames) {
-    			map.put(folderName, new CustomListModel(mailAccount.getListModelFor(folderName)));
-    		}
-        	models.put(mailAccount.getCSName(), map);
-        }
-    	
-    	HashMap<String, CustomListModel> allModel = new HashMap<>();
-        allModel.put(MailAccount.ALL, new CustomListModel(new ObservableLinkedHashSetPriorityQueue<Mail>(new MailComparator())));
+    	HashMap<String, CustomJListModel> allModel = new HashMap<>();
+        allModel.put(MailAccount.ALL, new CustomJListModel(new ObservableLinkedHashSetPriorityQueue<Message>(new MailComparator())));
         models.put(MailAccount.ALL, allModel);
 	}
     
@@ -217,7 +158,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
 	        CookieSwipeApplication.getApplication().setParam("mailAccountSelected", firstMailAccount);
         }
         
-        myTree.addMouseListener(new TreeMouseListener(myTree,(JList<Mail>) hsJcomponent.get("jListMail")));
+        myTree.addMouseListener(new TreeMouseListener(myTree,(JList<Message>) hsJcomponent.get("jListMail")));
     }
     
     private void initButton() {
@@ -285,43 +226,24 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.setVisible(b);
         csFrame.pack();
     }
-    
-    @SuppressWarnings("unchecked")
-	public void addMailsToList(MailAccount mc, List<Mail> mails) {
-    	HashMap<String, HashMap<String, DefaultListModel<Mail>>> models = 
-    			(HashMap<String, HashMap<String, DefaultListModel<Mail>>>) 
-    				CookieSwipeApplication.getApplication().getParam(jListMailModels);
-    	DefaultListModel<Mail> model = models.get(MailAccount.ALL).get(MailAccount.folderNames.get(0));
-    	for(Mail mail : mails) {
-			model.addElement(mail);
-		}
-    	model = models.get(mc.getCSName()).get(MailAccount.folderNames.get(0));
-    	for(Mail mail : mails) {
-			model.addElement(mail);
-		}
-    }
-
-	public void updateMailAccountMailList(MailAccount mc) {
-		System.err.println("Not implemented yet");
-	}
 	
 	private class TreeMouseListener extends MouseAdapter {
 		private CookieSwipeTree myTree;
-		private JList<Mail> jListMail;
+		private JList<Message> jListMail;
 		
-		public TreeMouseListener(CookieSwipeTree myTree, JList<Mail> jListMail) {
+		public TreeMouseListener(CookieSwipeTree myTree, JList<Message> jListMail) {
 			this.myTree = myTree;
 			this.jListMail = jListMail;
 		}
 		@Override
 	    public void mousePressed(MouseEvent e) {
 	        DefaultMutableTreeNode node = (DefaultMutableTreeNode) myTree.getLastSelectedPathComponent();
-	        CustomListModel model = getModelForSelection(node);
+	        CustomJListModel model = getModelForSelection(node);
 	        jListMail.setModel(model);
 	    }
 		
 		@SuppressWarnings("unchecked")
-		private CustomListModel getModelForSelection(DefaultMutableTreeNode node) {
+		private CustomJListModel getModelForSelection(DefaultMutableTreeNode node) {
 			String keyAccount = null, keyFolder = null;
 			if (node != null) {
 	        	Object userObject = node.getUserObject();
@@ -329,19 +251,18 @@ public class MainFrameInitializer extends AbstractIHMAction {
 	            	setMailAccountButtonsVisible(true);
 	                CookieSwipeApplication.getApplication().setParam("mailAccountSelected", node.getUserObject());
 	                keyAccount = ((MailAccount)userObject).getCSName();
-	                keyFolder = MailAccount.folderNames.get(0);
+	                keyFolder =((MailAccount)userObject).getFolderNames().get(0);
 	            } else {
 	            	setMailAccountButtonsVisible(false);
 	                if(node.getUserObject() instanceof String) {
-	                	String label = (String) node.getUserObject();
-	                	if(MailAccount.folderNames.contains(label)) {
-	                		MailAccount mailAccount = (MailAccount) ((DefaultMutableTreeNode)node.getParent()).getUserObject();
-	                		keyAccount = mailAccount.getCSName();
-	                		keyFolder = label;
-	                	}
-	                	else {
+	                	if(node.getParent().equals(node.getRoot())) {
 	                		keyAccount = MailAccount.ALL;
 	    	                keyFolder = MailAccount.ALL;
+	                	}
+	                	else {
+	                		MailAccount mc = (MailAccount) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
+	                		keyAccount = mc.getCSName();
+	                		keyFolder = (String) node.getUserObject();
 	                	}
 	                }
 	            }
@@ -349,8 +270,8 @@ public class MainFrameInitializer extends AbstractIHMAction {
 			
 			if(keyAccount == null || keyFolder == null) return null;
 			
-			HashMap<String, HashMap<String, CustomListModel>> models;
-			models = (HashMap<String, HashMap<String, CustomListModel>>)
+			HashMap<String, HashMap<String, CustomJListModel>> models;
+			models = (HashMap<String, HashMap<String, CustomJListModel>>)
 					CookieSwipeApplication.getApplication().getParam(jListMailModels);
 			return models.get(keyAccount).get(keyFolder);
 		}

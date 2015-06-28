@@ -5,7 +5,6 @@
  */
 package model;
 
-import java.util.List;
 
 /**
  *
@@ -15,8 +14,5 @@ public interface ListMailAccountListener {
 
     public void notifyMailAccountDeleted(MailAccount mc);
     public void notifyMailAccountAdded(MailAccount mc);
-    public void notifyMailsDeleted(MailAccount mc, List<Mail> mails);
-    public void notifyMailsAdded(MailAccount mc, List<Mail> mails);
-    public void notifyMailListChanged(MailAccount mc);
     
 }
