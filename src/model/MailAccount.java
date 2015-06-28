@@ -34,6 +34,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import module.ihm.CustomJListModel;
+import module.ihm.MainFrameInitializer;
 import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.LinkedHashSetPriorityQueueObserver;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
@@ -149,6 +150,9 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     	}
     	
     	jListModels.put(folder, new CustomJListModel(observableList));
+    	
+    	MainFrameInitializer frameInitializer = new MainFrameInitializer();
+    	frameInitializer.addFolderInTree(this,folder);
 	}
     
     public boolean connectionIsOk() {

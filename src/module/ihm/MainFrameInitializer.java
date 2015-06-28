@@ -13,11 +13,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.mail.Message;
-import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -52,6 +52,10 @@ public class MainFrameInitializer extends AbstractIHMAction {
 		this.csFrame = csFrame;
 	}
 	
+	public MainFrameInitializer() {
+		this(CookieSwipeApplication.getApplication().getMainFrame());
+	}
+
 	@Override
 	public boolean execute(Object... object) {
 		initMailAccount();
@@ -76,40 +80,49 @@ public class MainFrameInitializer extends AbstractIHMAction {
 			}
 		});
 	}
-
-	public void deleteMailAccountInTree(MailAccount mc) {
-        CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
-        DefaultTreeModel model = (DefaultTreeModel) myTree.getModel();
-        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) model.getRoot();
+    
+    public DefaultMutableTreeNode getRootNode() {
+        DefaultTreeModel model = getModel();
+        return (DefaultMutableTreeNode) model.getRoot();
+    }
+    
+    public DefaultTreeModel getModel() {
+    	CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
+        return (DefaultTreeModel) myTree.getModel();
+    }
+    
+    public DefaultMutableTreeNode getNode(String name) {
+    	DefaultMutableTreeNode rootNode = getRootNode();
         @SuppressWarnings("unchecked")
 		Enumeration<DefaultMutableTreeNode> en = rootNode.breadthFirstEnumeration();
         while (en.hasMoreElements()) {
             DefaultMutableTreeNode node = en.nextElement();
             TreeNode[] path = node.getPath();
-            if(path[path.length - 1].toString().equals(mc.getCSName())) {
-                rootNode.remove(node);
-                break; 
+            if(path[path.length - 1].toString().equals(name)) {
+                return node;
             }
         }
+        return null;
+    }
+
+	public void deleteMailAccountInTree(MailAccount mc) {
+		DefaultTreeModel model = getModel();
+		DefaultMutableTreeNode rootNode = getRootNode();
+		rootNode.remove(getNode(mc.getCSName()));
         model.reload();
     }
     
     public void addMailAccountInTree(MailAccount mc) {
-        CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
-        DefaultTreeModel model = (DefaultTreeModel) myTree.getModel();
-        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) model.getRoot();
-        rootNode.add(createMailAccountFolder(mc));
+    	DefaultTreeModel model = getModel();
+		DefaultMutableTreeNode rootNode = getRootNode();
+        rootNode.add(new DefaultMutableTreeNode(mc));
         model.reload();
     }
 
-    private MutableTreeNode createMailAccountFolder(MailAccount mailAccount) {
-        DefaultMutableTreeNode folder = new DefaultMutableTreeNode(mailAccount);
-        DefaultMutableTreeNode item;
-		for (String folderName : mailAccount.getFolderNames()) {
-        	item = new DefaultMutableTreeNode(folderName);
-        	folder.add(item);
-        }
-        return folder;
+    public void addFolderInTree(MailAccount mailAccount, String folderName) {
+    	DefaultMutableTreeNode folder = getNode(mailAccount.getCSName());
+    	folder.add(new DefaultMutableTreeNode(folderName));
+    	getModel().reload();
     }
     
     private void initModels() {
@@ -131,11 +144,11 @@ public class MainFrameInitializer extends AbstractIHMAction {
         User user = CookieSwipeApplication.getApplication().getUser();
         for (MailAccount mailAccount : user.getListOfMailAccount()) {
         	if(firstMailAccount != null) {
-        		myRoot.add(createMailAccountFolder(mailAccount));
+        		myRoot.add(new DefaultMutableTreeNode(mailAccount));
         	}
         	else {
         		firstMailAccount = mailAccount;
-        		firstFolder = createMailAccountFolder(mailAccount);
+        		firstFolder = new DefaultMutableTreeNode(mailAccount);
         		myRoot.add(firstFolder);
         	}
         }
@@ -143,12 +156,9 @@ public class MainFrameInitializer extends AbstractIHMAction {
         // Creation des models de données pour les listes de mails à afficher
         initModels();
 
-        // Construction du modèle de l'arbre.
-        DefaultTreeModel myModel = new DefaultTreeModel(myRoot);
-
         // Construction de l'arbre.
         CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
-        myTree.setModel(myModel);
+        myTree.setModel(new DefaultTreeModel(myRoot));
         
         if(firstMailAccount != null) {
 			Enumeration<DefaultMutableTreeNode> en = myRoot.breadthFirstEnumeration();
@@ -238,6 +248,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
 		@Override
 	    public void mousePressed(MouseEvent e) {
 	        DefaultMutableTreeNode node = (DefaultMutableTreeNode) myTree.getLastSelectedPathComponent();
+	        if(node == null) return;
 	        CustomJListModel model = getModelForSelection(node);
 	        jListMail.setModel(model);
 	    }
