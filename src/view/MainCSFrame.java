@@ -12,7 +12,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 import javax.mail.Message;
 import javax.swing.GroupLayout;
@@ -20,7 +19,6 @@ import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 import model.ListMailAccountListener;
-import model.Mail;
 import model.MailAccount;
 import module.ihm.MainFrameInitializer;
 import view.component.CookieSwipeButton;

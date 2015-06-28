@@ -12,7 +12,8 @@ public class MailComparator implements Comparator<Message> {
 	@Override
 	public int compare(Message o1, Message o2) {
 		try {
-			return o1.getSentDate().compareTo(o2.getSentDate());
+			int i = o2.getReceivedDate().compareTo(o1.getReceivedDate());
+			return i;
 		} catch (MessagingException e) {
 			Logger.getLogger(getClass().getName()).log(Level.WARNING, "An error occured while comparing mail", e);
 			return 0;

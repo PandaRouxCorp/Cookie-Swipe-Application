@@ -16,8 +16,6 @@ import java.util.HashMap;
 
 import javax.mail.Message;
 import javax.swing.JList;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;

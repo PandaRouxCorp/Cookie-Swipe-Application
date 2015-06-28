@@ -32,9 +32,13 @@ import javax.mail.event.MessageCountEvent;
 import javax.mail.event.MessageCountListener;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.swing.SwingUtilities;
 
 import module.ihm.CustomJListModel;
 import module.ihm.MainFrameInitializer;
+
+import com.sun.mail.imap.IMAPFolder;
+
 import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.LinkedHashSetPriorityQueueObserver;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
@@ -151,8 +155,12 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     	
     	jListModels.put(folder, new CustomJListModel(observableList));
     	
-    	MainFrameInitializer frameInitializer = new MainFrameInitializer();
-    	frameInitializer.addFolderInTree(this,folder);
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new MainFrameInitializer().addFolderInTree(MailAccount.this,folder);
+			}
+		});
 	}
     
     public boolean connectionIsOk() {
@@ -375,6 +383,10 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     public void addToListOfmail(String folderName, Message message) {
     	folderListModels.get(folderName).add(message);
 	}
+    
+    public void removeToListOfmail(String folderName, Message message) {
+    	folderListModels.get(folderName).remove(message);
+	}
 
     public void addToListOfmail(String folderName, List<Message> listOfmail) {
     	folderListModels.get(folderName).addAll(listOfmail);
@@ -382,6 +394,14 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     
     public void addToListOfmail(String folderName, Message[] listOfmail) {
     	folderListModels.get(folderName).addAll(Arrays.asList(listOfmail));
+    }
+    
+    public void removeToListOfmail(String folderName, List<Message> listOfmail) {
+    	folderListModels.get(folderName).removeAll(listOfmail);
+    }
+    
+    public void removeToListOfmail(String folderName, Message[] listOfmail) {
+    	folderListModels.get(folderName).removeAll(Arrays.asList(listOfmail));
     }
     
     public List<String> getFolderNames() {
@@ -430,13 +450,14 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     
     @Override
 	public void messagesAdded(MessageCountEvent event) {
-    	event.getSource();
-    	//addToListOfmail(event.getMessages());
+    	IMAPFolder f = (IMAPFolder) event.getSource();
+    	addToListOfmail(f.getName(), event.getMessages());
 	}
 
 	@Override
-	public void messagesRemoved(MessageCountEvent arg0) {
-		System.out.println("messagesRemoved");
+	public void messagesRemoved(MessageCountEvent event) {
+		IMAPFolder f = (IMAPFolder) event.getSource();
+		removeToListOfmail(f.getName(), event.getMessages());
 	}
 
 	@Override

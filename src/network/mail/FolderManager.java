@@ -45,7 +45,7 @@ public class FolderManager {
 				addMailAccount(mc);
 			}
 			catch(Exception e) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening folder", e);
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening store", e);
 			}
 		}
 	}
@@ -53,10 +53,15 @@ public class FolderManager {
 	public void addMailAccount(MailAccount mc) throws MessagingException, Exception {
 		Store store = mc.getClientConnection();
 		for(Folder f : store.getDefaultFolder().list()) {
-			if(open(f)) {
-				folders.put((IMAPFolder) f, new AbstractMap.SimpleEntry<Store,MailAccount>(store,mc));
-				addListeners((IMAPFolder) f, mc);
-				mc.createModelFor(f.getName());
+			try{
+				if(open(f)) {
+					folders.put((IMAPFolder) f, new AbstractMap.SimpleEntry<Store,MailAccount>(store,mc));
+					addListeners((IMAPFolder) f, mc);
+					mc.createModelFor(f.getName());
+				}
+			}
+			catch(Exception e ) {
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening folder", e);
 			}
 		}
 	}
