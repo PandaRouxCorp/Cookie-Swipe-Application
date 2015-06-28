@@ -85,21 +85,29 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="115" max="-2" attributes="0"/>
-              <Component id="cookieSwipeButtonLogin" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="cookieSwipeLabelPassword" min="-2" max="-2" attributes="0"/>
-                  <Component id="cookieSwipeLabelLogin" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="cookieSwipeTextFieldLogin" max="32767" attributes="0"/>
-                      <Component id="cookieSwipePasswordFieldPassword" min="-2" pref="154" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="115" max="-2" attributes="0"/>
+                      <Component id="cookieSwipeButtonLogin" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="cookieSwipeLabelPassword" min="-2" max="-2" attributes="0"/>
+                          <Component id="cookieSwipeLabelLogin" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="cookieSwipeTextFieldLogin" max="32767" attributes="0"/>
+                              <Component id="cookieSwipePasswordFieldPassword" min="-2" pref="154" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="cookieSwipeButtonSendLogin" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
+                              <Component id="cookieSwipeButtonSendPassword" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="cookieSwipeButtonSendLogin" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
-                      <Component id="cookieSwipeButtonSendPassword" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="216" max="-2" attributes="0"/>
+                      <Component id="cookieSwipeButtonInscription" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace pref="175" max="32767" attributes="0"/>
@@ -123,7 +131,9 @@
                   <Component id="cookieSwipeButtonLogin" min="-2" max="-2" attributes="0"/>
                   <Component id="cookieSwipeButtonSendPassword" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="176" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+              <Component id="cookieSwipeButtonInscription" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="108" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -168,6 +178,11 @@
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="&quot;Identifiant oubli&#xe9;&quot;" type="code"/>
         </Property>
+      </Properties>
+    </Component>
+    <Component class="view.component.CookieSwipeButton" name="cookieSwipeButtonInscription">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Inscription"/>
       </Properties>
     </Component>
   </SubComponents>

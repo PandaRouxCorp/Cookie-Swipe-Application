@@ -32,6 +32,7 @@ import view.component.CookieSwipeFrame;
 import view.component.CookieSwipePasswordField;
 import view.component.CookieSwipeTextField;
 import cookie.swipe.application.CookieSwipeApplication;
+import module.backoffice.CreateCSAccountAction;
 import module.backoffice.SendMailAction;
 
 
@@ -167,8 +168,16 @@ public class Dispatcher implements ActionListener {
         new UpdateMailAccountFrameInitializer(focusFrame).execute();
     }
 
-    public void createAccountAction() {
-        System.err.println("NOT IMPLEMENTED");
+    public void createAccountAction() { // compte cookie swipe a créé
+        CookieSwipeApplication application = CookieSwipeApplication.getApplication();
+        String login    = ((CookieSwipeTextField)application.getMainFrameJComponent("cookieSwipeTextFieldLoginAdressMail")).getText();
+        // getText() deprecated je trouverais autre chose
+        String pwd    = ((CookieSwipePasswordField)application.getMainFrameJComponent("cookieSwipePasswordFieldPassword")).getText();
+        String backup    = ((CookieSwipeTextField)application.getMainFrameJComponent("cookieSwipeTextFieldBackupMail")).getText();
+        
+        if(new CreateCSAccountAction().execute(login, pwd, backup)) {
+            
+        }
     }
 
     public void sendMailAction() {
