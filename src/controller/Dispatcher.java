@@ -49,7 +49,6 @@ public class Dispatcher implements ActionListener {
         String actionName = e.getActionCommand() + "Action";
         try {
             Method actionToPerform = Dispatcher.class.getDeclaredMethod(actionName);
-            System.out.println(actionName);
             actionToPerform.invoke(this);
         } catch (InvocationTargetException 
                 |IllegalArgumentException 
@@ -171,19 +170,15 @@ public class Dispatcher implements ActionListener {
     }
 
     public void createAccountAction() { // compte cookie swipe a créé
-        System.out.println("createAccount la");
         CookieSwipeApplication application = CookieSwipeApplication.getApplication();
         CookieSwipeFrame frame = application.getFocusFrame();
-        System.out.println("passe getApp");
         String login    = ((CookieSwipeTextField)application.getFocusFrameJComponent("cookieSwipeTextFieldLoginAdressMail")).getText();
         String pwd    = new String( ((CookieSwipePasswordField)application.getFocusFrameJComponent("cookieSwipePasswordFieldPassword")).getPassword() );
         String backup    = ((CookieSwipeTextField)application.getFocusFrameJComponent("cookieSwipeTextFieldBackupMail")).getText();
-        System.out.println("login : " + login + "\npwd : " + pwd + "\nback : " + backup);
         boolean created = new CreateCSAccountAction().execute(login, pwd, backup);
         if(created) 
             frame.dispose();
         if (created && new ConnectAccountAction().execute(login, pwd)) {
-            System.out.println("connected et created");
             MainCSFrame mainFrame = new MainCSFrame();
             application.getUser().addListMailAccountListeneur(mainFrame);
             application.setMainFrame(mainFrame);
