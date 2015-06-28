@@ -6,15 +6,9 @@
 package module.backoffice;
 
 import cookie.swipe.application.CookieSwipeApplication;
-import errorMessage.CodeError;
 import interfaces.AbstractIHMAction;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import model.Encryption;
 import model.Mail;
 import model.MailAccount;
 import view.component.CookieSwipeFrame;
@@ -31,7 +25,6 @@ public class SendMailAction extends AbstractIHMAction {
 
     @Override
     public boolean execute(Object... object) {
-        int error = 0;
         MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
         if(mailAccount != null) {
             Mail mail = mailAccount.createNewMail();
@@ -42,23 +35,6 @@ public class SendMailAction extends AbstractIHMAction {
             mailAccount.sendMail();
         }
         
-        switch (error) {
-            case CodeError.SUCESS:
-                new JOptionPane().showMessageDialog(null, "Votre compte mail à bien été envoyé",
-                        "Envoi d'un mail", JOptionPane.INFORMATION_MESSAGE);
-                return true;
-
-            case CodeError.CONNEXION_FAIL:
-            case CodeError.STATEMENT_EXECUTE_FAIL:
-            case CodeError.STATEMENT_CLOSE_FAIL:
-                new JOptionPane().showMessageDialog(null, "Problème de connexion au serveur\nCode erreur : " + error,
-                        "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
-                break;
-            default:
-                new JOptionPane().showMessageDialog(null, "Un problème est survenu\nCode erreur : " + error,
-                        "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
-
-        }
         return false;
     }
 }
