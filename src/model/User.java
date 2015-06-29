@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import network.mail.FolderManager;
+import cookie.swipe.application.CookieSwipeApplication;
 import dao.DAOMailAccount;
 import errorMessage.CodeError;
 
@@ -133,13 +135,23 @@ public class User {
         
         int res = DAOMailAccount.createMailAccount(newMailAccount, this);
         if (res == CodeError.SUCESS) {
-            listOfMailAccount.add(newMailAccount);
-            notifyMailAccountAdded(newMailAccount);
+            addMailAccount(newMailAccount);
         }
         return res;
     }
 
-    public int updatemailAccount(MailAccount mailAccount) {
+    private void addMailAccount(MailAccount newMailAccount) {
+    	FolderManager fm = (FolderManager)CookieSwipeApplication.getApplication().getParam("FolderManager");
+    	try {
+			fm.addNewMailAccount(newMailAccount);
+			listOfMailAccount.add(newMailAccount);
+			notifyMailAccountAdded(newMailAccount);	
+		} catch (Exception e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening store", e);
+		}
+	}
+
+	public int updatemailAccount(MailAccount mailAccount) {
         return DAOMailAccount.updateMailAccount(mailAccount);
     }
 

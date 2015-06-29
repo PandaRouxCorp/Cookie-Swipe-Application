@@ -50,7 +50,7 @@ public class FolderManager {
 		}
 	}
 	
-	public void addMailAccount(MailAccount mc) throws MessagingException, Exception {
+	private void addMailAccount(MailAccount mc) throws MessagingException, Exception {
 		Store store = mc.getClientConnection();
 		for(Folder f : store.getDefaultFolder().list()) {
 			try{
@@ -64,6 +64,17 @@ public class FolderManager {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening folder", e);
 			}
 		}
+	}
+	
+	public boolean addNewMailAccount(MailAccount mc) {
+		try {
+			addMailAccount(mc);
+			retrieveMailsFor(mc);
+		} catch (Exception e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening store", e);
+			return false;
+		}
+		return true;
 	}
 	
 	public void removeMailAccount(MailAccount mc) {
@@ -103,6 +114,40 @@ public class FolderManager {
 	public void start() {
 		retrieveMails();
 		startSync();
+	}
+	
+	private void retrieveMailsFor(MailAccount mc) {
+		List<IMAPFolder> newFolders = new ArrayList<>();
+		for(Folder f : folders.keySet()) {
+			if(folders.get(f).getValue().equals(mc)) {
+				newFolders.add((IMAPFolder)f);
+			}
+		}
+		DeliverySystem.launchTask(new FrameworkMessage<Object>() {
+
+			private static final long serialVersionUID = 7108005018953413117L;
+
+			@Override
+			public Object call() throws Exception {
+				Map<IMAPFolder,Integer> lengths = new HashMap<>();
+				int index = 0;
+				
+				for(IMAPFolder f : newFolders) {
+					lengths.put(f,f.getMessageCount());
+				}
+				
+				for(int i = 0; i < preloadedMessagesCount; ++i) {
+					for(IMAPFolder f : newFolders) {
+						index = lengths.get(f) - i;
+						if(index > 0) {
+							mc.addToListOfmail(f.getName(), f.getMessage(index));
+						}
+					}
+				}
+				return null;
+			}
+			
+		});
 	}
 
 	private void retrieveMails() {

@@ -51,7 +51,7 @@ CREATE TABLE `domain` (
 
 LOCK TABLES `domain` WRITE;
 /*!40000 ALTER TABLE `domain` DISABLE KEYS */;
-INSERT INTO `domain` VALUES (1,'Yahoo','yahoo.fr','pop.mail.yahoo.fr','smtp.mail.yahoo.fr',995,465,'pop3'),(2,'Microsoft','hotmail.com / hotmail.fr','pop3.live.com','smtp.live.com',995,587,'pop3'),(3,'Orange','orange.fr / wanadoo.fr','imap.free.fr','smtp.orange.fr',995,465,NULL),(4,'Google','gmail.com','pop.gmail.com','smtp.gmail.com',993,465,'imaps');
+INSERT INTO `domain` VALUES (1,'Yahoo','yahoo.fr','imap.mail.yahoo.com','smtp.mail.yahoo.fr',993,465,'imaps'),(2,'Microsoft','hotmail.com / hotmail.fr','imap-mail.outlook.com','smtp.live.com',993,587,'imaps'),(3,'Orange','orange.fr / wanadoo.fr','imap.orange.fr','smtp.orange.fr',993,465,'imaps'),(4,'Google','gmail.com','imap.gmail.com','smtp.gmail.com',993,465,'imaps');
 /*!40000 ALTER TABLE `domain` ENABLE KEYS */;
 UNLOCK TABLES;
 

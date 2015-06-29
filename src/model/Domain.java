@@ -18,8 +18,9 @@ public class Domain {
         Domain domain = null;
         switch (mailDomain) {
             case "yahoo.fr":
-                domain = new Domain("Yahoo", mailDomain, "pop.mail.yahoo.fr",
-                        "995", "smtp.mail.yahoo.fr", "465", "pop3", 1);
+            case "yahoo.com":
+                domain = new Domain("Yahoo", mailDomain, "imap.mail.yahoo.com",
+                        "993", "smtp.mail.yahoo.fr", "465", "imaps", 1);
                 break;
             case "hotmail.com":
             case "hotmail.fr":
@@ -27,12 +28,12 @@ public class Domain {
             case "live.fr":
             case "msn.com":
             case "outlook.com":
-                domain = new Domain("Microsoft", mailDomain, "pop3.live.com",
-                        "995", "smtp.live.com", "587", "pop3", 2);
+                domain = new Domain("Microsoft", mailDomain, "imap-mail.outlook.com",
+                        "993", "smtp.live.com", "587", "imaps", 2);
                 break;
             case "orange.fr":
             case "wanadoo.fr":
-                domain = new Domain("Orange", mailDomain, "", "", "", "", "", 3);
+                domain = new Domain("Orange", mailDomain, "imap.orange.fr", "993", "smtp.orange.fr", "465", "imaps", 3);
                 break;
             case "gmail.com":
                 domain = new Domain("Google", mailDomain, "imap.gmail.com", "993",
