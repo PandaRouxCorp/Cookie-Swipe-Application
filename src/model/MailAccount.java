@@ -43,6 +43,7 @@ import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.LinkedHashSetPriorityQueueObserver;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 import errorMessage.CodeError;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -238,47 +239,83 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     public void addSubject(String subject) {
         currentMail.setSubject(subject);
     }
-
+    
     /**
      * Sert a envoyer un courriel, delegue l'envoi a un domaine
-     *
-     * @return Si l'envoi c'est bien passe
+     *)
      */
-    public boolean sendMail() {
-        try {
-            Session session = Session.getDefaultInstance(getProperties(),
-                new javax.mail.Authenticator() {
-                    @Override
-                    public javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                        return new javax.mail.PasswordAuthentication(address, password);
-//                        return new javax.mail.PasswordAuthentication("panda.roux.corp@gmail.com", "Panda123456789");
+    public void sendMail() {
+        AbstractSender s = new AbstractSender<Boolean>() {
+            @Override
+            public void onMessageReceived(Future<Boolean> receivedMessage) {
+                try {
+                    boolean sended = receivedMessage.get();
+                    int error;
+                    if(sended)
+                        error = CodeError.SUCESS;
+                    else
+                        error = CodeError.FAILLURE;
+                    switch (error) {
+                        case CodeError.SUCESS:
+                            new JOptionPane().showMessageDialog(null, "Votre compte mail à bien été envoyé",
+                                    "Envoi d'un mail", JOptionPane.INFORMATION_MESSAGE);
+
+                        case CodeError.CONNEXION_FAIL:
+                        case CodeError.FAILLURE:
+                        case CodeError.STATEMENT_EXECUTE_FAIL:
+                        case CodeError.STATEMENT_CLOSE_FAIL:
+                            new JOptionPane().showMessageDialog(null, "Problème de connexion au serveur\nCode erreur : " + error,
+                                    "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
+                            break;
+                        default:
+                            new JOptionPane().showMessageDialog(null, "Un problème est survenu\nCode erreur : " + error,
+                                    "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
+
                     }
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            );
-            
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(address));
-//            message.setFrom(new InternetAddress("panda.roux.corp@gmail.com"));
-            message.setRecipients(Message.RecipientType.TO,
-                InternetAddress.parse(currentMail.getTo()));
-//                InternetAddress.parse("yehouda_arnauve@hotmail.com"));
-            message.setSubject(currentMail.getSubject());
-            message.setText(currentMail.getBody());
-//            message.setSubject("Testing Subject");
-//            message.setText("Dear Mail Crawler,"
-//                + "\n\n No spam to my email, please!");
-            
-            
-            System.out.println("before send");
-            
-            Transport.send(message);
-            
-            System.out.println("after send");
-            return true;
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-        return false;
+            }
+
+        };
+        s.sendMessage(new FrameworkMessage< Boolean >() {
+
+            @Override
+            public Boolean call() throws Exception {
+
+                try {
+                    Session session = Session.getDefaultInstance(getProperties(),
+                        new javax.mail.Authenticator() {
+                            @Override
+                            public javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                                String pwd = "";
+                                try {
+                                    pwd = new Encryption().decrypt(password);
+                                } catch (Exception ex) {
+                                    Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                return new javax.mail.PasswordAuthentication(address, pwd);
+                            }
+                        }
+                    );
+
+                    Message message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress(address));
+                    message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(currentMail.getTo()));
+                    message.setSubject(currentMail.getSubject());
+                    message.setText(currentMail.getBody());
+
+                    Transport.send(message);
+                    return true;
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
     }
 
     public void setMail(Mail mail) {
@@ -410,20 +447,20 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
 
     //response & forward mail
     public Mail response(Mail mail) {
-        Mail resp = new Mail();
-        resp.setBody(mailTranfer(mail));
-        resp.setTo(mail.getFrom());
-        resp.setFrom(mail.getTo());
-        resp.setSubject("FW : " + mail.getSubject());
-        return resp;
+        currentMail = new Mail();
+        currentMail.setBody(mailTranfer(mail));
+        currentMail.setTo(mail.getFrom());
+        currentMail.setFrom(mail.getTo());
+        currentMail.setSubject("FW : " + mail.getSubject());
+        return currentMail;
     }
 
     public Mail forward(Mail mail) {
-        Mail resp = new Mail();
-        resp.setAttachement(mail.getAttachement());
-        resp.setBody(mailTranfer(mail));
-        resp.setSubject("FW : " + mail.getSubject());
-        return resp;
+        currentMail = new Mail();
+        currentMail.setAttachement(mail.getAttachement());
+        currentMail.setBody(mailTranfer(mail));
+        currentMail.setSubject("FW : " + mail.getSubject());
+        return currentMail;
     }
 
     private String mailTranfer(Mail mail) {
@@ -432,7 +469,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                 + "To : " + mail.getTo() + "\n"
                 + "Date : " + mail.getDate() + "\n\n"
                 + mail.getBody()
-                + "";
+                + "\n\n";
     }
     
     public void addObservableTo(String observableName, LinkedHashSetPriorityQueueObserver obs) {

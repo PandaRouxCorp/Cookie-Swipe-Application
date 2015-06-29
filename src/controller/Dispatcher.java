@@ -32,6 +32,9 @@ import view.component.CookieSwipeFrame;
 import view.component.CookieSwipePasswordField;
 import view.component.CookieSwipeTextField;
 import cookie.swipe.application.CookieSwipeApplication;
+import module.backoffice.CreateCSAccountAction;
+import module.backoffice.SendMailAction;
+import module.ihm.CreateAccountFrameInitializer;
 
 
 public class Dispatcher implements ActionListener {
@@ -41,6 +44,7 @@ public class Dispatcher implements ActionListener {
      *
      * @param e Evénement décrivant l'action à réaliser
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         String actionName = e.getActionCommand() + "Action";
         try {
@@ -165,11 +169,40 @@ public class Dispatcher implements ActionListener {
         new UpdateMailAccountFrameInitializer(focusFrame).execute();
     }
 
-    public void createAccountAction() {
-        System.err.println("NOT IMPLEMENTED");
+    public void createAccountAction() { // compte cookie swipe a créé
+        CookieSwipeApplication application = CookieSwipeApplication.getApplication();
+        CookieSwipeFrame frame = application.getFocusFrame();
+        String login    = ((CookieSwipeTextField)application.getFocusFrameJComponent("cookieSwipeTextFieldLoginAdressMail")).getText();
+        String pwd    = new String( ((CookieSwipePasswordField)application.getFocusFrameJComponent("cookieSwipePasswordFieldPassword")).getPassword() );
+        String backup    = ((CookieSwipeTextField)application.getFocusFrameJComponent("cookieSwipeTextFieldBackupMail")).getText();
+        boolean created = new CreateCSAccountAction().execute(login, pwd, backup);
+        if(created) 
+            frame.dispose();
+        if (created && new ConnectAccountAction().execute(login, pwd)) {
+            MainCSFrame mainFrame = new MainCSFrame();
+            application.getUser().addListMailAccountListeneur(mainFrame);
+            application.setMainFrame(mainFrame);
+            new MainFrameInitializer(mainFrame).execute();
+            DeliverySystem.launchTask(new FrameworkMessage<Object>() {
+				@Override
+				public Object call() throws Exception {
+					application.getUser().retrieveMails();
+					return null;
+				}
+			});
+        }
+    }
+    
+    public void inscriptionAction() {
+        CookieSwipeApplication application = CookieSwipeApplication.getApplication();
+        AccountCSFrame frame = new AccountCSFrame();
+        application.setFocusFrame(frame);
+//        application.setMainFrame(frame);
+        new CreateAccountFrameInitializer(frame).execute();
     }
 
     public void sendMailAction() {
-        System.err.println("NOT IMPLEMENTED");
+        CookieSwipeFrame focusFrame = CookieSwipeApplication.getApplication().getFocusFrame();
+        new SendMailAction(focusFrame).execute();
     }
 }

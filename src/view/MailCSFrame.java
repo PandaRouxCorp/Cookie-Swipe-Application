@@ -31,6 +31,7 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponents.put("cookieSwipeLabelTo", cookieSwipeLabelTo);
         hsJcomponents.put("cookieSwipeTextFieldTo", cookieSwipeTextFieldTo);
         hsJcomponents.put("cookieSwipeTextFieldToCc", cookieSwipeTextFieldToCc);
+        hsJcomponents.put("jTextAreaMail", jTextAreaMail);
     }
 
     /**
