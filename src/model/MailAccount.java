@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +38,8 @@ import javax.swing.SwingUtilities;
 
 import module.ihm.CustomJListModel;
 import module.ihm.MainFrameInitializer;
+import network.messageFramework.AbstractSender;
+import network.messageFramework.FrameworkMessage;
 
 import com.sun.mail.imap.IMAPFolder;
 
@@ -43,6 +47,7 @@ import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.LinkedHashSetPriorityQueueObserver;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 import errorMessage.CodeError;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -245,7 +250,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
      *)
      */
     public void sendMail() {
-        AbstractSender s = new AbstractSender<Boolean>() {
+        AbstractSender<Boolean> s = new AbstractSender<Boolean>() {
             @Override
             public void onMessageReceived(Future<Boolean> receivedMessage) {
                 try {
@@ -257,18 +262,18 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                         error = CodeError.FAILLURE;
                     switch (error) {
                         case CodeError.SUCESS:
-                            new JOptionPane().showMessageDialog(null, "Votre compte mail à bien été envoyé",
+                            JOptionPane.showMessageDialog(null, "Votre compte mail à bien été envoyé",
                                     "Envoi d'un mail", JOptionPane.INFORMATION_MESSAGE);
 
                         case CodeError.CONNEXION_FAIL:
                         case CodeError.FAILLURE:
                         case CodeError.STATEMENT_EXECUTE_FAIL:
                         case CodeError.STATEMENT_CLOSE_FAIL:
-                            new JOptionPane().showMessageDialog(null, "Problème de connexion au serveur\nCode erreur : " + error,
+                        	JOptionPane.showMessageDialog(null, "Problème de connexion au serveur\nCode erreur : " + error,
                                     "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
                             break;
                         default:
-                            new JOptionPane().showMessageDialog(null, "Un problème est survenu\nCode erreur : " + error,
+                        	JOptionPane.showMessageDialog(null, "Un problème est survenu\nCode erreur : " + error,
                                     "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
 
                     }
@@ -282,7 +287,9 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         };
         s.sendMessage(new FrameworkMessage< Boolean >() {
 
-            @Override
+			private static final long serialVersionUID = 6843846978421159925L;
+
+			@Override
             public Boolean call() throws Exception {
 
                 try {
