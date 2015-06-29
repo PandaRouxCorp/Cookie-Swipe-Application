@@ -264,7 +264,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                         case CodeError.SUCESS:
                             JOptionPane.showMessageDialog(null, "Votre compte mail à bien été envoyé",
                                     "Envoi d'un mail", JOptionPane.INFORMATION_MESSAGE);
-
+                            break;
                         case CodeError.CONNEXION_FAIL:
                         case CodeError.FAILLURE:
                         case CodeError.STATEMENT_EXECUTE_FAIL:
