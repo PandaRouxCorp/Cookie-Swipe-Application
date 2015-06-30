@@ -152,7 +152,7 @@ public class Mail implements Serializable {
         return copyTo;
     }
 
-    public void setAttachement(String copyTo) {
+    public void setCopyTo(String copyTo) {
         this.copyTo = copyTo;
     }    
     //equals & hashcode

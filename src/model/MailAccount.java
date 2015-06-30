@@ -56,15 +56,17 @@ import javax.swing.JOptionPane;
  */
 public class MailAccount implements ConnectionListener, MessageChangedListener, MessageCountListener, FolderListener {
 
-	public static final String ALL = "Tous";
-	
+    public static final String ALL = "Tous";
+
     // Variable membre
     private int id;
     private String address, CSName, password, color, mailSignature;
     private Domain domain;
     private Date lastSynch;
     private Mail currentMail;
-    private HashMap<String,ObservableLinkedHashSetPriorityQueue<Message>> folderListModels;
+    private Session session;
+    private Message currentMessage;
+    private HashMap<String, ObservableLinkedHashSetPriorityQueue<Message>> folderListModels;
     private List<String> folderNames;
 
     // Constructeur
@@ -77,7 +79,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         this.folderListModels = new HashMap<>();
     }
 
-	/**
+    /**
      * Constructeur a utiliser lors de l'ajout d'une boite courriel
      *
      * @param CSName nom donne a la botie courriel
@@ -140,57 +142,56 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     }
 
     @SuppressWarnings("unchecked")
-	public void createModelFor(String folder) {
-    	this.folderNames.add(folder);
-    	
-    	ObservableLinkedHashSetPriorityQueue<Message> observableList = 
-    			new ObservableLinkedHashSetPriorityQueue<>(new MailComparator());
-    	
-    	folderListModels.put(folder, observableList);
-    	
-    	HashMap<String, HashMap<String, CustomJListModel>> models = 
-				(HashMap<String, HashMap<String, CustomJListModel>>) 
-				CookieSwipeApplication.getApplication().getParam("jListMailModels");
-    	
-    	HashMap<String, CustomJListModel> jListModels = models.get(getCSName());
-    	
-    	if(jListModels == null) {
-    		jListModels = new HashMap<>();
-    		models.put(getCSName(), jListModels);
-    	}
-    	
-    	jListModels.put(folder, new CustomJListModel(observableList));
-    	
-    	SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new MainFrameInitializer().addFolderInTree(MailAccount.this,folder);
-			}
-		});
-	}
-    
-    public boolean connectionIsOk() {
-    	try {
-			getClientConnection();
-		} catch (Exception e) {
-			return false;
-		}
-    	return true;
+    public void createModelFor(String folder) {
+        this.folderNames.add(folder);
+
+        ObservableLinkedHashSetPriorityQueue<Message> observableList
+                = new ObservableLinkedHashSetPriorityQueue<>(new MailComparator());
+
+        folderListModels.put(folder, observableList);
+
+        HashMap<String, HashMap<String, CustomJListModel>> models
+                = (HashMap<String, HashMap<String, CustomJListModel>>) CookieSwipeApplication.getApplication().getParam("jListMailModels");
+
+        HashMap<String, CustomJListModel> jListModels = models.get(getCSName());
+
+        if (jListModels == null) {
+            jListModels = new HashMap<>();
+            models.put(getCSName(), jListModels);
+        }
+
+        jListModels.put(folder, new CustomJListModel(observableList));
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new MainFrameInitializer().addFolderInTree(MailAccount.this, folder);
+            }
+        });
     }
-    
+
+    public boolean connectionIsOk() {
+        try {
+            getClientConnection();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
     public Store getClientConnection() throws MessagingException, Exception {
-    	// Get a Properties object
+        // Get a Properties object
         Properties props = System.getProperties();
 
         // Get a Session object
         Session session = Session.getInstance(props, null);
         session.setDebug(false);
-        
+
         Store store = session.getStore(domain.getStoreProtocol());
-        
+
         // Ouvrir la connexion
         store.connect(domain.getServerIn(), address, new Encryption().decrypt(password));
-        
+
         return store;
     }
 
@@ -217,8 +218,27 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
 //        props.put("mail.smtp.user", "panda.roux.corp@gmail.com");
 //        props.put("mail.smtp.port", "465");
 //        props.put("mail.from", "pop.gmail.com");
-
         return props;
+    }
+
+    public Session getSession() {
+        if (session == null) {
+            session = Session.getDefaultInstance(getProperties(),
+                    new javax.mail.Authenticator() {
+                        @Override
+                        public javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                            String pwd = "";
+                            try {
+                                pwd = new Encryption().decrypt(password);
+                            } catch (Exception ex) {
+                                Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            return new javax.mail.PasswordAuthentication(address, pwd);
+                        }
+                    }
+            );
+        }
+        return session;
     }
 
     /**
@@ -228,11 +248,17 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
      */
     public Mail createNewMail() {
         currentMail = new Mail();
+        currentMessage = new MimeMessage(getSession());
         return currentMail;
     }
 
     public void addDestinataire(String destinataire) {
-        String to = currentMail.getSubject();
+        String to = currentMail.getTo();
+        try {
+            currentMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+        } catch (MessagingException ex) {
+            Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (to == null || to.isEmpty()) {
             to = destinataire;
         } else {
@@ -243,11 +269,33 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
 
     public void addSubject(String subject) {
         currentMail.setSubject(subject);
+        try {
+            currentMessage.setSubject(subject);
+        } catch (MessagingException ex) {
+            Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
+    public void addBody(String body) {
+        currentMail.setBody(body);
+        try {
+            currentMessage.setText(body);
+        } catch (MessagingException ex) {
+            Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void addCopie(String copy) {
+        currentMail.setCopyTo(copy);
+        try {
+            currentMessage.addRecipients(Message.RecipientType.CC, InternetAddress.parse(copy));
+        } catch (MessagingException ex) {
+            Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
-     * Sert a envoyer un courriel, delegue l'envoi a un domaine
-     *)
+     * Sert a envoyer un courriel, delegue l'envoi a un domaine )
      */
     public void sendMail() {
         AbstractSender<Boolean> s = new AbstractSender<Boolean>() {
@@ -256,10 +304,11 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                 try {
                     boolean sended = receivedMessage.get();
                     int error;
-                    if(sended)
+                    if (sended) {
                         error = CodeError.SUCESS;
-                    else
+                    } else {
                         error = CodeError.FAILLURE;
+                    }
                     switch (error) {
                         case CodeError.SUCESS:
                             JOptionPane.showMessageDialog(null, "Votre compte mail à bien été envoyé",
@@ -269,11 +318,11 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                         case CodeError.FAILLURE:
                         case CodeError.STATEMENT_EXECUTE_FAIL:
                         case CodeError.STATEMENT_CLOSE_FAIL:
-                        	JOptionPane.showMessageDialog(null, "Problème de connexion au serveur\nCode erreur : " + error,
+                            JOptionPane.showMessageDialog(null, "Problème de connexion au serveur\nCode erreur : " + error,
                                     "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
                             break;
                         default:
-                        	JOptionPane.showMessageDialog(null, "Un problème est survenu\nCode erreur : " + error,
+                            JOptionPane.showMessageDialog(null, "Un problème est survenu\nCode erreur : " + error,
                                     "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
 
                     }
@@ -285,37 +334,19 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
             }
 
         };
-        s.sendMessage(new FrameworkMessage< Boolean >() {
-
-			private static final long serialVersionUID = 6843846978421159925L;
-
-			@Override
+        s.sendMessage(new FrameworkMessage< Boolean>() {
+            @Override
             public Boolean call() throws Exception {
 
                 try {
-                    Session session = Session.getDefaultInstance(getProperties(),
-                        new javax.mail.Authenticator() {
-                            @Override
-                            public javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                                String pwd = "";
-                                try {
-                                    pwd = new Encryption().decrypt(password);
-                                } catch (Exception ex) {
-                                    Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                return new javax.mail.PasswordAuthentication(address, pwd);
-                            }
-                        }
-                    );
+                    currentMessage = new MimeMessage(getSession());
+                    currentMessage.setFrom(new InternetAddress(address));
+                    currentMessage.setRecipients(Message.RecipientType.TO,
+                            InternetAddress.parse(currentMail.getTo()));
+                    currentMessage.setSubject(currentMail.getSubject());
+                    currentMessage.setText(currentMail.getBody());
 
-                    Message message = new MimeMessage(session);
-                    message.setFrom(new InternetAddress(address));
-                    message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(currentMail.getTo()));
-                    message.setSubject(currentMail.getSubject());
-                    message.setText(currentMail.getBody());
-
-                    Transport.send(message);
+                    Transport.send(currentMessage);
                     return true;
                 } catch (MessagingException e) {
                     e.printStackTrace();
@@ -341,6 +372,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
 
     public void addAttachement(File file) {
         currentMail.addAttachement(file);
+//        currentMessage.
     }
 
     public void addAttachement(String filename) {
@@ -423,33 +455,33 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     public Mail[] getListOfmail(String folderName) {
         return folderListModels.get(folderName).toArray(new Mail[folderListModels.get(folderName).size()]);
     }
-    
+
     public void addToListOfmail(String folderName, Message message) {
-    	folderListModels.get(folderName).add(message);
-	}
-    
+        folderListModels.get(folderName).add(message);
+    }
+
     public void removeToListOfmail(String folderName, Message message) {
-    	folderListModels.get(folderName).remove(message);
-	}
+        folderListModels.get(folderName).remove(message);
+    }
 
     public void addToListOfmail(String folderName, List<Message> listOfmail) {
-    	folderListModels.get(folderName).addAll(listOfmail);
+        folderListModels.get(folderName).addAll(listOfmail);
     }
-    
+
     public void addToListOfmail(String folderName, Message[] listOfmail) {
-    	folderListModels.get(folderName).addAll(Arrays.asList(listOfmail));
+        folderListModels.get(folderName).addAll(Arrays.asList(listOfmail));
     }
-    
+
     public void removeToListOfmail(String folderName, List<Message> listOfmail) {
-    	folderListModels.get(folderName).removeAll(listOfmail);
+        folderListModels.get(folderName).removeAll(listOfmail);
     }
-    
+
     public void removeToListOfmail(String folderName, Message[] listOfmail) {
-    	folderListModels.get(folderName).removeAll(Arrays.asList(listOfmail));
+        folderListModels.get(folderName).removeAll(Arrays.asList(listOfmail));
     }
-    
+
     public List<String> getFolderNames() {
-    	return this.folderNames;
+        return this.folderNames;
     }
 
     //response & forward mail
@@ -478,66 +510,65 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                 + mail.getBody()
                 + "\n\n";
     }
-    
+
     public void addObservableTo(String observableName, LinkedHashSetPriorityQueueObserver obs) {
-    	if(folderNames.contains(observableName) || ALL.equals(observableName)) {
-    		folderListModels.get(observableName).addObserver(obs);
-    	}
-    	else {
-    		throw new IllegalArgumentException("Ask for unknown observable: " + observableName);
-    	}
+        if (folderNames.contains(observableName) || ALL.equals(observableName)) {
+            folderListModels.get(observableName).addObserver(obs);
+        } else {
+            throw new IllegalArgumentException("Ask for unknown observable: " + observableName);
+        }
     }
-    
+
     public ObservableLinkedHashSetPriorityQueue<Message> getListModelFor(String folderName) {
-		return this.folderListModels.get(folderName);
-	}
-    
+        return this.folderListModels.get(folderName);
+    }
+
     @Override
-	public void messagesAdded(MessageCountEvent event) {
-    	IMAPFolder f = (IMAPFolder) event.getSource();
-    	addToListOfmail(f.getName(), event.getMessages());
-	}
+    public void messagesAdded(MessageCountEvent event) {
+        IMAPFolder f = (IMAPFolder) event.getSource();
+        addToListOfmail(f.getName(), event.getMessages());
+    }
 
-	@Override
-	public void messagesRemoved(MessageCountEvent event) {
-		IMAPFolder f = (IMAPFolder) event.getSource();
-		removeToListOfmail(f.getName(), event.getMessages());
-	}
+    @Override
+    public void messagesRemoved(MessageCountEvent event) {
+        IMAPFolder f = (IMAPFolder) event.getSource();
+        removeToListOfmail(f.getName(), event.getMessages());
+    }
 
-	@Override
-	public void messageChanged(MessageChangedEvent arg0) {
-		System.out.println("messageChanged");
-	}
+    @Override
+    public void messageChanged(MessageChangedEvent arg0) {
+        System.out.println("messageChanged");
+    }
 
-	@Override
-	public void closed(ConnectionEvent arg0) {
-		System.out.println("closed");
-	}
+    @Override
+    public void closed(ConnectionEvent arg0) {
+        System.out.println("closed");
+    }
 
-	@Override
-	public void disconnected(ConnectionEvent arg0) {
-		System.out.println("disconnected");
-	}
+    @Override
+    public void disconnected(ConnectionEvent arg0) {
+        System.out.println("disconnected");
+    }
 
-	@Override
-	public void opened(ConnectionEvent arg0) {
-		System.out.println("ConnectionEvent");
-	}
+    @Override
+    public void opened(ConnectionEvent arg0) {
+        System.out.println("ConnectionEvent");
+    }
 
-	@Override
-	public void folderCreated(FolderEvent arg0) {
-		System.out.println("FolderEvent");
-	}
+    @Override
+    public void folderCreated(FolderEvent arg0) {
+        System.out.println("FolderEvent");
+    }
 
-	@Override
-	public void folderDeleted(FolderEvent arg0) {
-		System.out.println("folderDeleted");
-	}
+    @Override
+    public void folderDeleted(FolderEvent arg0) {
+        System.out.println("folderDeleted");
+    }
 
-	@Override
-	public void folderRenamed(FolderEvent arg0) {
-		System.out.println("folderRenamed");	
-	}
+    @Override
+    public void folderRenamed(FolderEvent arg0) {
+        System.out.println("folderRenamed");
+    }
 
     // equals & hashcode
     @Override
