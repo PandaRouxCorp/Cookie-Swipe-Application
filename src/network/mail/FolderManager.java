@@ -151,32 +151,43 @@ public class FolderManager {
 	}
 
 	private void retrieveMails() {
-		DeliverySystem.launchTask(new FrameworkMessage<Object>() {
+		try {
+			Map<IMAPFolder,Integer> lengths = new HashMap<>();
 			
-			private static final long serialVersionUID = 3123849369769712930L;
-
-			@Override
-			public Object call() throws Exception {
-				Map<IMAPFolder,Integer> lengths = new HashMap<>();
-				int index = 0;
-				
-				for(IMAPFolder f : folders.keySet()) {
-					lengths.put(f,f.getMessageCount());
-				}
-				
-				for(int i = 0; i < preloadedMessagesCount; ++i) {
-					for(IMAPFolder f : folders.keySet()) {
-						index = lengths.get(f) - i;
-						if(index > 0) {
-							MailAccount mc = folders.get(f).getValue();
-							mc.addToListOfmail(f.getName(), f.getMessage(index));
-						}
-					}
-				}
-				return null;
+			for(IMAPFolder f : folders.keySet()) {
+				lengths.put(f,f.getMessageCount());
 			}
 			
-		});
+			for(int i = 0; i < preloadedMessagesCount; ++i) {
+				DeliverySystem.launchTask(new RetreiveMailMessage(lengths,i) );
+			}
+		} catch (MessagingException e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while retreiving mails", e);
+		}
+	}
+	
+	class RetreiveMailMessage extends FrameworkMessage<Object> {
+		private static final long serialVersionUID = 3123849369769712930L;
+		
+		private Map<IMAPFolder, Integer> lengths;
+		private int i;
+		
+		RetreiveMailMessage(Map<IMAPFolder,Integer> lengths, int i) {
+			this.lengths = lengths;
+			this.i = i;
+		}
+		
+		@Override
+		public Object call() throws Exception {
+			for(IMAPFolder f : folders.keySet()) {
+				int index = lengths.get(f) - i;
+				if(index > 0) {
+					MailAccount mc = folders.get(f).getValue();
+					mc.addToListOfmail(f.getName(), f.getMessage(index));
+				}
+			}
+			return null;
+		}
 	}
 	
 	public void closeSync() {
