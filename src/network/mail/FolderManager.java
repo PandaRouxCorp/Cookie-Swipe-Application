@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -23,6 +24,7 @@ import javax.mail.event.MessageChangedListener;
 import javax.mail.event.MessageCountListener;
 
 import model.MailAccount;
+import network.messageFramework.AbstractSender;
 import network.messageFramework.DeliverySystem;
 import network.messageFramework.FrameworkMessage;
 
@@ -40,29 +42,50 @@ public class FolderManager {
 	}
 	
 	public void addMailAccounts(Collection<MailAccount> mailAccounts) {
+		
+		AbstractSender<Object> sender = new AbstractSender<Object>() {
+			@Override
+			public void onMessageReceived(Future<Object> receivedMessage) {}
+			@Override
+			public void onAllMessagesReceived() {
+				start();
+			}
+		};
+			
+		List<FrameworkMessage<?>> sentMessages = new ArrayList<>();
+		
 		for(MailAccount mc : mailAccounts) {
-			try {
-				addMailAccount(mc);
-			}
-			catch(Exception e) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening store", e);
-			}
+			sentMessages.add(new FrameworkMessage<Object>() {
+				private static final long serialVersionUID = 5861187087219031673L;
+				@Override
+				public Object call() throws Exception {
+					try {
+						addMailAccount(mc);
+					}
+					catch(Exception e) {
+						Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening store", e);
+					}
+					return null;
+				}
+			});
 		}
+		
+		sender.sendMessages(sentMessages);
 	}
-	
-	private void addMailAccount(MailAccount mc) throws MessagingException, Exception {
-		Store store = mc.getClientConnection();
-		for(Folder f : store.getDefaultFolder().list()) {
-			try{
+
+	private void addMailAccount(MailAccount mc) {
+		try {
+			Store store = mc.getClientConnection();
+			for(Folder f : store.getDefaultFolder().list()) {
 				if(open(f)) {
 					folders.put((IMAPFolder) f, new AbstractMap.SimpleEntry<Store,MailAccount>(store,mc));
 					addListeners((IMAPFolder) f, mc);
 					mc.createModelFor(f.getName());
 				}
 			}
-			catch(Exception e ) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening folder", e);
-			}
+		}
+		catch(Exception e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening folder", e);
 		}
 	}
 	
@@ -111,7 +134,7 @@ public class FolderManager {
 		}
 	}
 	
-	public void start() {
+	private void start() {
 		retrieveMails();
 		startSync();
 	}
