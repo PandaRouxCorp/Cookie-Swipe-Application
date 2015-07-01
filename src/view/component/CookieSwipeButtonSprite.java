@@ -5,15 +5,14 @@
  */
 package view.component;
 
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -40,21 +39,21 @@ public class CookieSwipeButtonSprite extends CookieSwipeButton{
     
     static{
     	try{
-//	    font = Font.createFont(Font.TRUETYPE_FONT, 
-//		CookieSwipeButtonSprite.class.getClassLoader().getResourceAsStream("fontello/font/fontello.ttf"));
-//		font = font.deriveFont(14f);
+	//	    font = Font.createFont(Font.TRUETYPE_FONT, 
+	//		CookieSwipeButtonSprite.class.getClassLoader().getResourceAsStream("fontello/font/fontello.ttf"));
+	//		font = font.deriveFont(14f);
+	
+		    font = Font.createFont(Font.TRUETYPE_FONT, CookieSwipeButtonSprite.class.getClassLoader().getResourceAsStream("fontello/font/fontello.ttf"));
+		    font = font.deriveFont(14f);
 	    
-	    font = Font.createFont(Font.TRUETYPE_FONT, CookieSwipeButtonSprite.class.getClassLoader().getResourceAsStream("fontello/font/fontello.ttf"));
-	    font = font.deriveFont(14f);
-	    
-//	    InputStream is = new FileInputStream("fontello/font/fontello.ttf");
-//	    font = Font.createFont(Font.TRUETYPE_FONT, is);
-//	    font.deriveFont(14f);
-	    
-	    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fontello/font/fontello.ttf")));
-	    
-	    //setFont(font);
+//		    InputStream is = new FileInputStream("fontello/font/fontello.ttf");
+//		    font = Font.createFont(Font.TRUETYPE_FONT, is);
+//		    font.deriveFont(14f);
+		    
+		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fontello/font/fontello.ttf")));
+		    
+//		    setFont(font);
     	}catch(IOException | FontFormatException ex){
  	    	ex.printStackTrace();
      	}catch (Exception e) {

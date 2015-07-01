@@ -195,6 +195,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 				jScrollPane1.setPreferredSize(new Dimension(200, getHeight() - 135));
 				jScrollPane1.setMaximumSize(new Dimension(getWidth() - 258, getHeight() - 135));
 				jScrollPane1.setMinimumSize(new Dimension(0, 0));
+			
 				validate();
 				repaint();
 				revalidate();
@@ -322,8 +323,8 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 					.addComponent(cookieSwipeButtonDeleteMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 				)
 				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-					.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
-					.addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
+					.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				)
 			)
 		);
@@ -420,7 +421,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 
     @Override
     public void refresh() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
