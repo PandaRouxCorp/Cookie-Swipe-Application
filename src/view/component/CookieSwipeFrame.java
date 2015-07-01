@@ -16,7 +16,7 @@ public class CookieSwipeFrame extends JFrame {
     }
 
     private void initBaseComponents() {
-        setSize(400, 400);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         //setBackground(new Color(0, 175, 240));
         //getContentPane().setBackground(new Color(0, 175, 240));
         //setBackground(new Color(44, 62, 80));

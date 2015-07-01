@@ -50,7 +50,7 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+  void initComponents() {
 
         cookieSwipeTextFieldTo = new view.component.CookieSwipeTextField();
         cookieSwipeTextFieldToCc = new view.component.CookieSwipeTextField();
@@ -69,7 +69,7 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
 
         cookieSwipeLabelTo.setText("À :");
         cookieSwipeLabelCc.setText("Cc :");
-        cookieSwipeLabelObject.setText(" Objet :");
+        cookieSwipeLabelObject.setText("Objet :");
 
         jTextAreaMail.setColumns(20);
         jTextAreaMail.setRows(5);
