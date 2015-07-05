@@ -255,7 +255,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     public void addDestinataire(String destinataire) {
         String to = currentMail.getTo();
         try {
-            currentMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            currentMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(destinataire));
         } catch (MessagingException ex) {
             Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
