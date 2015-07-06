@@ -32,6 +32,9 @@ import view.component.CookieSwipeFrame;
 import view.component.CookieSwipePasswordField;
 import view.component.CookieSwipeTextField;
 import cookie.swipe.application.CookieSwipeApplication;
+import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
+import javax.mail.Message;
+import model.MailAccount;
 import module.backoffice.CreateCSAccountAction;
 import module.backoffice.SendMailAction;
 import module.ihm.CreateAccountFrameInitializer;
@@ -135,7 +138,9 @@ public class Dispatcher implements ActionListener {
     }
 
     public void deleteMailAction() {
-        System.err.println("NOT IMPLEMENTED");
+        MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
+        mailAccount.removeToListOfmail((String)CookieSwipeApplication.getApplication().getParam("folderName"),
+                                        (Message) CookieSwipeApplication.getApplication().getParam("selectedMail"));
     }
 
     public void selectMailAction() {
