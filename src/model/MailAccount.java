@@ -47,6 +47,12 @@ import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.LinkedHashSetPriorityQueueObserver;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 import errorMessage.CodeError;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 
 import javax.swing.JOptionPane;
 
@@ -68,6 +74,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     private Message currentMessage;
     private HashMap<String, ObservableLinkedHashSetPriorityQueue<Message>> folderListModels;
     private List<String> folderNames;
+    private List<File> attachments;
 
     // Constructeur
     /**
@@ -248,6 +255,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
      */
     public Mail createNewMail() {
         currentMail = new Mail();
+        attachments = new ArrayList<>();
         currentMessage = new MimeMessage(getSession());
         return currentMail;
     }
@@ -307,7 +315,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                     if (sended) {
                         error = CodeError.SUCESS;
                     } else {
-                        error = CodeError.FAILLURE;
+                        error = CodeError.CONNEXION_FAIL;
                     }
                     switch (error) {
                         case CodeError.SUCESS:
@@ -315,10 +323,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                                     "Envoi d'un mail", JOptionPane.INFORMATION_MESSAGE);
                             break;
                         case CodeError.CONNEXION_FAIL:
-                        case CodeError.FAILLURE:
-                        case CodeError.STATEMENT_EXECUTE_FAIL:
-                        case CodeError.STATEMENT_CLOSE_FAIL:
-                            JOptionPane.showMessageDialog(null, "Problème de connexion au serveur\nCode erreur : " + error,
+                            JOptionPane.showMessageDialog(null, "Problème de connexion \nCode erreur : " + error,
                                     "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
                             break;
                         default:
@@ -339,25 +344,57 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
             public Boolean call() throws Exception {
 
                 try {
-                    currentMessage = new MimeMessage(getSession());
-                    currentMessage.setFrom(new InternetAddress(address));
-                    currentMessage.setRecipients(Message.RecipientType.TO,
-                            InternetAddress.parse(currentMail.getTo()));
-                    currentMessage.setSubject(currentMail.getSubject());
-                    currentMessage.setText(currentMail.getBody());
+                    if (currentMessage == null) {
+                        currentMessage = new MimeMessage(getSession());
+                        currentMessage.setFrom(new InternetAddress(address));
+                        currentMessage.setRecipients(Message.RecipientType.TO,
+                                InternetAddress.parse(currentMail.getTo()));
+                        currentMessage.setSubject(currentMail.getSubject());
+                        currentMessage.setText(currentMail.getBody());
+                    }
+                    
+                    if ( attachments.size() > 0 ) {
+                        Multipart multi = getMultiPart();
+                        if(multi != null)
+                            currentMessage.setContent(multi);
+                    }
 
                     Transport.send(currentMessage);
                     return true;
                 } catch (MessagingException e) {
-                    e.printStackTrace();
                 }
                 return false;
             }
         });
     }
+    
+    private Multipart getMultiPart() {
+        
+        try {
+            MimeBodyPart messageBodyPart = new MimeBodyPart();
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart);
+            messageBodyPart = new MimeBodyPart();
+            DataSource source;
+            for (File file : attachments) {
+                source = new FileDataSource( file );
+                messageBodyPart.setDataHandler(new DataHandler(source));
+                messageBodyPart.setFileName( file.getName() );
+            }
+            multipart.addBodyPart(messageBodyPart);
+            return multipart;
+        } catch (MessagingException ex) {
+            Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 
     public void setMail(Mail mail) {
         currentMail = mail;
+    }
+
+    public void setMessage(Message mess) {
+        currentMessage = mess;
     }
 
     /**
@@ -371,11 +408,13 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     }
 
     public void addAttachement(File file) {
+        attachments.add(file);
         currentMail.addAttachement(file);
 //        currentMessage.
     }
 
     public void addAttachement(String filename) {
+        attachments.add(new File(filename));
         currentMail.addAttachement(new File(filename));
     }
 
