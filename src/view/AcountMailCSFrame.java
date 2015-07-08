@@ -18,6 +18,8 @@ public class AcountMailCSFrame extends CookieSwipeFrame implements IJFrame {
      * Creates new form AcountMailCSFrame
      */
     public AcountMailCSFrame() {
+    	setTitle("Ajout de compte mail");
+    	
         initComponents();
         this.pack();
         this.setLocationRelativeTo(null);

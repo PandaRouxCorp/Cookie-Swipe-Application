@@ -7,6 +7,18 @@
   "ascent": 850,
   "glyphs": [
     {
+      "uid": "1bafeeb1808a5fe24484c7890096901a",
+      "css": "user-plus",
+      "code": 59401,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "fb1c59faa93eb6e2248c2456625b08a2",
+      "css": "user-times",
+      "code": 59408,
+      "src": "fontawesome"
+    },
+    {
       "uid": "e335adbc2d898c7d85d40c507796e7b4",
       "css": "mail",
       "code": 59392,
@@ -14,56 +26,62 @@
     },
     {
       "uid": "bbd66ef66bb8fa9edde54d9a90b89150",
-      "css": "user-1",
-      "code": 59418,
+      "css": "user",
+      "code": 2056,
+      "src": "entypo"
+    },
+    {
+      "uid": "44b9e75612c5fad5505edd70d071651f",
+      "css": "attach",
+      "code": 59409,
       "src": "entypo"
     },
     {
       "uid": "b6fc2f656ef87275889422e19550680a",
-      "css": "reply-1",
-      "code": 59393,
+      "css": "reply",
+      "code": 59397,
       "src": "entypo"
     },
     {
       "uid": "1a4b54ba5618e5364fc47a3d26c1cf59",
-      "css": "reply-all-1",
-      "code": 59400,
+      "css": "reply-all",
+      "code": 59398,
       "src": "entypo"
     },
     {
       "uid": "ec347024a3640deebeeab53fd0d5ad03",
-      "css": "forward-1",
-      "code": 59401,
+      "css": "forward",
+      "code": 59394,
       "src": "entypo"
     },
     {
       "uid": "2626e3a1bbcd90e45849af3b58a1d594",
       "css": "trash",
-      "code": 59395,
+      "code": 59396,
       "src": "entypo"
     },
     {
       "uid": "0ccb084ddeeae372673793ed0b45bb4a",
-      "css": "folder-1",
-      "code": 59398,
+      "css": "folder",
+      "code": 59399,
       "src": "entypo"
     },
     {
       "uid": "29e7f6072d5935d7818204d9b088508b",
-      "css": "block-1",
-      "code": 59402,
+      "css": "block",
+      "code": 59400,
       "src": "entypo"
     },
     {
       "uid": "3bd18d47a12b8709e9f4fe9ead4f7518",
       "css": "arrows-ccw",
-      "code": 59396,
+      "code": 59393,
       "src": "entypo"
     },
     {
       "uid": "db112402805d9dadc01ce009fbfdb914",
-      "css": "paper-plane-1",
-      "code": 59397,
+      "css": "paper-plane",
+      "code": 59395,
       "src": "entypo"
     }
   ]

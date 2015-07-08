@@ -50,6 +50,8 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setVisible(true);
         
+        setExtendedState(MAXIMIZED_BOTH);
+        
         hsJcomponent.put("cookieSwipeButtonReply", cookieSwipeButtonReply);
         hsJcomponent.put("cookieSwipeButtonDeleteMail", cookieSwipeButtonDeleteMail);
         hsJcomponent.put("cookieSwipeButtonForward", cookieSwipeButtonForward);
@@ -60,6 +62,8 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
         hsJcomponent.put("cookieSwipeButtonLogout", cookieSwipeButtonLogout);
         hsJcomponent.put("cookieSwipeButtonUpdateCSAccount", cookieSwipeButtonUpdateCSAccount);
         hsJcomponent.put("cookieSwipeButtonUpdateMailAccount", cookieSwipeButtonUpdateMailAccount);
+        hsJcomponent.put("cookieSwipeButtonToBlacklist", cookieSwipeButtonToBlacklist);
+        hsJcomponent.put("cookieSwipeButtonBlacklist", cookieSwipeButtonBlacklist);
         hsJcomponent.put("jListMail", jListMail);
     }
 
@@ -81,12 +85,14 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		cookieSwipeButtonAddMailAccount = new CookieSwipeButton();
 		cookieSwipeButtonLogout = new CookieSwipeButton();
 		cookieSwipeButtonPseudo = new CookieSwipeButton();
+		cookieSwipeButtonBlacklist = new CookieSwipeButton();
 	
 		cookieSwipeButtonLogout.setText("Deconnexion");
 		cookieSwipeButtonUpdateCSAccount.setText("Modifer profil");
 		cookieSwipeButtonAddMailAccount.setText("Nouvelle boite");
 		cookieSwipeButtonUpdateMailAccount.setText("Modifier boite");
 		cookieSwipeButtonDeleteMailAccount.setText("Supprimer boite");
+		cookieSwipeButtonBlacklist.setText("Voir la blacklist");
 	
 		cookieSwipeButtonPseudo.setText("Kae"); //Temporaire //TODO
 		cookieSwipeButtonPseudo.addMouseListener(
@@ -100,6 +106,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 				    cookieSwipeButtonAddMailAccount.setVisible(true);
 				    cookieSwipeButtonUpdateMailAccount.setVisible(true);
 				    cookieSwipeButtonDeleteMailAccount.setVisible(true);
+				    cookieSwipeButtonBlacklist.setVisible(true);
 				    
 				    isMenuActivated = true;
 				}else{
@@ -108,6 +115,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 				    cookieSwipeButtonAddMailAccount.setVisible(false);
 				    cookieSwipeButtonUpdateMailAccount.setVisible(false);
 				    cookieSwipeButtonDeleteMailAccount.setVisible(false);
+				    cookieSwipeButtonBlacklist.setVisible(false);
 				    
 				    isMenuActivated = false;
 				}
@@ -130,6 +138,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		cookieSwipeButtonReplyToAll = new CookieSwipeButtonSprite();
 		cookieSwipeButtonRefresh = new CookieSwipeButtonSprite();
 		cookieSwipeButtonArchive = new CookieSwipeButtonSprite();
+		cookieSwipeButtonToBlacklist = new CookieSwipeButtonSprite();
 	
 		cookieSwipeButtonForward.setText(CookieSwipeButtonSprite.FORWARD);
 		cookieSwipeButtonForward.addActionListener(new java.awt.event.ActionListener() {
@@ -179,6 +188,13 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 			cookieSwipeButtonRefreshActionPerformed(evt);
 		    }
 		});
+		
+		cookieSwipeButtonToBlacklist.setText(CookieSwipeButtonSprite.TO_BLACKLIST);
+		cookieSwipeButtonToBlacklist.addActionListener(new java.awt.event.ActionListener() {
+		    public void actionPerformed(java.awt.event.ActionEvent evt) {
+			cookieSwipeButtonDeleteMailActionPerformed(evt);
+		    }
+		});
 	
 		//Delaration du listener en cas de changement de la taille de la fenetre
 		addComponentListener(new ComponentListener() {
@@ -221,7 +237,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		});
 	
 		/**
-		 * ******** Panel avec les Sprites *********
+		 * ******** Panel de menu *********
 		 */
 		spritePanel = new CookieSwipePanel();
 		spritePanel.setPreferredSize(new Dimension((int) spritePanel.getPreferredSize().getWidth(), 43)); //Lorsque la r�solution est petite: 40 grande: 43
@@ -239,6 +255,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 				.addComponent(cookieSwipeButtonAddMailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 				.addComponent(cookieSwipeButtonUpdateMailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 				.addComponent(cookieSwipeButtonDeleteMailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+				.addComponent(cookieSwipeButtonBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 			)
 		);
 	
@@ -253,6 +270,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 					.addComponent(cookieSwipeButtonUpdateCSAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 					.addComponent(cookieSwipeButtonUpdateMailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 					.addComponent(cookieSwipeButtonDeleteMailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+					.addComponent(cookieSwipeButtonBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 				)
 			)
 		);
@@ -302,6 +320,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 							.addComponent(cookieSwipeButtonForward, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 							.addComponent(cookieSwipeButtonArchive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 							.addComponent(cookieSwipeButtonDeleteMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+							.addComponent(cookieSwipeButtonToBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 						)
 					)
 				)
@@ -321,6 +340,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 					.addComponent(cookieSwipeButtonForward, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 					.addComponent(cookieSwipeButtonArchive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 					.addComponent(cookieSwipeButtonDeleteMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+					.addComponent(cookieSwipeButtonToBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 				)
 				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
 					.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -409,6 +429,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
     private CookieSwipeButton cookieSwipeButtonLogout;
     private CookieSwipeButton cookieSwipeButtonUpdateCSAccount;
     private CookieSwipeButton cookieSwipeButtonUpdateMailAccount;
+    private CookieSwipeButton cookieSwipeButtonBlacklist;
 
     private CookieSwipeButtonSprite cookieSwipeButtonDeleteMail;
     private CookieSwipeButtonSprite cookieSwipeButtonForward;
@@ -417,6 +438,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
     private CookieSwipeButtonSprite cookieSwipeButtonReplyToAll;
     private CookieSwipeButtonSprite cookieSwipeButtonRefresh;
     private CookieSwipeButtonSprite cookieSwipeButtonArchive;
+    private CookieSwipeButtonSprite	cookieSwipeButtonToBlacklist;
     // End of variables declaration//GEN-END:variables
 
     @Override

@@ -84,62 +84,62 @@ public class DeliverySystem {
     }
 
     private void launchListener() {
-        masterExecutor = Executors.newSingleThreadExecutor();
-        masterExecutor.execute(() -> {
-            safeStop = false;
-            shouldStop = false;
-            isLaunched = true;
-            while (!shouldStop) {
-                try {
-                    if (!futures.isEmpty()) {
-                        onRecieveResponse(completionService.take());
-                    } else {
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    LOGGER.log(Level.SEVERE, "Erreur :", e);
-                }
-            }
-            if (safeStop) {
-                saveState();
-            }
-            isLaunched = false;
-            slaveExecutor.shutdownNow();
-        });
-        
-//        masterExecutor.execute(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                safeStop = false;
-//                shouldStop = false;
-//                isLaunched = true;
-//                while (!shouldStop) {
-//                    try {
-//                        if (!futures.isEmpty()) {
-//                            onRecieveResponse(completionService.take());
-//                        } else {
-//                            try {
-//                                Thread.sleep(100);
-//                            } catch (InterruptedException e) {
-//                                break;
-//                            }
+//        masterExecutor = Executors.newSingleThreadExecutor();
+//        masterExecutor.execute(() -> {
+//            safeStop = false;
+//            shouldStop = false;
+//            isLaunched = true;
+//            while (!shouldStop) {
+//                try {
+//                    if (!futures.isEmpty()) {
+//                        onRecieveResponse(completionService.take());
+//                    } else {
+//                        try {
+//                            Thread.sleep(100);
+//                        } catch (InterruptedException e) {
+//                            break;
 //                        }
-//                    } catch (Exception e) {
-//                        LOGGER.log(Level.SEVERE, "Erreur :", e);
 //                    }
+//                } catch (Exception e) {
+//                    LOGGER.log(Level.SEVERE, "Erreur :", e);
 //                }
-//                if (safeStop) {
-//                    saveState();
-//                }
-//                isLaunched = false;
-//                slaveExecutor.shutdownNow();
 //            }
+//            if (safeStop) {
+//                saveState();
+//            }
+//            isLaunched = false;
+//            slaveExecutor.shutdownNow();
 //        });
+        
+        masterExecutor.execute(new Runnable() {
+
+            @Override
+            public void run() {
+                safeStop = false;
+                shouldStop = false;
+                isLaunched = true;
+                while (!shouldStop) {
+                    try {
+                        if (!futures.isEmpty()) {
+                            onRecieveResponse(completionService.take());
+                        } else {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                break;
+                            }
+                        }
+                    } catch (Exception e) {
+                        LOGGER.log(Level.SEVERE, "Erreur :", e);
+                    }
+                }
+                if (safeStop) {
+                    saveState();
+                }
+                isLaunched = false;
+                slaveExecutor.shutdownNow();
+            }
+        });
     }
 
     public int getTaskNumber() {
@@ -162,13 +162,13 @@ public class DeliverySystem {
     private void saveState() {
         List<FrameworkMessage<?>> frameworkMessages = new ArrayList<>();
         
-        futures.stream().forEach((f) -> {
-            frameworkMessages.add(matcher.get(f));
-        });
+//        futures.stream().forEach((f) -> {
+//            frameworkMessages.add(matcher.get(f));
+//        });
         
-//        for(Future<?> f : futures) {
-//            messages.add(matcher.get(f));
-//        }
+        for(Future<?> f : futures) {
+            frameworkMessages.add(matcher.get(f));
+        }
         
         Postman.serializeMessages(frameworkMessages);
     }
