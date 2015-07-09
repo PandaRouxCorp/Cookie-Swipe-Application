@@ -124,31 +124,31 @@ public class Postman {
             FileOutputStream fout = new FileOutputStream(file);
             oos = new ObjectOutputStream(fout);
             Map<FrameworkMessage<?>,AbstractSender<?>> mapToSerialized = new HashMap<>();
-            frameworkMessages.stream().forEach((m) -> {
-                AbstractSender<?> sender = senders.get(m.getSenderId());
-                if(sender != null && m.shouldBeSavedIfNotExecuted() && sender instanceof AbstractSerializableSender) {
-                    ((AbstractSerializableSender<?>)sender).beforeSerialisation();
-                    mapToSerialized.put(m,sender);
-                }
-                else {
-                    Logger.getLogger(DeliverySystem.class.getName())
-                            .log(Level.SEVERE,
-                                    "Serialisation error: sender have been unregistered. FrameworkMessage is lost");
-                }
-            });
-            
-//            for(FrameworkMessage m : messages) {
-//               AbstractSender sender = senders.get(m.getSenderId());
+//            frameworkMessages.stream().forEach((m) -> {
+//                AbstractSender<?> sender = senders.get(m.getSenderId());
 //                if(sender != null && m.shouldBeSavedIfNotExecuted() && sender instanceof AbstractSerializableSender) {
-//                    ((AbstractSerializableSender)sender).beforeSerialisation();
+//                    ((AbstractSerializableSender<?>)sender).beforeSerialisation();
 //                    mapToSerialized.put(m,sender);
 //                }
 //                else {
 //                    Logger.getLogger(DeliverySystem.class.getName())
 //                            .log(Level.SEVERE,
 //                                    "Serialisation error: sender have been unregistered. FrameworkMessage is lost");
-//                } 
-//            }
+//                }
+//            });
+            
+            for(FrameworkMessage m : frameworkMessages) {
+               AbstractSender sender = senders.get(m.getSenderId());
+                if(sender != null && m.shouldBeSavedIfNotExecuted() && sender instanceof AbstractSerializableSender) {
+                    ((AbstractSerializableSender)sender).beforeSerialisation();
+                    mapToSerialized.put(m,sender);
+                }
+                else {
+                    Logger.getLogger(DeliverySystem.class.getName())
+                            .log(Level.SEVERE,
+                                    "Serialisation error: sender have been unregistered. FrameworkMessage is lost");
+                } 
+            }
             
             oos.writeObject(mapToSerialized);
         } catch (IOException ex) {
@@ -174,20 +174,8 @@ public class Postman {
             FileInputStream fis = new FileInputStream(file);
             ois = new ObjectInputStream(fis);
             Map<FrameworkMessage,AbstractSender> map = (Map<FrameworkMessage,AbstractSender>) ois.readObject();
-            map.keySet().stream().forEach((m) -> {
-                AbstractSerializableSender sender = (AbstractSerializableSender) map.get(m);
-                Object pendingActions = sender.getPendingAction();
-                sender = sender.getSingletonSender();
-                sender.setPendingAction(pendingActions);
-                sender.afterDeserialisation();
-                if(!isSenderRegistered(sender.getSenderId())) {
-                    registerSender(sender);
-                }
-                m.setSenderId(sender.getSenderId());
-                sendMessage(m);
-            });
-            
-//            for(FrameworkMessage m : map.keySet()) {
+
+    //            map.keySet().stream().forEach((m) -> {
 //                AbstractSerializableSender sender = (AbstractSerializableSender) map.get(m);
 //                Object pendingActions = sender.getPendingAction();
 //                sender = sender.getSingletonSender();
@@ -198,7 +186,20 @@ public class Postman {
 //                }
 //                m.setSenderId(sender.getSenderId());
 //                sendMessage(m);
-//            }
+//            });
+            
+            for(FrameworkMessage m : map.keySet()) {
+                AbstractSerializableSender sender = (AbstractSerializableSender) map.get(m);
+                Object pendingActions = sender.getPendingAction();
+                sender = sender.getSingletonSender();
+                sender.setPendingAction(pendingActions);
+                sender.afterDeserialisation();
+                if(!isSenderRegistered(sender.getSenderId())) {
+                    registerSender(sender);
+                }
+                m.setSenderId(sender.getSenderId());
+                sendMessage(m);
+            }
             
             file.delete();
         } catch (IOException

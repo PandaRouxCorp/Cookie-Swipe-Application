@@ -12,12 +12,12 @@ import javax.swing.border.LineBorder;
 public class CookieSwipeButton extends JButton{
 
 	private static final long serialVersionUID = 1671314658637614873L;
-	private int inset = 5;
+	protected int inset = 5;
 //	private Color buttonColor = new Color(12, 125, 175);
-	private Color buttonColor = CookieSwipeColor.BUTTON;
-	private int cell = 0;
-	private int height, width;
-	private boolean sizeUpdated = false;
+	protected Color buttonColor = CookieSwipeColor.BUTTON;
+	protected int cell = 0;
+	protected int height, width;
+	protected boolean sizeUpdated = false;
  
 	public CookieSwipeButton(String text){
 		super(text);

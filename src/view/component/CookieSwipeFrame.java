@@ -1,7 +1,9 @@
 package view.component;
 
 
+import java.awt.Dimension;
 import java.util.HashMap;
+
 import javax.swing.JFrame;
 
 public class CookieSwipeFrame extends JFrame {
@@ -16,7 +18,6 @@ public class CookieSwipeFrame extends JFrame {
     }
 
     private void initBaseComponents() {
-        setSize(400, 400);
         //setBackground(new Color(0, 175, 240));
         //getContentPane().setBackground(new Color(0, 175, 240));
         //setBackground(new Color(44, 62, 80));

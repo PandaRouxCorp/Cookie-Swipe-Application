@@ -7,58 +7,82 @@
   "ascent": 850,
   "glyphs": [
     {
-      "uid": "ccc2329632396dc096bb638d4b46fb98",
-      "css": "mail-alt",
-      "code": 59392,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "8b80d36d4ef43889db10bc1f0dc9a862",
-      "css": "user",
-      "code": 59394,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "c6be5a58ee4e63a5ec399c2b0d15cf2c",
-      "css": "reply",
-      "code": 59393,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "1b5597a3bacaeca6600e88ae36d02e0a",
-      "css": "reply-all",
-      "code": 59400,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "3d39c828009c04ddb6764c0b04cd2439",
-      "css": "forward",
+      "uid": "1bafeeb1808a5fe24484c7890096901a",
+      "css": "user-plus",
       "code": 59401,
       "src": "fontawesome"
     },
     {
-      "uid": "bbfb51903f40597f0b70fd75bc7b5cac",
-      "css": "trash",
-      "code": 59395,
+      "uid": "fb1c59faa93eb6e2248c2456625b08a2",
+      "css": "user-times",
+      "code": 59408,
       "src": "fontawesome"
     },
     {
-      "uid": "f8aa663c489bcbd6e68ec8147dca841e",
-      "css": "folder",
-      "code": 59398,
-      "src": "fontawesome"
+      "uid": "e335adbc2d898c7d85d40c507796e7b4",
+      "css": "mail",
+      "code": 59392,
+      "src": "entypo"
     },
     {
-      "uid": "bc71f4c6e53394d5ba46b063040014f1",
-      "css": "cw",
-      "code": 59396,
-      "src": "fontawesome"
+      "uid": "bbd66ef66bb8fa9edde54d9a90b89150",
+      "css": "user",
+      "code": 2056,
+      "src": "entypo"
     },
     {
-      "uid": "38575a803c4da31ce20d77e1e1236bcb",
-      "css": "paper-plane",
+      "uid": "44b9e75612c5fad5505edd70d071651f",
+      "css": "attach",
+      "code": 59409,
+      "src": "entypo"
+    },
+    {
+      "uid": "b6fc2f656ef87275889422e19550680a",
+      "css": "reply",
       "code": 59397,
-      "src": "fontawesome"
+      "src": "entypo"
+    },
+    {
+      "uid": "1a4b54ba5618e5364fc47a3d26c1cf59",
+      "css": "reply-all",
+      "code": 59398,
+      "src": "entypo"
+    },
+    {
+      "uid": "ec347024a3640deebeeab53fd0d5ad03",
+      "css": "forward",
+      "code": 59394,
+      "src": "entypo"
+    },
+    {
+      "uid": "2626e3a1bbcd90e45849af3b58a1d594",
+      "css": "trash",
+      "code": 59396,
+      "src": "entypo"
+    },
+    {
+      "uid": "0ccb084ddeeae372673793ed0b45bb4a",
+      "css": "folder",
+      "code": 59399,
+      "src": "entypo"
+    },
+    {
+      "uid": "29e7f6072d5935d7818204d9b088508b",
+      "css": "block",
+      "code": 59400,
+      "src": "entypo"
+    },
+    {
+      "uid": "3bd18d47a12b8709e9f4fe9ead4f7518",
+      "css": "arrows-ccw",
+      "code": 59393,
+      "src": "entypo"
+    },
+    {
+      "uid": "db112402805d9dadc01ce009fbfdb914",
+      "css": "paper-plane",
+      "code": 59395,
+      "src": "entypo"
     }
   ]
 }
