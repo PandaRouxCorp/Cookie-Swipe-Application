@@ -292,8 +292,15 @@ public class MainFrameInitializer extends AbstractIHMAction {
 	        DefaultMutableTreeNode node = (DefaultMutableTreeNode) myTree.getLastSelectedPathComponent();
 	        if(node == null) return;   
                 CookieSwipeApplication.getApplication().setParam("folderName", node.toString());
-	        CustomJListModel model = getModelForSelection(node);
-	        jListMail.setModel(model);
+	        CustomJListModel model = null;
+                try { 
+                    getModelForSelection(node); 
+                }
+                catch(Exception ex) {
+                    
+                }
+                if(model != null)
+                    jListMail.setModel(model);
 	    }
 		
 		@SuppressWarnings("unchecked")
