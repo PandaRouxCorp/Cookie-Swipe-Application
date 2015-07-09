@@ -255,33 +255,17 @@ public class MainFrameInitializer extends AbstractIHMAction {
                         
                         this.jListMail.addMouseListener(new MouseListener() {
                             
-                            private int countClick = 0;
-                            private Message mess;
-                            
                             @Override
                             public void mouseClicked(MouseEvent e) {
-                                if(countClick == 2) {
-                                    countClick = 0;
-                                    Dispatcher d = new Dispatcher();
-                                    d.readMailAction();
-                                }
-                                
-                                if(countClick == 1) {
-                                    try {
-                                        Message messa = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
-                                        if ( !mess.getSentDate().equals(messa.getSentDate()) ) {
-                                            countClick = 0;
-                                            return;
-                                        }
-                                    } catch (MessagingException ex) {
-                                        Logger.getLogger(MainFrameInitializer.class.getName()).log(Level.SEVERE, null, ex);
+                                JList theList = (JList) e.getSource();
+                                if (e.getClickCount() == 2) { // double click
+                                    int index = theList.locationToIndex(e.getPoint());
+                                    if (index >= 0) {
+                                        Object o = theList.getModel().getElementAt(index);
+                                        Dispatcher dispatcher = new Dispatcher();
+                                        dispatcher.readMailAction();
                                     }
                                 }
-                                
-                                if(countClick == 0) {
-                                    mess = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
-                                }
-                                    countClick++;
                             }
 
                             @Override

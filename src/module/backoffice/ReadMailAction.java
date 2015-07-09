@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import model.MailAccount;
 import view.MailCSFrame;
 
 /**
@@ -26,11 +27,20 @@ public class ReadMailAction implements IAction {
         try {
             Message message = (Message) object[0];
             CookieSwipeApplication application = CookieSwipeApplication.getApplication();
+            MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
+            
             MailCSFrame frame = new MailCSFrame();
             // set frame
-            frame.setCookieSwipeTextFieldSubject( message.getSubject() );
+            frame.setCookieSwipeTextFieldSubject(message.getSubject());
             frame.setCookieSwipeTextFieldTo(Arrays.toString(message.getFrom()));
-            frame.setjTextAreaMail((String) message.getContent());
+            
+            System.out.println(message.getContentType());
+            if (message.isMimeType("text/plain")) {
+                frame.setjTextAreaMail((String) message.getContent());
+            } else {
+                frame.setjTextAreaMail("on vera");
+            }
+
             // then focus it
             application.setFocusFrame(frame);
             return true;

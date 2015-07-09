@@ -75,6 +75,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     private HashMap<String, ObservableLinkedHashSetPriorityQueue<Message>> folderListModels;
     private List<String> folderNames;
     private List<File> attachments;
+    private Multipart multipart;
 
     // Constructeur
     /**
@@ -344,9 +345,9 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                     }
                     
                     if ( attachments.size() > 0 ) {
-                        Multipart multi = getMultiPart();
-                        if(multi != null)
-                            currentMessage.setContent(multi);
+                        multipart = getMultiPart();
+                        if(multipart != null)
+                            currentMessage.setContent(multipart);
                     }
 
                     Transport.send(currentMessage);
@@ -358,11 +359,13 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         });
     }
     
-    private Multipart getMultiPart() {
+    public Multipart getMultiPart() {
+        if( multipart != null )
+            return multipart;
         
         try {
             MimeBodyPart messageBodyPart = new MimeBodyPart();
-            Multipart multipart = new MimeMultipart();
+            multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
             messageBodyPart = new MimeBodyPart();
             DataSource source;

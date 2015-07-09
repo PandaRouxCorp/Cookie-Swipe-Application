@@ -144,14 +144,12 @@ public class Dispatcher implements ActionListener {
     }
 
     public void selectMailAction() {
-        System.err.println("NOT IMPLEMENTED");
         Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
         if ( message != null )
             new ReadMailAction().execute(message);
     }
 
     public void readMailAction() {
-        System.err.println("NOT IMPLEMENTED");
         Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
         if(message != null)
             new ReadMailAction().execute(message);
