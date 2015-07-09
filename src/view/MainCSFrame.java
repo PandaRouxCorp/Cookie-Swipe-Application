@@ -94,34 +94,34 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		cookieSwipeButtonBlacklist.setText("Voir la blacklist");
 	
 		cookieSwipeButtonPseudo.setText("Kae"); //Temporaire //TODO
-		cookieSwipeButtonPseudo.addMouseListener(
-			new MouseAdapter() {
+		// cookieSwipeButtonPseudo.addMouseListener(
+		// 	new MouseAdapter() {
 			    
-			    @Override
-			    public void mousePressed(MouseEvent e) {
-				if(!isMenuActivated){
-				    cookieSwipeButtonLogout.setVisible(true);
-				    cookieSwipeButtonUpdateCSAccount.setVisible(true);
-				    cookieSwipeButtonAddMailAccount.setVisible(true);
-				    cookieSwipeButtonUpdateMailAccount.setVisible(true);
-				    cookieSwipeButtonDeleteMailAccount.setVisible(true);
-				    cookieSwipeButtonBlacklist.setVisible(true);
+		// 	    @Override
+		// 	    public void mousePressed(MouseEvent e) {
+		// 		if(!isMenuActivated){
+		// 		    cookieSwipeButtonLogout.setVisible(true);
+		// 		    cookieSwipeButtonUpdateCSAccount.setVisible(true);
+		// 		    cookieSwipeButtonAddMailAccount.setVisible(true);
+		// 		    cookieSwipeButtonUpdateMailAccount.setVisible(true);
+		// 		    cookieSwipeButtonDeleteMailAccount.setVisible(true);
+		// 		    cookieSwipeButtonBlacklist.setVisible(true);
 				    
-				    isMenuActivated = true;
-				}else{
-				    cookieSwipeButtonLogout.setVisible(false);
-				    cookieSwipeButtonUpdateCSAccount.setVisible(false);
-				    cookieSwipeButtonAddMailAccount.setVisible(false);
-				    cookieSwipeButtonUpdateMailAccount.setVisible(false);
-				    cookieSwipeButtonDeleteMailAccount.setVisible(false);
-				    cookieSwipeButtonBlacklist.setVisible(false);
+		// 		    isMenuActivated = true;
+		// 		}else{
+		// 		    cookieSwipeButtonLogout.setVisible(false);
+		// 		    cookieSwipeButtonUpdateCSAccount.setVisible(false);
+		// 		    cookieSwipeButtonAddMailAccount.setVisible(false);
+		// 		    cookieSwipeButtonUpdateMailAccount.setVisible(false);
+		// 		    cookieSwipeButtonDeleteMailAccount.setVisible(false);
+		// 		    cookieSwipeButtonBlacklist.setVisible(false);
 				    
-				    isMenuActivated = false;
-				}
+		// 		    isMenuActivated = false;
+		// 		}
 	
-			    }
-			}
-		);
+		// 	    }
+		// 	}
+		// );
 
 //		cookieSwipeButtonPseudo.addFocusListener(
 //			new FocusListener() {
@@ -145,20 +145,20 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 //		); // A supprimer une fois le probleme reglé
 	
 		//lorsque l'on clique sur le background (pour faire disparaitre les boutons
-		getContentPane().addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mousePressed(MouseEvent e) {
-			cookieSwipeButtonLogout.setVisible(false);
-			cookieSwipeButtonUpdateCSAccount.setVisible(false);
-			cookieSwipeButtonAddMailAccount.setVisible(false);
-			cookieSwipeButtonUpdateMailAccount.setVisible(false);
-			cookieSwipeButtonDeleteMailAccount.setVisible(false);
-			isMenuActivated = false;
+		// getContentPane().addMouseListener(new MouseAdapter() {
+		//     @Override
+		//     public void mousePressed(MouseEvent e) {
+		// 	cookieSwipeButtonLogout.setVisible(false);
+		// 	cookieSwipeButtonUpdateCSAccount.setVisible(false);
+		// 	cookieSwipeButtonAddMailAccount.setVisible(false);
+		// 	cookieSwipeButtonUpdateMailAccount.setVisible(false);
+		// 	cookieSwipeButtonDeleteMailAccount.setVisible(false);
+		// 	isMenuActivated = false;
 	
-		    }
+		//     }
 	
-		}
-		);
+		// }
+		// );
 		/**
 		 * ********************************
 		 */
@@ -410,7 +410,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
     private CookieSwipeButtonSprite cookieSwipeButtonReplyToAll;
     private CookieSwipeButtonSprite cookieSwipeButtonRefresh;
     private CookieSwipeButtonSprite cookieSwipeButtonArchive;
-    private CookieSwipeButtonSprite	cookieSwipeButtonToBlacklist;
+    private CookieSwipeButtonSprite cookieSwipeButtonToBlacklist;
     // End of variables declaration//GEN-END:variables
 
     @Override

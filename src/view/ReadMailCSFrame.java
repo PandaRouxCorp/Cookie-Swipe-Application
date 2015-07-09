@@ -71,7 +71,7 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         // TODO 
         cookieSwipeButtonAttach = new CookieSwipeButtonAttach[5];
         for(int i = 0; i < 5; i++){
-        	cookieSwipeButtonAttach[i+1] = new CookieSwipeButtonAttach("image.jpg");
+        	//cookieSwipeButtonAttach[i+1] = new CookieSwipeButtonAttach("image.jpg");
         }
         
         
