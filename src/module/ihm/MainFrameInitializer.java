@@ -261,7 +261,8 @@ public class MainFrameInitializer extends AbstractIHMAction {
                                 if (e.getClickCount() == 2) { // double click
                                     int index = theList.locationToIndex(e.getPoint());
                                     if (index >= 0) {
-                                        Object o = theList.getModel().getElementAt(index);
+                                        Message message = (Message) theList.getModel().getElementAt(index);
+                                        CookieSwipeApplication.getApplication().setParam("selectedMail", message);  
                                         Dispatcher dispatcher = new Dispatcher();
                                         dispatcher.readMailAction();
                                     }
