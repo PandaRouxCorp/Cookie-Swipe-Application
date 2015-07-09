@@ -47,6 +47,7 @@ public class AccountCSFrame extends CookieSwipeFrame implements IJFrame{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+    	setResizable(false);
         cookieSwipeLabelLoginAdressMail = new view.component.CookieSwipeLabel();
         cookieSwipeTextFieldLoginAdressMail = new view.component.CookieSwipeTextField();
         cookieSwipePasswordFieldPassword = new view.component.CookieSwipePasswordField();
@@ -62,7 +63,7 @@ public class AccountCSFrame extends CookieSwipeFrame implements IJFrame{
 
         cookieSwipeLabelPassword.setText("Mot de passe :");
 
-        cookieSwipeLabelBackupMail.setText("Courriel de secour :");
+        cookieSwipeLabelBackupMail.setText("Courriel de secours :");
 
         cookieSwipeButtonValidate.setText("Valider");
         cookieSwipeButtonValidate.addActionListener(new java.awt.event.ActionListener() {

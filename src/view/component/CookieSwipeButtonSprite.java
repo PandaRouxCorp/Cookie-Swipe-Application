@@ -5,6 +5,7 @@
  */
 package view.component;
 
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -12,6 +13,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 /**
  *
@@ -29,26 +33,31 @@ public class CookieSwipeButtonSprite extends CookieSwipeButton{
     public static final String ARCHIVE = "archive";
     public static final String REPLY = "reply";
     public static final String REPLY_ALL = "reply_all";
+    public static final String TO_BLACKLIST = "to_blacklist";
+    public static final String BLACKLIST_ADD = "blacklist_add";
+    public static final String BLACKLIST_DELETE = "blacklist_delete";
+    public static final String ATTACH = "attach";
+    
     
     private static Font font;
     
     static{
     	try{
-//	    font = Font.createFont(Font.TRUETYPE_FONT, 
-//		CookieSwipeButtonSprite.class.getClassLoader().getResourceAsStream("fontello/font/fontello.ttf"));
-//		font = font.deriveFont(14f);
+	//	    font = Font.createFont(Font.TRUETYPE_FONT, 
+	//		CookieSwipeButtonSprite.class.getClassLoader().getResourceAsStream("fontello/font/fontello.ttf"));
+	//		font = font.deriveFont(14f);
+	
+		    font = Font.createFont(Font.TRUETYPE_FONT, CookieSwipeButtonSprite.class.getClassLoader().getResourceAsStream("fontello/font/fontello.ttf"));
+		    font = font.deriveFont(14f);
 	    
-	    font = Font.createFont(Font.TRUETYPE_FONT, CookieSwipeButtonSprite.class.getClassLoader().getResourceAsStream("fontello/font/fontello.ttf"));
-	    font = font.deriveFont(14f);
-	    
-//	    InputStream is = new FileInputStream("fontello/font/fontello.ttf");
-//	    font = Font.createFont(Font.TRUETYPE_FONT, is);
-//	    font.deriveFont(14f);
-	    
-	    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fontello/font/fontello.ttf")));
-	    
-	    //setFont(font);
+//		    InputStream is = new FileInputStream("fontello/font/fontello.ttf");
+//		    font = Font.createFont(Font.TRUETYPE_FONT, is);
+//		    font.deriveFont(14f);
+		    
+		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fontello/font/fontello.ttf")));
+		    
+//		    setFont(font);
     	}catch(IOException | FontFormatException ex){
  	    	ex.printStackTrace();
      	}catch (Exception e) {
@@ -58,16 +67,30 @@ public class CookieSwipeButtonSprite extends CookieSwipeButton{
 
     public CookieSwipeButtonSprite() {
     	super();
+    	buttonColor = CookieSwipeColor.BACKGROUND_FRAME;
     }
+    
+    protected void initComponent(){	
+		setForeground(CookieSwipeColor.LETTER);
+		
+		setFocusPainted(false);
+		
+		Border thickBorder = new LineBorder(CookieSwipeColor.BACKGROUND_FRAME, 2);
+		setBorder(thickBorder);
+	
+		setContentAreaFilled(false);
+		
+		setCursor(new Cursor(Cursor.HAND_CURSOR));
+		
+		setLayout(null);
+		
+	}
     
     /**
      *
-     * @param s Actuellement 5 possibilitÃ©s qui sont les variables en static
-     * final de la classe. Dans le cas oÃ¹ une des variables static final n'est
-     * pas choisie, l'erreur "unknown sprite" apparaÃ®tra. Valeurs possibles:
-     * CookieSwipeButtonSprite.NEW, CookieSwipeButton.REFRESH,
-     * CookieSwipeButton.TRANSFER, CookieSwipeButton.SEND,
-     * CookieSwipeButton.DELETE
+     * @param Plusieurs possibilités qui sont les variables en static
+     * final de la classe. Dans le cas où une des variables static final n'est
+     * pas choisie, l'erreur "unknown sprite" apparaîtra. 
      *
      */
     public void setText(String s) {
@@ -98,45 +121,62 @@ public class CookieSwipeButtonSprite extends CookieSwipeButton{
 //		case ARCHIVE:
 //		    super.setText("<html>\ue806 <font face=Sans Serif>Archiver</font></html>");
 //		    break;
-		case NEW:
-			super.setText("\ue800");
-			setToolTipText("Nouveau mail");
-			break;
+			case NEW:
+				super.setText("\ue800");
+				setToolTipText("Nouveau mail");
+				break;
 		    case REFRESH:
-			super.setText("\ue804");
-			setToolTipText("Rafraîchir");
-			break;
+				super.setText("\ue801");
+				setToolTipText("Rafraîchir");
+				break;
 		    case FORWARD:
-			super.setText("\ue809");
-			setToolTipText("Transférer");
-			break;
+				super.setText("\ue802");
+				setToolTipText("Transférer");
+				break;
 		    case SEND:
-			super.setText("\ue805");
-			setToolTipText("Envoyer");
-			break;
+				super.setText("\ue803");
+				setToolTipText("Envoyer");
+				break;
 		    case DELETE:
-			super.setText("\ue803");
-			setToolTipText("Supprimer");
-			break;
+				super.setText("\ue804");
+				setToolTipText("Supprimer");
+				break;
 		    case REPLY:
-			super.setText("\ue801");
-			setToolTipText("Répondre");
-			break;
+				super.setText("\ue805");
+				setToolTipText("Répondre");
+				break;
 		    case REPLY_ALL:
-			super.setText("\ue808");
-			setToolTipText("Répondre à tous");
-			break;
+				super.setText("\ue806");
+				setToolTipText("Répondre à tous");
+				break;
 		    case ARCHIVE:
-			super.setText("\ue806");
-			setToolTipText("Archiver");
-			break;
+				super.setText("\ue807");
+				setToolTipText("Archiver");
+				break;
+		    case TO_BLACKLIST:
+		    	super.setText("\ue808");
+		    	setToolTipText("Blacklister");
+		    	break;
+		    case BLACKLIST_ADD:
+		    	super.setText("\ue809");
+		    	setToolTipText("Ajouter à la blacklist");
+		    	break;
+		    case BLACKLIST_DELETE:
+		    	super.setText("\ue810");
+		    	setToolTipText("Supprimer de la blacklist");
+		    	break;
+		    case ATTACH:
+		    	super.setText("\ue811");
+		    	setToolTipText("Ajouter pièce jointe");
+		    	break;
 		    default:
-			throw new Exception("Unknown sprite");
+		    	throw new Exception("Unknown sprite");
 		    }
+	    
+	    	
     	}catch (Exception e) {
 		    e.printStackTrace();
 		}
     	super.setFont(font);
     }
-
 }

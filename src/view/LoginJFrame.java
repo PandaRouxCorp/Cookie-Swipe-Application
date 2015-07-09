@@ -18,6 +18,8 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
      * Creates new form LoginJFrame
      */
     public LoginJFrame() {
+    	setTitle("Login");
+    	
         initComponents();
         this.pack();
         this.setLocationRelativeTo(null);
