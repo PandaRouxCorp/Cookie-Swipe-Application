@@ -214,17 +214,6 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         props.put("mail.smtp.user", address);
         props.put("mail.smtp.port", domain.getPortOut());
         props.put("mail.from", domain.getServerIn());
-
-        // version pour test gmail avec le compte panda.roux.corp@gmail.com
-//        props.put("mail.transport.protocol", "smtp");
-//        props.put("mail.smtp.auth", "true");
-//        props.put("mail.smtp.starttls.enable", "true");
-//        props.put("mail.smtp.host", "smtp.gmail.com");
-//        props.put("mail.smtp.socketFactory.port", "465");
-//        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-//        props.put("mail.smtp.user", "panda.roux.corp@gmail.com");
-//        props.put("mail.smtp.port", "465");
-//        props.put("mail.from", "pop.gmail.com");
         return props;
     }
 
@@ -339,6 +328,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
             }
 
         };
+        
         s.sendMessage(new FrameworkMessage< Boolean>() {
             @Override
             public Boolean call() throws Exception {

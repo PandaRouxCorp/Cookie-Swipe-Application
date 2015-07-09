@@ -7,6 +7,7 @@ package module.backoffice;
 
 import cookie.swipe.application.CookieSwipeApplication;
 import interfaces.IAction;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,13 +28,13 @@ public class ReadMailAction implements IAction {
             CookieSwipeApplication application = CookieSwipeApplication.getApplication();
             MailCSFrame frame = new MailCSFrame();
             // set frame
-//            frame.setCookieSwipeTextFieldSubject( message.getSubject() );
+            frame.setCookieSwipeTextFieldSubject( message.getSubject() );
             frame.setCookieSwipeTextFieldTo(Arrays.toString(message.getFrom()));
-            frame.setjTextAreaMail("the text that i decided");
+            frame.setjTextAreaMail((String) message.getContent());
             // then focus it
             application.setFocusFrame(frame);
             return true;
-        } catch (MessagingException ex) {
+        } catch (MessagingException | IOException ex) {
             Logger.getLogger(ReadMailAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
