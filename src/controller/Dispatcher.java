@@ -32,10 +32,10 @@ import view.component.CookieSwipeFrame;
 import view.component.CookieSwipePasswordField;
 import view.component.CookieSwipeTextField;
 import cookie.swipe.application.CookieSwipeApplication;
-import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 import javax.mail.Message;
 import model.MailAccount;
 import module.backoffice.CreateCSAccountAction;
+import module.backoffice.ReadMailAction;
 import module.backoffice.SendMailAction;
 import module.ihm.CreateAccountFrameInitializer;
 
@@ -145,10 +145,16 @@ public class Dispatcher implements ActionListener {
 
     public void selectMailAction() {
         System.err.println("NOT IMPLEMENTED");
+        Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
+        if ( message != null )
+            new ReadMailAction().execute(message);
     }
 
     public void readMailAction() {
         System.err.println("NOT IMPLEMENTED");
+        Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
+        if(message != null)
+            new ReadMailAction().execute(message);
     }
 
     public void writeMailAction() {
@@ -202,7 +208,6 @@ public class Dispatcher implements ActionListener {
         CookieSwipeApplication application = CookieSwipeApplication.getApplication();
         AccountCSFrame frame = new AccountCSFrame();
         application.setFocusFrame(frame);
-//        application.setMainFrame(frame);
         new CreateAccountFrameInitializer(frame).execute();
     }
 

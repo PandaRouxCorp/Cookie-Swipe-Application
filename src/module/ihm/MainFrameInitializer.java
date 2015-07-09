@@ -34,6 +34,7 @@ import controller.ActionName;
 import controller.Dispatcher;
 import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
+import java.awt.event.MouseListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
@@ -241,7 +242,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
     private void setSelectedMail (FocusEvent e)
     {
         JList<Message> jListMail =( JList<Message>) hsJcomponent.get("jListMail") ;        
-        CookieSwipeApplication.getApplication().setParam("selectedMail",jListMail.getSelectedValue());               
+        CookieSwipeApplication.getApplication().setParam("selectedMail", jListMail.getSelectedValue());               
     }
 	
 	private class TreeMouseListener extends MouseAdapter {
@@ -251,6 +252,55 @@ public class MainFrameInitializer extends AbstractIHMAction {
 		public TreeMouseListener(CookieSwipeTree myTree, JList<Message> jListMail) {
 			this.myTree = myTree;
 			this.jListMail = jListMail;
+                        
+                        this.jListMail.addMouseListener(new MouseListener() {
+                            
+                            private int countClick = 0;
+                            private Message mess;
+                            
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                if(countClick == 2) {
+                                    countClick = 0;
+                                    Dispatcher d = new Dispatcher();
+                                    d.readMailAction();
+                                }
+                                
+                                if(countClick == 1) {
+                                    try {
+                                        Message messa = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
+                                        if ( !mess.getSentDate().equals(messa.getSentDate()) ) {
+                                            countClick = 0;
+                                            return;
+                                        }
+                                    } catch (MessagingException ex) {
+                                        Logger.getLogger(MainFrameInitializer.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
+                                
+                                if(countClick == 0) {
+                                    mess = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
+                                }
+                                    countClick++;
+                            }
+
+                            @Override
+                            public void mousePressed(MouseEvent e) {
+                            }
+
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                            }
+
+                            @Override
+                            public void mouseEntered(MouseEvent e) {
+                            }
+
+                            @Override
+                            public void mouseExited(MouseEvent e) {
+                                
+                            }
+                        });
 		}
 		@Override
 	    public void mousePressed(MouseEvent e) {
