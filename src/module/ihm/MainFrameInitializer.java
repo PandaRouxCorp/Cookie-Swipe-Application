@@ -108,24 +108,24 @@ public class MainFrameInitializer extends AbstractIHMAction {
         return null;
     }
 
-	public void deleteMailAccountInTree(MailAccount mc) {
-		DefaultTreeModel model = getModel();
-		DefaultMutableTreeNode rootNode = getRootNode();
-		rootNode.remove(getNode(mc.getCSName()));
-        model.reload();
+    public void deleteMailAccountInTree(MailAccount mc) {
+        DefaultTreeModel model = getModel();
+        DefaultMutableTreeNode rootNode = getRootNode();
+        rootNode.remove(getNode(mc.getCSName()));
+        model.nodeStructureChanged(rootNode);
     }
     
     public void addMailAccountInTree(MailAccount mc) {
     	DefaultTreeModel model = getModel();
-		DefaultMutableTreeNode rootNode = getRootNode();
+        DefaultMutableTreeNode rootNode = getRootNode();
         rootNode.add(new DefaultMutableTreeNode(mc));
-        model.reload();
+        model.nodeStructureChanged(rootNode);
     }
 
     public void addFolderInTree(MailAccount mailAccount, String folderName) {
     	DefaultMutableTreeNode folder = getNode(mailAccount.getCSName());
     	folder.add(new DefaultMutableTreeNode(folderName));
-    	getModel().reload();
+    	getModel().nodeStructureChanged(folder);
     }
     
     private void initModels() {
