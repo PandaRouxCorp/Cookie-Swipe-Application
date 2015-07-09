@@ -7,7 +7,9 @@ package view;
 
 import interfaces.IJFrame;
 import java.util.HashMap;
+import javax.swing.JTextArea;
 import view.component.CookieSwipeFrame;
+import view.component.CookieSwipeTextField;
 
 /**
  *
@@ -26,6 +28,7 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
         this.setVisible(true);
+        
         hsJcomponents.put("cookieSwipeButtonSend", cookieSwipeButtonSend);
         hsJcomponents.put("cookieSwipeLabelCc", cookieSwipeLabelCc);
         hsJcomponents.put("cookieSwipeLabelTo", cookieSwipeLabelTo);
@@ -33,6 +36,22 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponents.put("cookieSwipeTextFieldToCc", cookieSwipeTextFieldToCc);
         hsJcomponents.put("cookieSwipeTextFieldSubject", cookieSwipeTextFieldSubject);
         hsJcomponents.put("jTextAreaMail", jTextAreaMail);
+    }
+
+//    public void setCookieSwipeTextFieldSubject(String cookieSwipeTextFieldSubject) {
+//        this.cookieSwipeTextFieldSubject.setText(cookieSwipeTextFieldSubject);
+//    }
+
+    public void setCookieSwipeTextFieldTo(String cookieSwipeTextFieldTo) {
+        this.cookieSwipeTextFieldTo.setText(cookieSwipeTextFieldTo);
+    }
+
+    public void setCookieSwipeTextFieldToCc(String cookieSwipeTextFieldToCc) {
+        this.cookieSwipeTextFieldToCc.setText(cookieSwipeTextFieldToCc);
+    }
+
+    public void setjTextAreaMail(String jTextAreaMail) {
+        this.jTextAreaMail.setText(jTextAreaMail);
     }
 
     /**

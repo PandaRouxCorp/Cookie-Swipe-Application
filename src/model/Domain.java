@@ -13,14 +13,14 @@ import java.util.Objects;
  * @author Mary
  */
 public class Domain {
-
+	
     static Domain getDomainFor(String mailDomain) throws Exception {
         Domain domain = null;
         switch (mailDomain) {
             case "yahoo.fr":
             case "yahoo.com":
-                domain = new Domain("Yahoo", mailDomain, "imap.mail.yahoo.com",
-                        "993", "smtp.mail.yahoo.fr", "465", "imaps", 1);
+                domain = new Domain("Yahoo", mailDomain, "imap.mail.yahoo.com", "smtp.mail.yahoo.fr",
+                        "993", "465", "imaps", 1);
                 break;
             case "hotmail.com":
             case "hotmail.fr":
@@ -28,16 +28,15 @@ public class Domain {
             case "live.fr":
             case "msn.com":
             case "outlook.com":
-                domain = new Domain("Microsoft", mailDomain, "imap-mail.outlook.com",
-                        "993", "smtp.live.com", "587", "imaps", 2);
+                domain = new Domain("Microsoft", mailDomain, "imap-mail.outlook.com", "smtp.live.com",
+                        "993", "587", "imaps", 2);
                 break;
             case "orange.fr":
             case "wanadoo.fr":
-                domain = new Domain("Orange", mailDomain, "imap.orange.fr", "993", "smtp.orange.fr", "465", "imaps", 3);
+                domain = new Domain("Orange", mailDomain, "imap.orange.fr", "smtp.orange.fr", "993", "465", "imaps", 3);
                 break;
             case "gmail.com":
-                domain = new Domain("Google", mailDomain, "imap.gmail.com", "993",
-                        "smtp.gmail.com", "465", "imaps", 4);
+                domain = new Domain("Google", mailDomain, "imap.gmail.com", "smtp.gmail.com", "993", "465", "imaps", 4);
                 break;
             default:
                 throw new Exception("Unknown domain: " +  mailDomain);

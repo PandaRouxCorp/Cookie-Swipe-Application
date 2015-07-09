@@ -34,6 +34,10 @@ import controller.ActionName;
 import controller.Dispatcher;
 import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
+import java.awt.event.MouseListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
 
 /**
  *
@@ -42,7 +46,7 @@ import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 public class MainFrameInitializer extends AbstractIHMAction { 
 	
 	public static final String jListMailModels = "jListMailModels";
-
+        
 	private CookieSwipeFrame csFrame;
     
     public MainFrameInitializer(CookieSwipeFrame csFrame) {
@@ -56,10 +60,10 @@ public class MainFrameInitializer extends AbstractIHMAction {
 
 	@Override
 	public boolean execute(Object... object) {
-		initMailAccount();
-        initButton();
-        initMailList();
-		return true;
+            initMailAccount();
+            initButton();
+            initMailList();
+            return true;
 	}
     
     private void initMailList() {
@@ -74,8 +78,9 @@ public class MainFrameInitializer extends AbstractIHMAction {
 			
 			@Override
 			public void focusGained(FocusEvent e) {
+                                setSelectedMail(e);
 				setMailButtonsVisible(true);
-			}
+			}                    
 		});
 	}
     
@@ -96,7 +101,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
         while (en.hasMoreElements()) {
             DefaultMutableTreeNode node = en.nextElement();
             TreeNode[] path = node.getPath();
-            if(path[path.length - 1].toString().equals(name)) {
+            if(path[path.length - 1].toString().equals(name)) {                
                 return node;
             }
         }
@@ -234,19 +239,74 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.setVisible(b);
         csFrame.pack();
     }
+    private void setSelectedMail (FocusEvent e)
+    {
+        JList<Message> jListMail =( JList<Message>) hsJcomponent.get("jListMail") ;        
+        CookieSwipeApplication.getApplication().setParam("selectedMail", jListMail.getSelectedValue());               
+    }
 	
 	private class TreeMouseListener extends MouseAdapter {
-		private CookieSwipeTree myTree;
-		private JList<Message> jListMail;
+		private CookieSwipeTree myTree = null;
+		private JList<Message> jListMail = null;
 		
 		public TreeMouseListener(CookieSwipeTree myTree, JList<Message> jListMail) {
 			this.myTree = myTree;
 			this.jListMail = jListMail;
+                        
+                        this.jListMail.addMouseListener(new MouseListener() {
+                            
+                            private int countClick = 0;
+                            private Message mess;
+                            
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                if(countClick == 2) {
+                                    countClick = 0;
+                                    Dispatcher d = new Dispatcher();
+                                    d.readMailAction();
+                                }
+                                
+                                if(countClick == 1) {
+                                    try {
+                                        Message messa = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
+                                        if ( !mess.getSentDate().equals(messa.getSentDate()) ) {
+                                            countClick = 0;
+                                            return;
+                                        }
+                                    } catch (MessagingException ex) {
+                                        Logger.getLogger(MainFrameInitializer.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
+                                
+                                if(countClick == 0) {
+                                    mess = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
+                                }
+                                    countClick++;
+                            }
+
+                            @Override
+                            public void mousePressed(MouseEvent e) {
+                            }
+
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                            }
+
+                            @Override
+                            public void mouseEntered(MouseEvent e) {
+                            }
+
+                            @Override
+                            public void mouseExited(MouseEvent e) {
+                                
+                            }
+                        });
 		}
 		@Override
 	    public void mousePressed(MouseEvent e) {
 	        DefaultMutableTreeNode node = (DefaultMutableTreeNode) myTree.getLastSelectedPathComponent();
-	        if(node == null) return;
+	        if(node == null) return;   
+                CookieSwipeApplication.getApplication().setParam("folderName", node.toString());
 	        CustomJListModel model = getModelForSelection(node);
 	        jListMail.setModel(model);
 	    }
@@ -284,5 +344,5 @@ public class MainFrameInitializer extends AbstractIHMAction {
 					CookieSwipeApplication.getApplication().getParam(jListMailModels);
 			return models.get(keyAccount).get(keyFolder);
 		}
-	}
+	}   
 }
