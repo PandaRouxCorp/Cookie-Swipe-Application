@@ -35,7 +35,8 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setVisible(true);
         
-        setExtendedState(MAXIMIZED_BOTH);
+//        setExtendedState(MAXIMIZED_BOTH); //fullscreen
+        setSize(720, 480);
         
         hsJcomponents.put("cookieSwipeButtonSend", cookieSwipeButtonSend);
         hsJcomponents.put("cookieSwipeButtonAttach", cookieSwipeButtonAttach);
@@ -45,6 +46,10 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponents.put("cookieSwipeTextFieldToCc", cookieSwipeTextFieldToCc);
         hsJcomponents.put("cookieSwipeTextFieldSubject", cookieSwipeTextFieldSubject);
         hsJcomponents.put("jTextAreaMail", jTextAreaMail);
+        
+        validate();
+	repaint();
+	revalidate();
     }
 
     public void setCookieSwipeTextFieldSubject(String cookieSwipeTextFieldSubject) {
