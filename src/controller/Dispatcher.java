@@ -38,6 +38,7 @@ import module.backoffice.CreateCSAccountAction;
 import module.backoffice.ReadMailAction;
 import module.backoffice.SendMailAction;
 import module.ihm.CreateAccountFrameInitializer;
+import network.mail.FolderManager;
 
 
 public class Dispatcher implements ActionListener {
@@ -210,5 +211,10 @@ public class Dispatcher implements ActionListener {
     public void sendMailAction() {
         CookieSwipeFrame focusFrame = CookieSwipeApplication.getApplication().getFocusFrame();
         new SendMailAction(focusFrame).execute();
+    }
+    
+    public void refreshAction() {
+        FolderManager fm = (FolderManager) CookieSwipeApplication.getApplication().getParam("FolderManager");
+        fm.refresh();
     }
 }

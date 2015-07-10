@@ -209,6 +209,10 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonForward");
         button.setActionCommand(ActionName.forwardMail);
         button.addActionListener(dispatcher);
+        
+        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonRefresh");
+        button.setActionCommand(ActionName.refresh);
+        button.addActionListener(dispatcher);
 
         setMailAccountButtonsVisible(false);
         setMailButtonsVisible(false);
