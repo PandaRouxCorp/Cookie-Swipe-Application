@@ -16,6 +16,8 @@ import javax.swing.WindowConstants;
 
 import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeFrame;
+import view.component.CookieSwipeTextArea;
+import view.component.CookieSwipeTextField;
 
 /**
  *
@@ -44,6 +46,24 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponents.put("cookieSwipeTextFieldToCc", cookieSwipeTextFieldToCc);
         hsJcomponents.put("cookieSwipeLabelObject", cookieSwipeLabelObject);
     }
+
+    public void setCookieSwipeTextFieldObject(String cookieSwipeTextFieldObject) {
+        this.cookieSwipeTextFieldObject.setText(cookieSwipeTextFieldObject);
+    }
+
+    public void setCookieSwipeTextFieldTo(String cookieSwipeTextFieldTo) {
+        this.cookieSwipeTextFieldTo.setText(cookieSwipeTextFieldTo);
+    }
+
+    public void setCookieSwipeTextFieldToCc(String cookieSwipeTextFieldToCc) {
+        this.cookieSwipeTextFieldToCc.setText(cookieSwipeTextFieldToCc);
+    }
+
+    public void setjTextAreaMail(String jTextAreaMail) {
+        this.jTextAreaMail.setText(jTextAreaMail);
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
