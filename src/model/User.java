@@ -15,6 +15,8 @@ import network.mail.FolderManager;
 import cookie.swipe.application.CookieSwipeApplication;
 import dao.DAOMailAccount;
 import errorMessage.CodeError;
+import network.messageFramework.DeliverySystem;
+import network.messageFramework.FrameworkMessage;
 
 /**
  * Utilisateur de l'application Cookie Swipe Peut être un singleton ?
@@ -141,15 +143,22 @@ public class User {
     }
 
     private void addMailAccount(MailAccount newMailAccount) {
-    	FolderManager fm = (FolderManager)CookieSwipeApplication.getApplication().getParam("FolderManager");
-    	try {
-			fm.addNewMailAccount(newMailAccount);
-			listOfMailAccount.add(newMailAccount);
-			notifyMailAccountAdded(newMailAccount);	
-		} catch (Exception e) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening store", e);
+        listOfMailAccount.add(newMailAccount);
+        notifyMailAccountAdded(newMailAccount);	
+        DeliverySystem.launchTask(new FrameworkMessage<Object>() {
+            @Override
+            public Object call() throws Exception {
+                try {
+                    FolderManager fm = (FolderManager)CookieSwipeApplication.getApplication().getParam("FolderManager");
+                    fm.addNewMailAccount(newMailAccount);
+                } catch (Exception e) {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening store", e);
 		}
-	}
+                return null;
+            }
+
+        });
+    }
 
 	public int updatemailAccount(MailAccount mailAccount) {
         return DAOMailAccount.updateMailAccount(mailAccount);

@@ -57,7 +57,7 @@ public class DeliverySystem {
 
     private void addTask(FrameworkMessage<?> callable, boolean shouldAnswer) {     
     	if(slaveExecutor.isShutdown()) {
-            slaveExecutor = Executors.newFixedThreadPool(8);
+            slaveExecutor = Executors.newFixedThreadPool(4);
             completionService = new ExecutorCompletionService<>(slaveExecutor);
         }
         if(callable != null) {
@@ -96,13 +96,8 @@ public class DeliverySystem {
                     try {
                         if (!futures.isEmpty()) {
                             onRecieveResponse(completionService.take());
-                        } else {
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                break;
-                            }
                         }
+                        Thread.sleep(100);
                     } catch (Exception e) {
                         LOGGER.log(Level.SEVERE, "Erreur :", e);
                     }

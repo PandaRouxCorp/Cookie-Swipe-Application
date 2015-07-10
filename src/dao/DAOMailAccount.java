@@ -258,9 +258,9 @@ public class DAOMailAccount {
      */
     public static int loadMails(List<MailAccount> mailAccounts) {
         try {
-        	FolderManager folderManager = new FolderManager();
-        	folderManager.addMailAccounts(mailAccounts);
-        	CookieSwipeApplication.getApplication().setParam("FolderManager", folderManager);
+        	FolderManager folderManager = (FolderManager) CookieSwipeApplication.getApplication()
+                        .getParam("FolderManager");
+                folderManager.addMailAccounts(mailAccounts);
         } catch (Exception ex) {
             Logger.getLogger(DAOMailAccount.class.getName()).log(Level.SEVERE, "An error occured when retreiving mails", ex);
             return CodeError.FAILLURE;

@@ -31,18 +31,19 @@ public class CookieSwipeListCellRenderer<T> extends CookieSwipeLabel implements 
 			renderer.setBackground(CookieSwipeColor.BACKGROUND_FRAME);
 		}
 		renderer.setForeground(CookieSwipeColor.LETTER);
-		if(value instanceof Message) {
-			String render = null;
-			try {
-				render = ((Message)value).getSubject();
-			} catch (MessagingException e) {
-				e.printStackTrace();
-			}
-			if(render == null) render = "<no subject>"; 
-			renderer.setText(render);
-		}
-		else
-			renderer.setText(value.toString());
+                if(value != null) {
+                    if(value instanceof Message) {
+                            String render = null;
+                            try {
+                                    render = ((Message)value).getSubject();
+                            } catch (MessagingException e) {
+                                    e.printStackTrace();
+                            }
+                            if(render == null) render = "<no subject>"; 
+                            renderer.setText(render);
+                    }
+                    else renderer.setText(value.toString());
+                }
 		
 		return renderer;
 	}

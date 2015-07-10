@@ -5,18 +5,20 @@
  */
 package view;
 
+import cookie.swipe.application.CookieSwipeApplication;
 import interfaces.IJFrame;
 
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.mail.Message;
 import javax.swing.GroupLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.WindowConstants;
 
 import model.ListMailAccountListener;
 import model.MailAccount;
@@ -42,7 +44,13 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
     public MainCSFrame() {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                CookieSwipeApplication.getApplication().stop();
+            }
+        };
+        this.addWindowListener(exitListener);
         this.setVisible(true);
         
         setExtendedState(MAXIMIZED_BOTH);

@@ -17,7 +17,8 @@ public class ActionName {
                 readMail = "readMail", selectMail = "selectMail", deleteMail = "deleteMail",
                 addBlackListSender = "addBlackListSender", removeBlacklistSender = "removeBlacklistSender",
                 replyMail = "answerMail", forwardMail = "forwardMail", sendMail = "sendMail",
-                downloadPicture = "downloadPicture", logout = "logout", createMailAccount = "createMailAccount";  
+                downloadPicture = "downloadPicture", logout = "logout", createMailAccount = "createMailAccount",
+                refresh = "refresh";  
 
         public static final Color bg = new Color(1, 1, 1);
 }

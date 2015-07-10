@@ -7,6 +7,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import model.User;
 import module.ihm.LoginFrameInitializer;
+import network.mail.FolderManager;
+import network.messageFramework.DeliverySystem;
 import view.LoginJFrame;
 import view.MainCSFrame;
 import view.component.CookieSwipeFrame;
@@ -33,9 +35,14 @@ public class CookieSwipeApplication {
     
     private void start() {
     	initLookAndFeel();       
+        setParam("FolderManager", new FolderManager());
         LoginJFrame loginFrame = new LoginJFrame();
         this.mainFrame = loginFrame;
         new LoginFrameInitializer(loginFrame).execute();
+    }
+    
+    public void stop() {
+        DeliverySystem.stop();
     }
     
     private void initLookAndFeel() {
