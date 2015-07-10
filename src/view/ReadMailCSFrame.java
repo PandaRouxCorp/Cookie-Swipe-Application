@@ -16,8 +16,6 @@ import javax.swing.WindowConstants;
 
 import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeFrame;
-import view.component.CookieSwipeTextArea;
-import view.component.CookieSwipeTextField;
 
 /**
  *
