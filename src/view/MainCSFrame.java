@@ -42,6 +42,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
      * Creates new form MainCSFrame
      */
     public MainCSFrame() {
+
         initComponents();
         this.setLocationRelativeTo(null);
         WindowListener exitListener = new WindowAdapter() {
@@ -53,7 +54,8 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
         this.addWindowListener(exitListener);
         this.setVisible(true);
         
-        setExtendedState(MAXIMIZED_BOTH);
+//        setExtendedState(MAXIMIZED_BOTH); //fullscreen
+        setSize(720, 480);
         
         hsJcomponent.put("cookieSwipeButtonReply", cookieSwipeButtonReply);
         hsJcomponent.put("cookieSwipeButtonReplyToAll", cookieSwipeButtonReplyToAll);
@@ -71,7 +73,10 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
         hsJcomponent.put("cookieSwipeButtonToBlacklist", cookieSwipeButtonToBlacklist);
         hsJcomponent.put("cookieSwipeButtonBlacklist", cookieSwipeButtonBlacklist);
         hsJcomponent.put("jListMail", jListMail);
-        
+
+        validate();
+        repaint();
+        revalidate();
     }
 
     /**
@@ -249,7 +254,7 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		 * ******** Panel de menu *********
 		 */
 		spritePanel = new CookieSwipePanel();
-		spritePanel.setPreferredSize(new Dimension((int) spritePanel.getPreferredSize().getWidth(), 43)); //Lorsque la r�solution est petite: 40 grande: 43
+		spritePanel.setPreferredSize(new Dimension((int) spritePanel.getPreferredSize().getWidth() + 2500, 43)); //Lorsque la r�solution est petite: 40 grande: 43
 	//	spritePanel.setSize((int)getPreferredSize().getWidth(), 43);
 		GroupLayout spriteLayout = new GroupLayout(spritePanel);
 		spritePanel.setLayout(spriteLayout);

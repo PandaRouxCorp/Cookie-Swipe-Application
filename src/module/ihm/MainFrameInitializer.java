@@ -209,14 +209,15 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonForward");
         button.setActionCommand(ActionName.forwardMail);
         button.addActionListener(dispatcher);
-        
+
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonRefresh");
         button.setActionCommand(ActionName.refresh);
         button.addActionListener(dispatcher);
 
         setMailAccountButtonsVisible(false);
         setMailButtonsVisible(false);
-        csFrame.pack();
+
+        refresh();
     }
 
     private void setMailAccountButtonsVisible(boolean b) {
@@ -224,7 +225,8 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.setVisible(b);
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonDeleteMailAccount");
         button.setVisible(b);
-        csFrame.pack();
+
+        refresh();
     }
 
     private void setMailButtonsVisible(boolean b) {
@@ -238,7 +240,8 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.setVisible(b);
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonArchive");
         button.setVisible(b);
-        csFrame.pack();
+
+        refresh();
     }
 
     private void setSelectedMail(FocusEvent e) {
@@ -298,8 +301,9 @@ public class MainFrameInitializer extends AbstractIHMAction {
             }
             CookieSwipeApplication.getApplication().setParam("folderName", node.toString());
             CustomJListModel model = getModelForSelection(node);
-            if(model != null)
+            if (model != null) {
                 jListMail.setModel(model);
+            }
         }
 
         @SuppressWarnings("unchecked")
@@ -337,5 +341,11 @@ public class MainFrameInitializer extends AbstractIHMAction {
             models = (HashMap<String, HashMap<String, CustomJListModel>>) CookieSwipeApplication.getApplication().getParam(jListMailModels);
             return models.get(keyAccount).get(keyFolder);
         }
+    }
+    
+    private void refresh(){
+        csFrame.validate();
+	csFrame.repaint();
+	csFrame.revalidate();
     }
 }
