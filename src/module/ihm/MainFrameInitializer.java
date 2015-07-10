@@ -35,73 +35,71 @@ import controller.Dispatcher;
 import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 import java.awt.event.MouseListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.mail.MessagingException;
+import java.util.List;
 
 /**
  *
  * @author Lucas
  */
-public class MainFrameInitializer extends AbstractIHMAction { 
-	
-	public static final String jListMailModels = "jListMailModels";
-        
-	private CookieSwipeFrame csFrame;
-    
-    public MainFrameInitializer(CookieSwipeFrame csFrame) {
-		super(csFrame);
-		this.csFrame = csFrame;
-	}
-	
-	public MainFrameInitializer() {
-		this(CookieSwipeApplication.getApplication().getMainFrame());
-	}
+public class MainFrameInitializer extends AbstractIHMAction {
 
-	@Override
-	public boolean execute(Object... object) {
-            initMailAccount();
-            initButton();
-            initMailList();
-            return true;
-	}
-    
+    public static final String jListMailModels = "jListMailModels";
+
+    private CookieSwipeFrame csFrame;
+
+    public MainFrameInitializer(CookieSwipeFrame csFrame) {
+        super(csFrame);
+        this.csFrame = csFrame;
+    }
+
+    public MainFrameInitializer() {
+        this(CookieSwipeApplication.getApplication().getMainFrame());
+    }
+
+    @Override
+    public boolean execute(Object... object) {
+        initMailAccount();
+        initButton();
+        initMailList();
+        return true;
+    }
+
     private void initMailList() {
-    	@SuppressWarnings("unchecked")
-		CookieSwipeList<Mail> jListMail = (CookieSwipeList<Mail>) hsJcomponent.get("jListMail");
-    	jListMail.addFocusListener(new FocusListener() {
-			
-			@Override
-			public void focusLost(FocusEvent e) {
-				setMailButtonsVisible(false);
-			}
-			
-			@Override
-			public void focusGained(FocusEvent e) {
-                                setSelectedMail(e);
-				setMailButtonsVisible(true);
-			}                    
-		});
-	}
-    
+        @SuppressWarnings("unchecked")
+        CookieSwipeList<Mail> jListMail = (CookieSwipeList<Mail>) hsJcomponent.get("jListMail");
+        jListMail.addFocusListener(new FocusListener() {
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                setMailButtonsVisible(false);
+            }
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                setSelectedMail(e);
+                setMailButtonsVisible(true);
+            }
+        });
+    }
+
     public DefaultMutableTreeNode getRootNode() {
         DefaultTreeModel model = getModel();
         return (DefaultMutableTreeNode) model.getRoot();
     }
-    
+
     public DefaultTreeModel getModel() {
-    	CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
+        CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
         return (DefaultTreeModel) myTree.getModel();
     }
-    
+
     public DefaultMutableTreeNode getNode(String name) {
-    	DefaultMutableTreeNode rootNode = getRootNode();
+        DefaultMutableTreeNode rootNode = getRootNode();
         @SuppressWarnings("unchecked")
-		Enumeration<DefaultMutableTreeNode> en = rootNode.breadthFirstEnumeration();
+        Enumeration<DefaultMutableTreeNode> en = rootNode.breadthFirstEnumeration();
         while (en.hasMoreElements()) {
             DefaultMutableTreeNode node = en.nextElement();
             TreeNode[] path = node.getPath();
-            if(path[path.length - 1].toString().equals(name)) {                
+            if (path[path.length - 1].toString().equals(name)) {
                 return node;
             }
         }
@@ -114,69 +112,68 @@ public class MainFrameInitializer extends AbstractIHMAction {
         rootNode.remove(getNode(mc.getCSName()));
         model.nodeStructureChanged(rootNode);
     }
-    
+
     public void addMailAccountInTree(MailAccount mc) {
-    	DefaultTreeModel model = getModel();
+        DefaultTreeModel model = getModel();
         DefaultMutableTreeNode rootNode = getRootNode();
         rootNode.add(new DefaultMutableTreeNode(mc));
         model.nodeStructureChanged(rootNode);
     }
 
     public void addFolderInTree(MailAccount mailAccount, String folderName) {
-    	DefaultMutableTreeNode folder = getNode(mailAccount.getCSName());
-    	folder.add(new DefaultMutableTreeNode(folderName));
-    	getModel().nodeStructureChanged(folder);
+        DefaultMutableTreeNode folder = getNode(mailAccount.getCSName());
+        folder.add(new DefaultMutableTreeNode(folderName));
+        getModel().nodeStructureChanged(folder);
     }
-    
+
     private void initModels() {
-    	HashMap<String, HashMap<String, CustomJListModel>> models = new HashMap<>();
+        HashMap<String, HashMap<String, CustomJListModel>> models = new HashMap<>();
         CookieSwipeApplication.getApplication().setParam(jListMailModels, models);
-    	HashMap<String, CustomJListModel> allModel = new HashMap<>();
+        HashMap<String, CustomJListModel> allModel = new HashMap<>();
         allModel.put(MailAccount.ALL, new CustomJListModel(new ObservableLinkedHashSetPriorityQueue<Message>(new MailComparator())));
         models.put(MailAccount.ALL, allModel);
-	}
-    
+    }
+
     @SuppressWarnings("unchecked")
-	private void initMailAccount() {
+    private void initMailAccount() {
         DefaultMutableTreeNode myRoot = new DefaultMutableTreeNode(MailAccount.ALL);
 
         MailAccount firstMailAccount = null;
         MutableTreeNode firstFolder = null;
-        
+
         // Construction des différents noeuds de l'arbre.
         User user = CookieSwipeApplication.getApplication().getUser();
         for (MailAccount mailAccount : user.getListOfMailAccount()) {
-        	if(firstMailAccount != null) {
-        		myRoot.add(new DefaultMutableTreeNode(mailAccount));
-        	}
-        	else {
-        		firstMailAccount = mailAccount;
-        		firstFolder = new DefaultMutableTreeNode(mailAccount);
-        		myRoot.add(firstFolder);
-        	}
+            if (firstMailAccount != null) {
+                myRoot.add(new DefaultMutableTreeNode(mailAccount));
+            } else {
+                firstMailAccount = mailAccount;
+                firstFolder = new DefaultMutableTreeNode(mailAccount);
+                myRoot.add(firstFolder);
+            }
         }
-        
+
         // Creation des models de données pour les listes de mails à afficher
         initModels();
 
         // Construction de l'arbre.
         CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
         myTree.setModel(new DefaultTreeModel(myRoot));
-        
-        if(firstMailAccount != null) {
-			Enumeration<DefaultMutableTreeNode> en = myRoot.breadthFirstEnumeration();
-	        en.nextElement();
-	        DefaultMutableTreeNode node = en.nextElement();
-	        myTree.setSelectionPath(new TreePath(node));
-	        CookieSwipeApplication.getApplication().setParam("mailAccountSelected", firstMailAccount);
+
+        if (firstMailAccount != null) {
+            Enumeration<DefaultMutableTreeNode> en = myRoot.breadthFirstEnumeration();
+            en.nextElement();
+            DefaultMutableTreeNode node = en.nextElement();
+            myTree.setSelectionPath(new TreePath(node));
+            CookieSwipeApplication.getApplication().setParam("mailAccountSelected", firstMailAccount);
         }
-        
-        myTree.addMouseListener(new TreeMouseListener(myTree,(JList<Message>) hsJcomponent.get("jListMail")));
+
+        myTree.addMouseListener(new TreeMouseListener(myTree, (JList<Message>) hsJcomponent.get("jListMail")));
     }
-    
+
     private void initButton() {
         Dispatcher dispatcher = new Dispatcher();
-        
+
         CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonUpdateCSAccount");
         button.setActionCommand(ActionName.updateAccount);
         button.addActionListener(dispatcher);
@@ -239,95 +236,102 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.setVisible(b);
         csFrame.pack();
     }
-    private void setSelectedMail (FocusEvent e)
-    {
-        JList<Message> jListMail =( JList<Message>) hsJcomponent.get("jListMail") ;        
-        CookieSwipeApplication.getApplication().setParam("selectedMail", jListMail.getSelectedValue());               
+
+    private void setSelectedMail(FocusEvent e) {
+        JList<Message> jListMail = (JList<Message>) hsJcomponent.get("jListMail");
+        CookieSwipeApplication.getApplication().setParam("selectedMail", jListMail.getSelectedValue());
     }
-	
-	private class TreeMouseListener extends MouseAdapter {
-		private CookieSwipeTree myTree = null;
-		private JList<Message> jListMail = null;
-		
-		public TreeMouseListener(CookieSwipeTree myTree, JList<Message> jListMail) {
-			this.myTree = myTree;
-			this.jListMail = jListMail;
-                        
-                        this.jListMail.addMouseListener(new MouseListener() {
-                            
-                            @Override
-                            public void mouseClicked(MouseEvent e) {
-                                JList theList = (JList) e.getSource();
-                                if (e.getClickCount() == 2) { // double click
-                                    int index = theList.locationToIndex(e.getPoint());
-                                    if (index >= 0) {
-                                        Message message = (Message) theList.getModel().getElementAt(index);
-                                        CookieSwipeApplication.getApplication().setParam("selectedMail", message);  
-                                        Dispatcher dispatcher = new Dispatcher();
-                                        dispatcher.readMailAction();
-                                    }
-                                }
-                            }
 
-                            @Override
-                            public void mousePressed(MouseEvent e) {
-                            }
+    private class TreeMouseListener extends MouseAdapter {
 
-                            @Override
-                            public void mouseReleased(MouseEvent e) {
-                            }
+        private CookieSwipeTree myTree = null;
+        private JList<Message> jListMail = null;
 
-                            @Override
-                            public void mouseEntered(MouseEvent e) {
-                            }
+        public TreeMouseListener(CookieSwipeTree myTree, JList<Message> jListMail) {
+            this.myTree = myTree;
+            this.jListMail = jListMail;
 
-                            @Override
-                            public void mouseExited(MouseEvent e) {
-                                
-                            }
-                        });
-		}
-		@Override
-	    public void mousePressed(MouseEvent e) {
-	        DefaultMutableTreeNode node = (DefaultMutableTreeNode) myTree.getLastSelectedPathComponent();
-	        if(node == null) return;   
-                CookieSwipeApplication.getApplication().setParam("folderName", node.toString());
-	        CustomJListModel model = getModelForSelection(node);
-	        jListMail.setModel(model);
-	    }
-		
-		@SuppressWarnings("unchecked")
-		private CustomJListModel getModelForSelection(DefaultMutableTreeNode node) {
-			String keyAccount = null, keyFolder = null;
-			if (node != null) {
-	        	Object userObject = node.getUserObject();
-	            if (userObject instanceof MailAccount) {
-	            	setMailAccountButtonsVisible(true);
-	                CookieSwipeApplication.getApplication().setParam("mailAccountSelected", node.getUserObject());
-	                keyAccount = ((MailAccount)userObject).getCSName();
-	                keyFolder =((MailAccount)userObject).getFolderNames().get(0);
-	            } else {
-	            	setMailAccountButtonsVisible(false);
-	                if(node.getUserObject() instanceof String) {
-	                	if(node.getParent().equals(node.getRoot())) {
-	                		keyAccount = MailAccount.ALL;
-	    	                keyFolder = MailAccount.ALL;
-	                	}
-	                	else {
-	                		MailAccount mc = (MailAccount) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
-	                		keyAccount = mc.getCSName();
-	                		keyFolder = (String) node.getUserObject();
-	                	}
-	                }
-	            }
-	        }
-			
-			if(keyAccount == null || keyFolder == null) return null;
-			
-			HashMap<String, HashMap<String, CustomJListModel>> models;
-			models = (HashMap<String, HashMap<String, CustomJListModel>>)
-					CookieSwipeApplication.getApplication().getParam(jListMailModels);
-			return models.get(keyAccount).get(keyFolder);
-		}
-	}   
+            this.jListMail.addMouseListener(new MouseListener() {
+
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    JList theList = (JList) e.getSource();
+                    if (e.getClickCount() == 2) { // double click
+                        int index = theList.locationToIndex(e.getPoint());
+                        if (index >= 0) {
+                            Message message = (Message) theList.getModel().getElementAt(index);
+                            CookieSwipeApplication.getApplication().setParam("selectedMail", message);
+                            Dispatcher dispatcher = new Dispatcher();
+                            dispatcher.readMailAction();
+                        }
+                    }
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) myTree.getLastSelectedPathComponent();
+            if (node == null) {
+                return;
+            }
+            CookieSwipeApplication.getApplication().setParam("folderName", node.toString());
+            CustomJListModel model = getModelForSelection(node);
+            if(model != null)
+                jListMail.setModel(model);
+        }
+
+        @SuppressWarnings("unchecked")
+        private CustomJListModel getModelForSelection(DefaultMutableTreeNode node) {
+            String keyAccount = null, keyFolder = null;
+            if (node != null) {
+                Object userObject = node.getUserObject();
+                if (userObject instanceof MailAccount) {
+                    setMailAccountButtonsVisible(true);
+                    CookieSwipeApplication.getApplication().setParam("mailAccountSelected", node.getUserObject());
+                    MailAccount ma = (MailAccount) userObject;
+                    keyAccount = ma.getCSName();
+                    List<String> folders = ma.getFolderNames();
+                    keyFolder = !folders.isEmpty() ? folders.get(0) : null;
+                } else {
+                    setMailAccountButtonsVisible(false);
+                    if (node.getUserObject() instanceof String) {
+                        if (node.getParent().equals(node.getRoot())) {
+                            keyAccount = MailAccount.ALL;
+                            keyFolder = MailAccount.ALL;
+                        } else {
+                            MailAccount mc = (MailAccount) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
+                            keyAccount = mc.getCSName();
+                            keyFolder = (String) node.getUserObject();
+                        }
+                    }
+                }
+            }
+
+            if (keyAccount == null || keyFolder == null) {
+                return null;
+            }
+
+            HashMap<String, HashMap<String, CustomJListModel>> models;
+            models = (HashMap<String, HashMap<String, CustomJListModel>>) CookieSwipeApplication.getApplication().getParam(jListMailModels);
+            return models.get(keyAccount).get(keyFolder);
+        }
+    }
 }
