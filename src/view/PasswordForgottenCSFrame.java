@@ -12,12 +12,12 @@ import view.component.CookieSwipeFrame;
  *
  * @author Lucas
  */
-public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
+public class PasswordForgottenCSFrame extends CookieSwipeFrame implements IJFrame {
 
     /**
      * Creates new form LoginJFrame
      */
-    public LoginJFrame() {
+    public PasswordForgottenCSFrame() {
     	setTitle("Login");
 
         initComponents();
@@ -27,13 +27,10 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
         setSize(720, 480);
         setResizable(false);
         
-        hsJcomponent.put("cookieSwipeButtonLogin", cookieSwipeButtonLogin);
-        hsJcomponent.put("cookieSwipeButtonInscription", cookieSwipeButtonInscription);
-        hsJcomponent.put("cookieSwipeButtonSendLogin", cookieSwipeButtonSendLogin);
         hsJcomponent.put("cookieSwipeButtonSendPassword", cookieSwipeButtonSendPassword);
         hsJcomponent.put("cookieSwipeLabelLogin", cookieSwipeLabelLogin);
-        hsJcomponent.put("cookieSwipeLabelPassword", cookieSwipeLabelPassword);
-        hsJcomponent.put("cookieSwipePasswordFieldPassword", cookieSwipePasswordFieldPassword);
+        hsJcomponent.put("cookieSwipeLabelPassword", cookieSwipeLabelMailAddress);
+        hsJcomponent.put("cookieSwipePasswordFieldPassword", cookieSwipeTextFieldMailAddress);
         hsJcomponent.put("cookieSwipeTextFieldLogin", cookieSwipeTextFieldLogin);
         
         validate();
@@ -50,13 +47,10 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
         cookieSwipeFrame2 = new view.component.CookieSwipeFrame();
         cookieSwipeFrame3 = new view.component.CookieSwipeFrame();
         cookieSwipeTextFieldLogin = new view.component.CookieSwipeTextField();
-        cookieSwipePasswordFieldPassword = new view.component.CookieSwipePasswordField();
+        cookieSwipeTextFieldMailAddress = new view.component.CookieSwipeTextField();
         cookieSwipeLabelLogin = new view.component.CookieSwipeLabel();
-        cookieSwipeLabelPassword = new view.component.CookieSwipeLabel();
-        cookieSwipeButtonLogin = new view.component.CookieSwipeButton();
-        cookieSwipeButtonSendLogin = new view.component.CookieSwipeButton();
+        cookieSwipeLabelMailAddress = new view.component.CookieSwipeLabel();
         cookieSwipeButtonSendPassword = new view.component.CookieSwipeButton();
-        cookieSwipeButtonInscription = new view.component.CookieSwipeButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -106,20 +100,10 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
 
         cookieSwipeLabelLogin.setText("Login");
 
-        cookieSwipeLabelPassword.setText("Password");
+        cookieSwipeLabelMailAddress.setText("Adresse mail");
 
-        cookieSwipeButtonLogin.setText("Connexion");
-        cookieSwipeButtonLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cookieSwipeButtonLoginActionPerformed(evt);
-            }
-        });
-
-        cookieSwipeButtonSendLogin.setText("Mot de passe oublié");
 
         cookieSwipeButtonSendPassword.setText("Identifiant oublié");
-
-        cookieSwipeButtonInscription.setText("Inscription");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -130,23 +114,19 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(250, 250, 250)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cookieSwipeLabelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cookieSwipeLabelMailAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cookieSwipeLabelLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cookieSwipeTextFieldLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cookieSwipePasswordFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cookieSwipeTextFieldMailAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                         )
                     )
                     .addGroup(layout.createSequentialGroup()
                         .addGap(100, 100, 100)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(cookieSwipeButtonLogin,  javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(20, 20, 20)
-                                .addComponent(cookieSwipeButtonSendLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(20, 20, 20)
                                 .addComponent(cookieSwipeButtonSendPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(20, 20, 20)
-                                .addComponent(cookieSwipeButtonInscription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             )
                         )
                     )
@@ -161,15 +141,12 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cookieSwipeTextFieldLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cookieSwipeLabelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cookieSwipeLabelMailAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cookieSwipePasswordFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cookieSwipeTextFieldMailAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(68, 68, 68)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cookieSwipeButtonSendLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cookieSwipeButtonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cookieSwipeButtonSendPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cookieSwipeButtonInscription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 )
             )
         );
@@ -206,22 +183,19 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LoginJFrame().setVisible(true);
+                new PasswordForgottenCSFrame().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private view.component.CookieSwipeButton cookieSwipeButtonInscription;
-    private view.component.CookieSwipeButton cookieSwipeButtonLogin;
-    private view.component.CookieSwipeButton cookieSwipeButtonSendLogin;
     private view.component.CookieSwipeButton cookieSwipeButtonSendPassword;
     private view.component.CookieSwipeFrame cookieSwipeFrame1;
     private view.component.CookieSwipeFrame cookieSwipeFrame2;
     private view.component.CookieSwipeFrame cookieSwipeFrame3;
     private view.component.CookieSwipeLabel cookieSwipeLabelLogin;
-    private view.component.CookieSwipeLabel cookieSwipeLabelPassword;
-    private view.component.CookieSwipePasswordField cookieSwipePasswordFieldPassword;
+    private view.component.CookieSwipeLabel cookieSwipeLabelMailAddress;
+    private view.component.CookieSwipeTextField cookieSwipeTextFieldMailAddress;
     private view.component.CookieSwipeTextField cookieSwipeTextFieldLogin;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
