@@ -70,7 +70,6 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     private String address, CSName, password, color, mailSignature;
     private Domain domain;
     private Date lastSynch;
-    private Mail currentMail;
     private Session session;
     private Message currentMessage;
     private HashMap<String, ObservableLinkedHashSetPriorityQueue<Message>> folderListModels;
@@ -246,11 +245,9 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
      *
      * @return courriel cree
      */
-    public Mail createNewMail() {
-        currentMail = new Mail();
+    public void createNewMail() {
         messageBodyPart = new MimeBodyPart();
         currentMessage = new MimeMessage(getSession());
-        return currentMail;
     }
 
     public void addDestinataire(Address[] destinataire) {
@@ -262,22 +259,14 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     }
     
     public void addDestinataire(String destinataire) {
-        String to = currentMail.getTo();
         try {
             currentMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(destinataire));
         } catch (MessagingException ex) {
             Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (to == null || to.isEmpty()) {
-            to = destinataire;
-        } else {
-            to += "; " + destinataire;
-        }
-        currentMail.setTo(to);
     }
 
     public void addSubject(String subject) {
-        currentMail.setSubject(subject);
         try {
             currentMessage.setSubject(subject);
         } catch (MessagingException ex) {
@@ -290,7 +279,6 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     }
 
     public void addBody(String body) {
-        currentMail.setBody(body);
         try {
             if(attachments.size() > 0)
                 messageBodyPart.setText(body);
@@ -302,7 +290,6 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     }
 
     public void addCopie(String copy) {
-        currentMail.setCopyTo(copy);
         try {
             currentMessage.addRecipients(Message.RecipientType.CC, InternetAddress.parse(copy));
         } catch (MessagingException ex) {
@@ -354,15 +341,6 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
             public Boolean call() throws Exception {
 
                 try {
-                    if (currentMessage == null) {
-                        currentMessage = new MimeMessage(getSession());
-                        currentMessage.setFrom(new InternetAddress(address));
-                        currentMessage.setRecipients(Message.RecipientType.TO,
-                                InternetAddress.parse(currentMail.getTo()));
-                        currentMessage.setSubject(currentMail.getSubject());
-                        currentMessage.setText(currentMail.getBody());
-                    }
-                    
                     if ( attachments.size() > 0 ) {
                         multipart = getMultiPart();
                         if(multipart != null)
@@ -399,10 +377,6 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         return null;
     }
 
-    public void setMail(Mail mail) {
-        currentMail = mail;
-    }
-
     public void setMessage(Message mess) {
         currentMessage = mess;
     }
@@ -422,13 +396,10 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     }
     public void addAttachement(File file) {
         attachments.add(file);
-        currentMail.addAttachement(file);
-//        currentMessage.
     }
 
     public void addAttachement(String filename) {
         attachments.add(new File(filename));
-        currentMail.addAttachement(new File(filename));
     }
 
     // Getter & setter
