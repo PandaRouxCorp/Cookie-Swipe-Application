@@ -167,7 +167,7 @@ public class Dispatcher implements ActionListener {
                                         (Message) CookieSwipeApplication.getApplication().getParam("selectedMail"));
     }
 
-    public void selectMailAction() {
+    public void selectMailAction() { // ne sert a rien
         System.err.println("NOT IMPLEMENTED");
     }
 
