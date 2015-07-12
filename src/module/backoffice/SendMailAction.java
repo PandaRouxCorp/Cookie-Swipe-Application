@@ -27,14 +27,14 @@ public class SendMailAction extends AbstractIHMAction {
     public boolean execute(Object... object) {
         MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
         if(mailAccount != null) {
-            Mail mail = mailAccount.createNewMail();
+            mailAccount.createNewMail();
             mailAccount.addDestinataire( ((JTextField) hsJcomponent.get("cookieSwipeTextFieldTo")).getText() );
             mailAccount.addCopie( ((JTextField) hsJcomponent.get("cookieSwipeTextFieldToCc")).getText() );
             mailAccount.addSubject(((JTextField) hsJcomponent.get("cookieSwipeTextFieldSubject")).getText() );
             mailAccount.addBody( ((JTextArea) hsJcomponent.get("jTextAreaMail")).getText() );
             mailAccount.sendMail();
-            mailAccount.clearAttachments();
         }
+//        mailAccount.clearAttachments();
         return false;
     }
 }

@@ -32,7 +32,9 @@ import view.component.CookieSwipeFrame;
 import view.component.CookieSwipePasswordField;
 import view.component.CookieSwipeTextField;
 import cookie.swipe.application.CookieSwipeApplication;
+import java.io.File;
 import javax.mail.Message;
+import javax.swing.JFileChooser;
 import model.MailAccount;
 import module.backoffice.CreateCSAccountAction;
 import module.backoffice.ForgottenAction;
@@ -42,7 +44,6 @@ import module.backoffice.SendMailAction;
 import module.ihm.CreateAccountFrameInitializer;
 import module.ihm.LoginForgottenFrameInitializer;
 import module.ihm.PasswordForgottenFrameInitializer;
-import module.ihm.ReadMailFrameInitializer;
 import network.mail.FolderManager;
 import view.LoginForgottenCSFrame;
 import view.PasswordForgottenCSFrame;
@@ -209,8 +210,13 @@ public class Dispatcher implements ActionListener {
     }
 
     public void addAttachementAction() {
-//        MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
-        System.err.println("NOT IMPLEMENTED");
+        MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
+        JFileChooser choose = new JFileChooser();
+        choose.setMultiSelectionEnabled(true);
+        int val = choose.showOpenDialog(CookieSwipeApplication.getApplication().getFocusFrame());
+        File[] files = choose.getSelectedFiles();
+        if(val == JFileChooser.APPROVE_OPTION) 
+            mailAccount.addAttachements(files);
     }
     
     public void writeMailAction() {

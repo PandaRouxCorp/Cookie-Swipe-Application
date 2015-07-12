@@ -77,6 +77,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     private List<String> folderNames;
     private List<File> attachments;
     private Multipart multipart;
+    private MimeBodyPart messageBodyPart;
 
     // Constructeur
     /**
@@ -85,6 +86,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     public MailAccount() {
         domain = new Domain();
         this.folderNames = new ArrayList<>();
+        this.attachments = new ArrayList<>();
         this.folderListModels = new HashMap<>();
     }
 
@@ -246,7 +248,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
      */
     public Mail createNewMail() {
         currentMail = new Mail();
-        attachments = new ArrayList<>();
+        messageBodyPart = new MimeBodyPart();
         currentMessage = new MimeMessage(getSession());
         return currentMail;
     }
@@ -290,7 +292,10 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     public void addBody(String body) {
         currentMail.setBody(body);
         try {
-            currentMessage.setText(body);
+            if(attachments.size() > 0)
+                messageBodyPart.setText(body);
+            else
+                currentMessage.setText(body);
         } catch (MessagingException ex) {
             Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -309,6 +314,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
      * Sert a envoyer un courriel, delegue l'envoi a un domaine )
      */
     public void sendMail() {
+        System.out.println("pj length : " + attachments.size());
         AbstractSender<Boolean> s = new AbstractSender<Boolean>() {
             @Override
             public void onMessageReceived(Future<Boolean> receivedMessage) {
@@ -377,17 +383,15 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
             return multipart;
         
         try {
-            MimeBodyPart messageBodyPart = new MimeBodyPart();
             multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
-            messageBodyPart = new MimeBodyPart();
-            DataSource source;
             for (File file : attachments) {
-                source = new FileDataSource( file );
+                messageBodyPart = new MimeBodyPart();
+                DataSource source = new FileDataSource( file );
                 messageBodyPart.setDataHandler(new DataHandler(source));
                 messageBodyPart.setFileName( file.getName() );
+                multipart.addBodyPart(messageBodyPart);
             }
-            multipart.addBodyPart(messageBodyPart);
             return multipart;
         } catch (MessagingException ex) {
             Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
@@ -413,6 +417,9 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         return false;
     }
 
+    public void addAttachements(File[] files) {
+        attachments.addAll(Arrays.asList(files));
+    }
     public void addAttachement(File file) {
         attachments.add(file);
         currentMail.addAttachement(file);
