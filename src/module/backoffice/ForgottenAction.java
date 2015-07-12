@@ -74,17 +74,19 @@ public class ForgottenAction extends AbstractIHMAction {
                 subject = "forgotten password";
                 if( err == 0) {
                     String pwd = "";
-                    try {
+                    try { // pourquoi il est encrypté deux fois ??????
                         pwd = new Encryption().decrypt(usr.getPassword());
+                        pwd = new Encryption().decrypt(pwd);
                     } catch (Exception ex) {
                         Logger.getLogger(ForgottenAction.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     if(!pwd.isEmpty()) {
                         message = "votre password est : " + pwd;
                         sendMail(mail);
+                        break;
                     }
-                } else 
-                    error = CodeError.FAILLURE;
+                }
+                error = CodeError.FAILLURE;
                 break;
         }
 

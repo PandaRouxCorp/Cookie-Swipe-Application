@@ -40,6 +40,7 @@ import module.backoffice.ReadMailAction;
 import module.backoffice.SendMailAction;
 import module.ihm.CreateAccountFrameInitializer;
 import module.ihm.LoginForgottenFrameInitializer;
+import module.ihm.PasswordForgottenFrameInitializer;
 import network.mail.FolderManager;
 import view.LoginForgottenCSFrame;
 import view.PasswordForgottenCSFrame;
@@ -96,14 +97,13 @@ public class Dispatcher implements ActionListener {
     public void forgottenPasswordAction() {
         PasswordForgottenCSFrame frame = new PasswordForgottenCSFrame();
         CookieSwipeApplication.getApplication().setFocusFrame(frame);
-        
-//        System.err.println("NOT IMPLEMENTED lol");
+        new PasswordForgottenFrameInitializer(frame).execute();
     }
     
     public void sendMailForgottenPasswordAction() {
-        LoginForgottenCSFrame frame = (LoginForgottenCSFrame) CookieSwipeApplication.getApplication().getFocusFrame();
+        PasswordForgottenCSFrame frame = (PasswordForgottenCSFrame) CookieSwipeApplication.getApplication().getFocusFrame();
         ForgottenAction action = new ForgottenAction(frame);
-        if (action.execute("login"))
+        if (action.execute("password"))
             frame.dispose();
     }
 

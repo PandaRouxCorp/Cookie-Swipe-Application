@@ -203,7 +203,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         return store;
     }
 
-    private Properties getProperties() {
+    public Properties getProperties() {
         Properties props = new Properties();
 
         props.put("mail.transport.protocol", domain.getStoreProtocol());

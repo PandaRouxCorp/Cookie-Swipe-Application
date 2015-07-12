@@ -182,7 +182,7 @@ public class DAOUser {
         int error = 0;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
-        String request = "SELECT count(*), login FROM users where backupAdr = ? ;";
+        String request = "SELECT count(*), login, password FROM users where backupAdr = ? ;";
 
         try {
             connectionInstance = BDDConnect.getConnection();
@@ -199,6 +199,7 @@ public class DAOUser {
                 result.next();
                 if (result.getInt(1) == 1) {
                     usr.setLoginAdressMail(result.getString(2));
+                    usr.setPassword(result.getString(3));
                 } else {
                     error = CodeError.FAILLURE;
                 }
