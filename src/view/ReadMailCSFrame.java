@@ -42,6 +42,12 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponents.put("cookieSwipeLabelTo", cookieSwipeLabelTo);
         hsJcomponents.put("cookieSwipeTextFieldTo", cookieSwipeTextFieldTo);
         hsJcomponents.put("cookieSwipeTextFieldToCc", cookieSwipeTextFieldToCc);
+        hsJcomponents.put("cookieSwipeButtonReply", cookieSwipeButtonReply);
+        hsJcomponents.put("cookieSwipeButtonReplyToAll", cookieSwipeButtonReplyToAll);
+        hsJcomponents.put("cookieSwipeButtonForward", cookieSwipeButtonForward);
+        hsJcomponents.put("cookieSwipeButtonArchive", cookieSwipeButtonArchive);
+        hsJcomponents.put("cookieSwipeButtonDeleteMail", cookieSwipeButtonDeleteMail);
+        hsJcomponents.put("cookieSwipeButtonToBlacklist", cookieSwipeButtonToBlacklist);
         hsJcomponents.put("cookieSwipeLabelObject", cookieSwipeLabelObject);
     }
 

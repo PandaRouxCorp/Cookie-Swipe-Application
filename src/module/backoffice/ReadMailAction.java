@@ -18,6 +18,7 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import model.MailAccount;
+import module.ihm.ReadMailFrameInitializer;
 import org.jsoup.Jsoup;
 import view.ReadMailCSFrame;
 
@@ -34,45 +35,15 @@ public class ReadMailAction implements IAction {
             MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
 
             ReadMailCSFrame frame = new ReadMailCSFrame();
+            new ReadMailFrameInitializer(frame).execute();
             // set frame
             frame.setCookieSwipeTextFieldObject(message.getSubject());
             frame.setCookieSwipeTextFieldTo(Arrays.toString(message.getFrom()));
 
             Object mess = message.getContent();
-            String content = "";
-
-            if (message.isMimeType("text/plain")) {
-                frame.setjTextAreaMail((String) message.getContent());
-            } else if (mess instanceof Multipart) {
-
-                Multipart multipart = (Multipart) mess;
-                for (int i = 0; i < multipart.getCount(); i++) {
-
-                    BodyPart bodyPart = multipart.getBodyPart(i);
-
-                    String disposition = bodyPart.getDisposition();
-
-                    if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
-                        System.out.println("Mail have some attachment");
-
-                        DataHandler handler = bodyPart.getDataHandler();
-                        System.out.println("file name : " + handler.getName());
-                    } else {
-                        //Parser parse;
-                        content = getText(bodyPart);
-                        content = content.replaceAll("<br/>", "\n");
-                        content = content.replaceAll("<br>", "\n");
-                        content = html2text(content);
-                    }
-                }
-
-                frame.setjTextAreaMail(content);
-
-            } else if (message.isMimeType("message/rfc822")) {
-                frame.setjTextAreaMail("message/rfc822 to do");
-            } else {
-                frame.setjTextAreaMail("others to do");
-            }
+            String content = getContentMessage(message);
+            
+            frame.setjTextAreaMail(content);
 
             // then focus it
             application.setFocusFrame(frame);
@@ -82,12 +53,60 @@ public class ReadMailAction implements IAction {
         }
         return false;
     }
+
+    public static String getContentMessage(Message message) throws IOException, MessagingException {
+        
+        Object mess = message.getContent();
+        String content = "";
+        if (message.isMimeType("text/plain")) {
+            content = (String) message.getContent();
+        } else if (mess instanceof Multipart) {
+            content = getContentMessageFormMultipart(message);
+        } else if (message.isMimeType("message/rfc822")) {
+            content = "message/rfc822 to do";
+        } else {
+            content = "others to do";
+        }
+        return content;
+    }
     
+    public static String getContentMessageFormMultipart(Message message) throws IOException, MessagingException {
+
+        Object mess = message.getContent();
+        String content = "";
+
+        Multipart multipart = (Multipart) mess;
+        for (int i = 0; i < multipart.getCount(); i++) {
+
+            BodyPart bodyPart = multipart.getBodyPart(i);
+
+            String disposition = bodyPart.getDisposition();
+
+            if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
+                System.out.println("Mail have some attachment");
+
+                DataHandler handler = bodyPart.getDataHandler();
+                System.out.println("file name : " + handler.getName());
+            } else {
+                //Parser parse;
+                content = getText(bodyPart);
+                if (content.contains("<br/>")) {
+                    content = content.replaceAll("<br/>", "\n");
+                }
+                if (content.contains("<br>")) {
+                    content = content.replaceAll("<br>", "\n");
+                }
+                content = html2text(content);
+            }
+        }
+        return content;
+    }
+
     public static String html2text(String html) {
         return Jsoup.parse(html).text();
     }
 
-    private String getText(Part p) throws MessagingException, IOException {
+    public static String getText(Part p) throws MessagingException, IOException {
         if (p.isMimeType("text/*")) {
             String s = (String) p.getContent();
             boolean textIsHtml = p.isMimeType("text/html");

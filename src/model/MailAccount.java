@@ -50,6 +50,7 @@ import errorMessage.CodeError;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.mail.Address;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
@@ -250,6 +251,14 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         return currentMail;
     }
 
+    public void addDestinataire(Address[] destinataire) {
+        try {
+            currentMessage.addRecipients(Message.RecipientType.TO, destinataire);
+        } catch (MessagingException ex) {
+            Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void addDestinataire(String destinataire) {
         String to = currentMail.getTo();
         try {
@@ -272,6 +281,10 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         } catch (MessagingException ex) {
             Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void clearAttachments() {
+        attachments.clear();
     }
 
     public void addBody(String body) {
@@ -514,33 +527,6 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
 
     public List<String> getFolderNames() {
         return this.folderNames;
-    }
-
-    //response & forward mail
-    public Mail response(Mail mail) {
-        currentMail = new Mail();
-        currentMail.setBody(mailTranfer(mail));
-        currentMail.setTo(mail.getFrom());
-        currentMail.setFrom(mail.getTo());
-        currentMail.setSubject("FW : " + mail.getSubject());
-        return currentMail;
-    }
-
-    public Mail forward(Mail mail) {
-        currentMail = new Mail();
-        currentMail.setAttachement(mail.getAttachement());
-        currentMail.setBody(mailTranfer(mail));
-        currentMail.setSubject("FW : " + mail.getSubject());
-        return currentMail;
-    }
-
-    private String mailTranfer(Mail mail) {
-        return "------------------------\n"
-                + "From : " + mail.getFrom() + "\n"
-                + "To : " + mail.getTo() + "\n"
-                + "Date : " + mail.getDate() + "\n\n"
-                + mail.getBody()
-                + "\n\n";
     }
 
     public void addObservableTo(String observableName, LinkedHashSetPriorityQueueObserver obs) {

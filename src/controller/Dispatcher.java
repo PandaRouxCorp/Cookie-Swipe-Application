@@ -36,11 +36,13 @@ import javax.mail.Message;
 import model.MailAccount;
 import module.backoffice.CreateCSAccountAction;
 import module.backoffice.ForgottenAction;
+import module.backoffice.MailAction;
 import module.backoffice.ReadMailAction;
 import module.backoffice.SendMailAction;
 import module.ihm.CreateAccountFrameInitializer;
 import module.ihm.LoginForgottenFrameInitializer;
 import module.ihm.PasswordForgottenFrameInitializer;
+import module.ihm.ReadMailFrameInitializer;
 import network.mail.FolderManager;
 import view.LoginForgottenCSFrame;
 import view.PasswordForgottenCSFrame;
@@ -158,7 +160,10 @@ public class Dispatcher implements ActionListener {
     }
 
     public void addBlackListSenderAction() {
-        System.err.println("NOT IMPLEMENTED");
+        Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
+        if(message != null)
+            new MailAction().execute("addBlackListSender", message);
+//        System.err.println("NOT IMPLEMENTED");
     }
 
     public void deleteMailAction() {
@@ -173,10 +178,41 @@ public class Dispatcher implements ActionListener {
 
     public void readMailAction() {
         Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
-        if(message != null)
+        if (message != null) {
             new ReadMailAction().execute(message);
+        }
+    }
+    
+    public void replyAction() {
+        Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
+        if(message != null)
+            new MailAction().execute("reply", message);
+    }
+    
+    public void replyAllAction() {
+        Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
+        if(message != null)
+            new MailAction().execute("replyAll", message);
+    }
+    
+    public void forwardAction() {
+        Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
+        if(message != null)
+            new MailAction().execute("forward", message);
+    }
+    
+    public void archiveAction() {
+        Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
+        if(message != null)
+            new MailAction().execute("archive", message);
+//        System.err.println("NOT IMPLEMENTED");
     }
 
+    public void addAttachementAction() {
+//        MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
+        System.err.println("NOT IMPLEMENTED");
+    }
+    
     public void writeMailAction() {
         CookieSwipeFrame focusFrame = new MailCSFrame();
         CookieSwipeApplication.getApplication().setFocusFrame(focusFrame);

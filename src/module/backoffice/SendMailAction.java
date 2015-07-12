@@ -29,16 +29,12 @@ public class SendMailAction extends AbstractIHMAction {
         if(mailAccount != null) {
             Mail mail = mailAccount.createNewMail();
             mailAccount.addDestinataire( ((JTextField) hsJcomponent.get("cookieSwipeTextFieldTo")).getText() );
-//            mail.setTo( ((JTextField) hsJcomponent.get("cookieSwipeTextFieldTo")).getText() );
-            // manque le subject du mail dans l'ihm cookieSwipeTextFieldToCc
             mailAccount.addCopie( ((JTextField) hsJcomponent.get("cookieSwipeTextFieldToCc")).getText() );
             mailAccount.addSubject(((JTextField) hsJcomponent.get("cookieSwipeTextFieldSubject")).getText() );
             mailAccount.addBody( ((JTextArea) hsJcomponent.get("jTextAreaMail")).getText() );
-//            mail.setSubject(((JTextField) hsJcomponent.get("cookieSwipeTextFieldSubject")).getText() );
-//            mail.setBody( ((JTextArea) hsJcomponent.get("jTextAreaMail")).getText() );
             mailAccount.sendMail();
+            mailAccount.clearAttachments();
         }
-        
         return false;
     }
 }

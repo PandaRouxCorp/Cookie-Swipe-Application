@@ -23,9 +23,16 @@ public class WriteMailFrameInitializer extends AbstractIHMAction {
     
     @Override
     public boolean execute(Object ... object) {
+        Dispatcher dispatcher = new Dispatcher();
+        
         CookieSwipeButton button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonSend");
         button.setActionCommand(ActionName.sendMail);
-        button.addActionListener(new Dispatcher());
+        button.addActionListener(dispatcher);
+        
+        CookieSwipeButton attachments = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonAttach");
+        attachments.setActionCommand(ActionName.addAttachement);
+        attachments.addActionListener(dispatcher);
+        
         return true;
     }
 }

@@ -31,7 +31,7 @@ public class CreateCSAccountAction implements IAction {
         
         User u = new User(login, password, backup);
         int code = u.create();
-        new JOptionPane();
+        JOptionPane jOptionPane = new JOptionPane();
         if(code == CodeError.SUCESS) {
 //            new JOptionPane();
             JOptionPane.showMessageDialog(null, "La création du compte à été effectué",

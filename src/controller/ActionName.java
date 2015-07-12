@@ -10,7 +10,9 @@ public class ActionName {
     
         public static final String createAccount = "createAccount", insciption = "inscription", 
                 logAccount = "logAccount", sendMailForgottenLogin = "sendMailForgottenLogin",  
-                sendMailForgottenPassword = "sendMailForgottenPassword", 
+                sendMailForgottenPassword = "sendMailForgottenPassword", reply = "reply", 
+                replyAll = "replyAll", forward = "forward", archive = "archive", 
+                addAttachement = "addAttachement", 
                 updateAccount = "updateAccount", forgottenPassword = "forgottenPassword",
                 forgottenLogin = "forgottenLogin", addMailAccount = "addMailAccount",
                 selectMailAccount = "selectMailAccount", updateMailAccount = "updateMailAccount",
