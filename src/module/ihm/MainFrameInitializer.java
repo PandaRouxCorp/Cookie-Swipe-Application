@@ -199,7 +199,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonReply");
-        button.setActionCommand(ActionName.replyMail);
+        button.setActionCommand(ActionName.reply);
         button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonDeleteMail");
@@ -207,11 +207,15 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonForward");
-        button.setActionCommand(ActionName.forwardMail);
+        button.setActionCommand(ActionName.forward);
         button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonRefresh");
         button.setActionCommand(ActionName.refresh);
+        button.addActionListener(dispatcher);
+
+        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonBlacklist");
+        button.setActionCommand(ActionName.removeBlacklistSender);
         button.addActionListener(dispatcher);
 
         setMailAccountButtonsVisible(false);

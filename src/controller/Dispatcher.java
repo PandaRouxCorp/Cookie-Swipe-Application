@@ -32,10 +32,16 @@ import view.component.CookieSwipeFrame;
 import view.component.CookieSwipePasswordField;
 import view.component.CookieSwipeTextField;
 import cookie.swipe.application.CookieSwipeApplication;
+import dao.DAOUser;
 import java.io.File;
+import java.util.List;
+import javax.mail.Address;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import model.MailAccount;
+import model.User;
 import module.backoffice.CreateCSAccountAction;
 import module.backoffice.ForgottenAction;
 import module.backoffice.MailAction;
@@ -45,6 +51,7 @@ import module.ihm.CreateAccountFrameInitializer;
 import module.ihm.LoginForgottenFrameInitializer;
 import module.ihm.PasswordForgottenFrameInitializer;
 import network.mail.FolderManager;
+import view.BlacklistCSFrame;
 import view.LoginForgottenCSFrame;
 import view.PasswordForgottenCSFrame;
 
@@ -157,14 +164,32 @@ public class Dispatcher implements ActionListener {
     }
 
     public void removeBlacklistSenderAction() {
+        User usr = CookieSwipeApplication.getApplication().getUser();
+        List<String> bl = usr.getBlackList();
+        BlacklistCSFrame frame = new BlacklistCSFrame();
+//        String[] blackl = bl.toArray(new String [bl.size() + 1]);
+//        blackl[bl.size()] = "my@test.fr";
+//        frame.setBlacklist(blackl);
+        CookieSwipeApplication.getApplication().setFocusFrame(frame);
+        for( String s : bl )
+            System.out.println(s);
+        //
+        
+        DAOUser.updateBlackListUser(usr);
         System.err.println("NOT IMPLEMENTED");
     }
 
-    public void addBlackListSenderAction() {
+    public void addBlackListSenderAction() throws MessagingException {
         Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
-        if(message != null)
-            new MailAction().execute("addBlackListSender", message);
-//        System.err.println("NOT IMPLEMENTED");
+        User usr = CookieSwipeApplication.getApplication().getUser();
+        List<String> bl = usr.getBlackList();
+        Address[] addresses = message.getFrom();
+        for (Address address : addresses) {
+            bl.add(address.toString());
+        }
+        DAOUser.updateBlackListUser(usr);
+        JOptionPane.showMessageDialog(null, "Cet/Ces adresse mail à bien été ajouté a la black list",
+                "black list", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void deleteMailAction() {
@@ -275,7 +300,8 @@ public class Dispatcher implements ActionListener {
 
     public void sendMailAction() {
         CookieSwipeFrame focusFrame = CookieSwipeApplication.getApplication().getFocusFrame();
-        new SendMailAction(focusFrame).execute();
+        if (new SendMailAction(focusFrame).execute())
+            focusFrame.dispose();
     }
     
     public void refreshAction() {

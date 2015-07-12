@@ -36,7 +36,7 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setVisible(true);
         
-        setExtendedState(MAXIMIZED_BOTH);
+//        setExtendedState(MAXIMIZED_BOTH);
         
         hsJcomponents.put("cookieSwipeLabelCc", cookieSwipeLabelCc);
         hsJcomponents.put("cookieSwipeLabelTo", cookieSwipeLabelTo);

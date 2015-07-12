@@ -6,12 +6,10 @@ import interfaces.IJFrame;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
-import javax.swing.WindowConstants;
-
-import model.Mail;
 import view.component.CookieSwipeButton;
 import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeFrame;
+import view.component.CookieSwipeList;
 
 public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 
@@ -39,6 +37,12 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
         hsJcomponent.put("cookieSwipeAddToBlacklist", cookieSwipeAddToBlacklist);
         
 	}
+
+        public void setBlacklist(String[] blacklist) {
+            this.blacklist = new CookieSwipeList<>(blacklist);
+        }
+        
+        
 	
 	public void initComponents(){
 		cookieSwipeDeleteFromBlacklist = new CookieSwipeButtonSprite();
