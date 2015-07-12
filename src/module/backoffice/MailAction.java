@@ -66,35 +66,8 @@ public class MailAction implements IAction {
         return true;
     }
     
-    //response & forward mail
-    public void response(MailAccount ma, Message message) {
-//        try {
-//            ma.createNewMail();
-//            ma.addBody(mailTranfer(message));
-//            ma.addDestinataire(message.getFrom());
-//            ma.addSubject("RE: " + message.getSubject());
-//        return mess;
-//        currentMail = new Mail();
-//        currentMail.setBody(mailTranfer(mail));
-//        currentMail.setTo(mail.getFrom());
-//        currentMail.setFrom(mail.getTo());
-//        currentMail.setSubject("FW : " + mail.getSubject());
-//        return currentMail;
-//        } catch (MessagingException | IOException ex) {
-//            Logger.getLogger(MailAction.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-    }
-
-    public void forward(Mail mail) {
-//        currentMail = new Mail();
-//        currentMail.setAttachement(mail.getAttachement());
-//        currentMail.setBody(mailTranfer(mail));
-//        currentMail.setSubject("FW : " + mail.getSubject());
-//        return currentMail;
-    }
-    
     private String mailTranfer(Message message) throws MessagingException, IOException {
-        return "\n\n\n------------------------\n"
+        return "\n\n\n----------------------------------------\n"
                 + "From : " + Arrays.toString(message.getFrom()) + "\n"
                 + "To : " + Arrays.toString(message.getRecipients(Message.RecipientType.TO)) + "\n"
                 + "Date : " + message.getReceivedDate() + "\n\n"
