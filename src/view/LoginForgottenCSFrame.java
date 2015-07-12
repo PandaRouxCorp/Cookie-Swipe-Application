@@ -5,6 +5,7 @@
  */
 package view;
 
+import controller.Dispatcher;
 import interfaces.IJFrame;
 import view.component.CookieSwipeFrame;
 
@@ -29,7 +30,7 @@ public class LoginForgottenCSFrame extends CookieSwipeFrame implements IJFrame {
         
         hsJcomponent.put("cookieSwipeButtonSendLogin", cookieSwipeButtonSendLogin);
         hsJcomponent.put("cookieSwipeLabelLogin", cookieSwipeLabelMailAddress);
-        hsJcomponent.put("cookieSwipeTextFieldLogin", cookieSwipeTextFieldMailAddress);
+        hsJcomponent.put("cookieSwipeTextFieldMailAddress", cookieSwipeTextFieldMailAddress);
         
         validate();
         repaint();

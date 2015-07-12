@@ -171,4 +171,51 @@ public class DAOUser {
         }
         return error;
     }
+
+    /**
+     * Connecte l'utilisateur si il existe en persistance
+     *
+     * @param usr Utilisateur qui tente de se connecter
+     * @return Code d'erreur
+     */
+    public static int getUserByBackupAddress(User usr) {
+        int error = 0;
+        Connection connectionInstance = null;
+        PreparedStatement statementInstance = null;
+        String request = "SELECT count(*), login FROM users where backupAdr = ? ;";
+
+        try {
+            connectionInstance = BDDConnect.getConnection();
+            if(connectionInstance == null) {
+                Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, "CONNEXION_FAIL");
+                error =  CodeError.CONNEXION_FAIL;
+            }
+            else {
+                statementInstance = connectionInstance.prepareStatement(request);
+
+                statementInstance.setString(1, usr.getBackupMail());
+
+                ResultSet result = statementInstance.executeQuery();
+                result.next();
+                if (result.getInt(1) == 1) {
+                    usr.setLoginAdressMail(result.getString(2));
+                } else {
+                    error = CodeError.FAILLURE;
+                }
+            }    
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+            error = CodeError.STATEMENT_EXECUTE_FAIL;
+        } finally {
+            if (statementInstance != null) {
+                try {
+                    statementInstance.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
+                    error = CodeError.STATEMENT_CLOSE_FAIL;
+                }
+            }
+        }
+        return error;
+    }
 }

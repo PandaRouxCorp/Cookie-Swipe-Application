@@ -9,7 +9,8 @@ import java.awt.Color;
 public class ActionName {
     
         public static final String createAccount = "createAccount", insciption = "inscription", 
-                logAccount = "logAccount", 
+                logAccount = "logAccount", sendMailForgottenLogin = "sendMailForgottenLogin",  
+                sendMailForgottenPassword = "sendMailForgottenPassword", 
                 updateAccount = "updateAccount", forgottenPassword = "forgottenPassword",
                 forgottenLogin = "forgottenLogin", addMailAccount = "addMailAccount",
                 selectMailAccount = "selectMailAccount", updateMailAccount = "updateMailAccount",

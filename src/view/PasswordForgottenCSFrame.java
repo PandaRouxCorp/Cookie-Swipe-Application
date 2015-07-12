@@ -29,8 +29,8 @@ public class PasswordForgottenCSFrame extends CookieSwipeFrame implements IJFram
         
         hsJcomponent.put("cookieSwipeButtonSendPassword", cookieSwipeButtonSendPassword);
         hsJcomponent.put("cookieSwipeLabelLogin", cookieSwipeLabelLogin);
-        hsJcomponent.put("cookieSwipeLabelPassword", cookieSwipeLabelMailAddress);
-        hsJcomponent.put("cookieSwipePasswordFieldPassword", cookieSwipeTextFieldMailAddress);
+        hsJcomponent.put("cookieSwipeLabelMailAddress", cookieSwipeLabelMailAddress);
+        hsJcomponent.put("cookieSwipeTextFieldMailAddress", cookieSwipeTextFieldMailAddress);
         hsJcomponent.put("cookieSwipeTextFieldLogin", cookieSwipeTextFieldLogin);
         
         validate();

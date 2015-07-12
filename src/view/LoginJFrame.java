@@ -115,9 +115,9 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
             }
         });
 
-        cookieSwipeButtonSendLogin.setText("Mot de passe oublié");
+        cookieSwipeButtonSendPassword.setText("Mot de passe oublié");
 
-        cookieSwipeButtonSendPassword.setText("Identifiant oublié");
+        cookieSwipeButtonSendLogin.setText("Identifiant oublié");
 
         cookieSwipeButtonInscription.setText("Inscription");
 

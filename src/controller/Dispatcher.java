@@ -35,10 +35,14 @@ import cookie.swipe.application.CookieSwipeApplication;
 import javax.mail.Message;
 import model.MailAccount;
 import module.backoffice.CreateCSAccountAction;
+import module.backoffice.ForgottenAction;
 import module.backoffice.ReadMailAction;
 import module.backoffice.SendMailAction;
 import module.ihm.CreateAccountFrameInitializer;
+import module.ihm.LoginForgottenFrameInitializer;
 import network.mail.FolderManager;
+import view.LoginForgottenCSFrame;
+import view.PasswordForgottenCSFrame;
 
 
 public class Dispatcher implements ActionListener {
@@ -90,11 +94,30 @@ public class Dispatcher implements ActionListener {
     }
 
     public void forgottenPasswordAction() {
-        System.err.println("NOT IMPLEMENTED");
+        PasswordForgottenCSFrame frame = new PasswordForgottenCSFrame();
+        CookieSwipeApplication.getApplication().setFocusFrame(frame);
+        
+//        System.err.println("NOT IMPLEMENTED lol");
+    }
+    
+    public void sendMailForgottenPasswordAction() {
+        LoginForgottenCSFrame frame = (LoginForgottenCSFrame) CookieSwipeApplication.getApplication().getFocusFrame();
+        ForgottenAction action = new ForgottenAction(frame);
+        if (action.execute("login"))
+            frame.dispose();
     }
 
     public void forgottenLoginAction() {
-        System.err.println("NOT IMPLEMENTED");
+        LoginForgottenCSFrame frame = new LoginForgottenCSFrame();
+        CookieSwipeApplication.getApplication().setFocusFrame(frame);
+        new LoginForgottenFrameInitializer(frame).execute();
+    }
+    
+    public void sendMailForgottenLoginAction() {
+        LoginForgottenCSFrame frame = (LoginForgottenCSFrame) CookieSwipeApplication.getApplication().getFocusFrame();
+        ForgottenAction action = new ForgottenAction(frame);
+        if (action.execute("login"))
+            frame.dispose();
     }
 
     public void addMailAccountAction() {
