@@ -27,7 +27,6 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 		initComponents();
 
 		this.setLocationRelativeTo(null);
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
         setResizable(false);
         setSize(new Dimension(360, 270));
@@ -36,6 +35,9 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
         hsJcomponent.put("cookieSwipeDeleteFromBlacklist", cookieSwipeDeleteFromBlacklist);
         hsJcomponent.put("cookieSwipeAddToBlacklist", cookieSwipeAddToBlacklist);
         
+        validate();
+		repaint();
+		revalidate();
 	}
 
         public void setBlacklist(String[] blacklist) {
