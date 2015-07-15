@@ -32,7 +32,7 @@ public class CookieSwipeTreeCellRenderer implements TreeCellRenderer {
 		backgroundSelectionColor = CookieSwipeColor.BUTTON;
 		backgroundNonSelectionColor = CookieSwipeColor.BUTTON.brighter();
 	}
-
+ 
 	@Override
 	public Component getTreeCellRendererComponent(JTree tree, Object value,
 			boolean selected, boolean expanded, boolean leaf, int row,

@@ -17,14 +17,15 @@ public class CookieSwipeTextArea extends JTextArea {
 	    }
 
 	    public CookieSwipeTextArea(String arg0) {
-		super(arg0);
-		initComponent();
+			super(arg0);
+			initComponent();
 	    }
 
 	    public void initComponent() {
-		//setSize(110, 20);
-		Border thickBorder = new LineBorder(Color.white, 5);
-		setBorder(thickBorder);
+	    	//setSize(110, 20);
+			Border thickBorder = new LineBorder(Color.white, 5);
+			setBorder(thickBorder);
+			setBackground(new Color(255, 255, 255));
 
 	    }
 }
