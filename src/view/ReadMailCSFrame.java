@@ -14,7 +14,9 @@ import java.util.HashMap;
 
 import javax.swing.WindowConstants;
 
+import view.component.CookieSwipeButtonAttach;
 import view.component.CookieSwipeButtonSprite;
+import view.component.CookieSwipeColor;
 import view.component.CookieSwipeFrame;
 
 /**
@@ -36,7 +38,9 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setVisible(true);
         
-//        setExtendedState(MAXIMIZED_BOTH);
+        
+//       setExtendedState(MAXIMIZED_BOTH);
+        setSize(720, 480);
         
         hsJcomponents.put("cookieSwipeLabelCc", cookieSwipeLabelCc);
         hsJcomponents.put("cookieSwipeLabelTo", cookieSwipeLabelTo);
@@ -49,6 +53,10 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponents.put("cookieSwipeButtonDeleteMail", cookieSwipeButtonDeleteMail);
         hsJcomponents.put("cookieSwipeButtonToBlacklist", cookieSwipeButtonToBlacklist);
         hsJcomponents.put("cookieSwipeLabelObject", cookieSwipeLabelObject);
+        
+        validate();
+        repaint();
+        revalidate();
     }
 
     public void setCookieSwipeTextFieldObject(String cookieSwipeTextFieldObject) {
@@ -93,9 +101,13 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         cookieSwipeButtonToBlacklist.setText(CookieSwipeButtonSprite.BLACKLIST_ADD);
         
         // TODO 
-        cookieSwipeButtonAttach = new CookieSwipeButtonAttach[5];
+        cookieSwipeButtonAttach = new view.component.CookieSwipeButtonAttach[5];
         for(int i = 0; i < 5; i++){
-        	//cookieSwipeButtonAttach[i+1] = new CookieSwipeButtonAttach("image.jpg");
+        	cookieSwipeButtonAttach[i] = new view.component.CookieSwipeButtonAttach("<html><u>image.jpg</u></html>");
+        }
+        view.component.CookieSwipePanel csPanel = new view.component.CookieSwipePanel(CookieSwipeColor.BACKGROUND_FRAME);
+        for(int i = 0; i < cookieSwipeButtonAttach.length; i++){
+        	csPanel.add(cookieSwipeButtonAttach[i]);
         }
         
         
@@ -193,9 +205,6 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
 						.addComponent(cookieSwipeButtonDeleteMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 						.addComponent(cookieSwipeButtonToBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 					)
-					.addGroup(layout.createSequentialGroup()
-						
-					)
                     .addGroup(layout.createSequentialGroup()
                 		.addComponent(cookieSwipeTextFieldTo, javax.swing.GroupLayout.DEFAULT_SIZE, 2000, 2000)
                         .addGap(60, 60, 60)
@@ -206,6 +215,10 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
                     )
                     .addGroup(layout.createSequentialGroup()
                     		.addComponent(cookieSwipeTextFieldObject, javax.swing.GroupLayout.DEFAULT_SIZE, 2000, 2000)
+                            .addGap(60, 60, 60)
+                    )
+                    .addGroup(layout.createSequentialGroup()
+                    		.addComponent(csPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 2000, 2000)
                             .addGap(60, 60, 60)
                     )
         		)
@@ -230,15 +243,18 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
                             .addComponent(cookieSwipeLabelTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cookieSwipeTextFieldTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         )
-                        .addGap(4, 4, 4)
+                        .addGap(7, 7, 7)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cookieSwipeTextFieldToCc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cookieSwipeLabelCc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         )
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(7, 7, 7)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cookieSwipeLabelObject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cookieSwipeTextFieldObject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        )
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    		.addComponent(csPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
                         )
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 2000, 2000)
@@ -288,7 +304,7 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private CookieSwipeButtonAttach[] cookieSwipeButtonAttach;
+    private view.component.CookieSwipeButtonAttach[] cookieSwipeButtonAttach;
     
     private CookieSwipeButtonSprite cookieSwipeButtonReply;
     private CookieSwipeButtonSprite cookieSwipeButtonReplyToAll;
