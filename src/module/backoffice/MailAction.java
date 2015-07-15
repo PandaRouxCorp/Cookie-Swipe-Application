@@ -29,45 +29,39 @@ public class MailAction implements IAction {
 
     @Override
     public boolean execute(Object... object) {
-        try {
-            String action = (String) object[0];
-            Message message = (Message) object[1];
-            
-            MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
-            String startSubject = "";
-            switch(action) {
-                case "forward":
-                    startSubject = "FW : ";
-                case "reply":
-                case "replyAll":
-                    MailCSFrame mailFrame = new MailCSFrame();
-                    try {
-                        if(action.startsWith("reply")) {
-                            startSubject = "RE : ";
-                            mailFrame.setCookieSwipeTextFieldTo(Arrays.toString(message.getFrom()));
-                        }
-                        mailFrame.setCookieSwipeTextFieldSubject(startSubject + message.getSubject());
-                        mailFrame.setjTextAreaMail(mailTranfer(message));
-                    } catch (MessagingException | IOException ex) {
-                        Logger.getLogger(MailAction.class.getName()).log(Level.SEVERE, null, ex);
+        String action = (String) object[0];
+        Message message = (Message) object[1];
+        MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
+        String startSubject = "";
+        switch(action) {
+            case "forward":
+                startSubject = "FW : ";
+            case "reply":
+            case "replyAll":
+                MailCSFrame mailFrame = new MailCSFrame();
+                try {
+                    if(action.startsWith("reply")) {
+                        startSubject = "RE : ";
+                        mailFrame.setCookieSwipeTextFieldTo(Arrays.toString(message.getFrom()));
                     }
-                    
-                    CookieSwipeApplication.getApplication().setFocusFrame(mailFrame);
-                    new WriteMailFrameInitializer(mailFrame).execute();
-                    
-                    break;
-                case "addBlackListSender":
-                    break;
-                case "archive":
-                    // TODO
-                    System.err.println("NOT IMPLEMENTED");
-                    break;
-            }
-            return true;
-        } catch (MessagingException ex) {
-            Logger.getLogger(MailAction.class.getName()).log(Level.SEVERE, null, ex);
+                    mailFrame.setCookieSwipeTextFieldSubject(startSubject + message.getSubject());
+                    mailFrame.setjTextAreaMail(mailTranfer(message));
+                } catch (MessagingException | IOException ex) {
+                    Logger.getLogger(MailAction.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                CookieSwipeApplication.getApplication().setFocusFrame(mailFrame);
+                new WriteMailFrameInitializer(mailFrame).execute();
+                
+                break;
+            case "addBlackListSender":
+                break;
+            case "archive":
+                // TODO
+                System.err.println("NOT IMPLEMENTED");
+                break;
         }
-        return false;
+        return true;
     }
     
     private String mailTranfer(Message message) throws MessagingException, IOException {

@@ -1,15 +1,18 @@
 package view.component;
 
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 public class CookieSwipeTextArea extends JTextArea {
+    
+    {
+        setOpaque(false);
+    }
 
 	public CookieSwipeTextArea() {
 		super();
@@ -25,6 +28,12 @@ public class CookieSwipeTextArea extends JTextArea {
 		//setSize(110, 20);
 		Border thickBorder = new LineBorder(Color.white, 5);
 		setBorder(thickBorder);
-
-	    }
+            
+            }
+            
+            public void paintImageComponent (Image image) {
+                Graphics g = getGraphics();
+                g.drawImage(image, 0, 0, (int)getSize().getWidth(), (int)getSize().getHeight(), this);
+                super.paintComponent(g);
+            }
 }
