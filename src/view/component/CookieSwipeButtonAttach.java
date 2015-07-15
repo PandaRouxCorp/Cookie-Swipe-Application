@@ -21,6 +21,9 @@ public class CookieSwipeButtonAttach extends CookieSwipeButton{
  
 	public CookieSwipeButtonAttach(String text){
 		super(text);
+		text = text.replace("<html><u>", "");
+		text = text.replace("</u></html>", "");
+		setToolTipText("Télécharger " + text);
 		initComponent();
 	}
  
