@@ -8,7 +8,6 @@ package module.backoffice;
 import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.SystemSettings;
 import interfaces.IAction;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
@@ -21,8 +20,12 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.activation.DataHandler;
@@ -34,9 +37,12 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import model.MailAccount;
 import module.ihm.ReadMailFrameInitializer;
+import network.messageFramework.AbstractSender;
+import network.messageFramework.FrameworkMessage;
 import org.jsoup.Jsoup;
 import view.ReadMailCSFrame;
 import view.component.CookieSwipeTextArea;
@@ -139,27 +145,49 @@ public class ReadMailAction implements IAction {
                 }
                 
                 if ( content.contains("<img") ) { // telecharge toutes les image du mail
-                    String sr = "src=\"";
-                    int start, end = 0;
-                    
-                    while( (start = content.indexOf(sr, end) + sr.length()) != -1 ) {
-                        end = content.indexOf("\"", start + 1);
-                        String src = content.substring(start, end);
-                        start ++;
+                    List<String> urls = getUrls(content);
+                    for(final String src : urls) {
                         
-                        if(src == null || src.isEmpty() || !src.startsWith("http")) break;
-                        
-                        File file = downloadImage(src, "tmp/img/");
-                        if( file == null ) break;
+                        AbstractSender<Boolean> s = new AbstractSender<Boolean>() {
 
-                        BufferedImage myPicture = ImageIO.read( file );
-                        ImageIcon img = new ImageIcon(myPicture);
-                        JLabel iconLabel = new JLabel(img);
-                        iconLabel.setVisible(true);
-                        CookieSwipeTextArea area = frame.getjTextAreaMail();
-                        area.paintImageComponent(img.getImage());
-                        area.repaint();
-                        area.revalidate();
+                            @Override
+                            public void onMessageReceived(Future<Boolean> receivedMessage) {
+                                try {
+                                    boolean b = receivedMessage.get();
+                                    if(b) {
+                                        CookieSwipeTextArea area = frame.getjTextAreaMail();
+                                        area.repaint();
+                                        area.revalidate();
+                                    } else {
+                                        
+                                        JOptionPane.showMessageDialog(null, "une image n'a pas été téléchargé",
+                                                "Telechargement des images", JOptionPane.ERROR_MESSAGE);
+                                    }
+                                } catch (InterruptedException | ExecutionException ex) {
+                                    Logger.getLogger(ReadMailAction.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            
+                        };
+                        
+                        s.sendMessage(new FrameworkMessage< Boolean>() {
+
+                            @Override
+                            public Boolean call() throws Exception {
+                                
+                                File file = downloadImage(src, "tmp/img/");
+                                if( file == null ) return false;
+
+                                BufferedImage myPicture = ImageIO.read( file );
+                                ImageIcon img = new ImageIcon(myPicture);
+                                JLabel iconLabel = new JLabel(img);
+                                iconLabel.setVisible(true);
+                                CookieSwipeTextArea area = frame.getjTextAreaMail();
+                                area.paintImageComponent(img.getImage());
+                                return true;
+                            }
+                            
+                        });
                     }
                 }
                 
@@ -167,6 +195,20 @@ public class ReadMailAction implements IAction {
             }
         }
         return content;
+    }
+    
+    private static List<String> getUrls(String html) {
+        List<String> urls = new ArrayList<>();
+        int start = 0, end = 0;
+        String refStart = "src=\"",
+               refEnd   = "\"";
+        while( (start = html.indexOf(refStart, end)) != -1 ) {
+            end = html.indexOf(refEnd, start);
+            String a = html.substring(start, end);
+            if(a != null && !a.isEmpty())
+                urls.add(a);
+        }
+        return urls;
     }
 
     public static String html2text(String html) {
