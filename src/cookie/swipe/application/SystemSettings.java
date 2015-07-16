@@ -12,5 +12,6 @@ package cookie.swipe.application;
 public class SystemSettings {
         
     public static final String SEPARATOR = System.getProperty("os.name").startsWith("Windows") ? "\\" : "/";
+    public static final String PATH_HOME = System.getProperty("os.name").startsWith("Windows") ? "C:/" : "/home/";
     
 }

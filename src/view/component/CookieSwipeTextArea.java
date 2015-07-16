@@ -1,15 +1,18 @@
 package view.component;
 
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 public class CookieSwipeTextArea extends JTextArea {
+    
+    {
+        setOpaque(false);
+    }
 
 	public CookieSwipeTextArea() {
 		super();
