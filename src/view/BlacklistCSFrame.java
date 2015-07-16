@@ -28,7 +28,7 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 
 		this.setLocationRelativeTo(null);
         this.setVisible(true);
-        setResizable(false);
+        setResizable(false); 
         setSize(new Dimension(360, 270));
         
         hsJcomponent.put("blacklist", blacklist);
@@ -73,7 +73,7 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 					.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 						.addGroup(layout.createSequentialGroup()
 							.addGap(15, 15, 15)
-							.addComponent(scrollBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+							.addComponent(scrollBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
 						)
 					)
 				)

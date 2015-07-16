@@ -5,8 +5,21 @@
  */
 package view;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+
+import com.sun.media.sound.Toolkit;
+
 import interfaces.IJFrame;
+import view.component.CookieSwipeColor;
 import view.component.CookieSwipeFrame;
+import view.component.CookieSwipePanel;
 
 /**
  *
@@ -36,9 +49,13 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponent.put("cookieSwipePasswordFieldPassword", cookieSwipePasswordFieldPassword);
         hsJcomponent.put("cookieSwipeTextFieldLogin", cookieSwipeTextFieldLogin);
         
+        cookieSwipeButtonLogin.setPreferredSize(cookieSwipeButtonInscription.getSize());
+        
+        
         validate();
         repaint();
         revalidate();
+        
     }
 
 
@@ -53,11 +70,16 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
         cookieSwipePasswordFieldPassword = new view.component.CookieSwipePasswordField();
         cookieSwipeLabelLogin = new view.component.CookieSwipeLabel();
         cookieSwipeLabelPassword = new view.component.CookieSwipeLabel();
-        cookieSwipeButtonLogin = new view.component.CookieSwipeButton();
-        cookieSwipeButtonSendLogin = new view.component.CookieSwipeButton();
-        cookieSwipeButtonSendPassword = new view.component.CookieSwipeButton();
+        cookieSwipeButtonSendLogin = new view.component.CookieSwipeButtonAttach();
+        cookieSwipeButtonSendPassword = new view.component.CookieSwipeButtonAttach();
         cookieSwipeButtonInscription = new view.component.CookieSwipeButton();
+        cookieSwipeButtonLogin = new view.component.CookieSwipeButton();
 
+        
+       	CookieSwipePanel logoPanel = new CookieSwipePanel(new File("cookieSwipe.png"));
+       	logoPanel.setBackground(CookieSwipeColor.BACKGROUND_FRAME);
+       	
+       	
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -115,9 +137,9 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
             }
         });
 
-        cookieSwipeButtonSendPassword.setText("Mot de passe oublié");
+        cookieSwipeButtonSendPassword.setText("<html><u>Mot de passe oublié</u></html>");
 
-        cookieSwipeButtonSendLogin.setText("Identifiant oublié");
+        cookieSwipeButtonSendLogin.setText("<html><u>Identifiant oublié</u></html>");
 
         cookieSwipeButtonInscription.setText("Inscription");
 
@@ -127,8 +149,12 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            		.addGroup(layout.createSequentialGroup()
+        				.addGap(220, 220, 220)
+        				.addComponent(logoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+    				)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(250, 250, 250)
+                        .addGap(280, 280, 280)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cookieSwipeLabelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cookieSwipeLabelLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -137,17 +163,25 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
                         )
                     )
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
+                        .addGap(258, 258, 258)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(cookieSwipeButtonLogin,  javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(20, 20, 20)
-                                .addComponent(cookieSwipeButtonSendLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(20, 20, 20)
-                                .addComponent(cookieSwipeButtonSendPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(20, 20, 20)
                                 .addComponent(cookieSwipeButtonInscription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             )
+                        )
+                    )
+                    
+                    .addGroup(layout.createSequentialGroup()
+                		.addGap(480, 480, 480)
+                		.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            				.addGroup(layout.createSequentialGroup()
+        						.addComponent(cookieSwipeButtonSendLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        						.addGap(20, 20, 20)
+        						.addComponent(cookieSwipeButtonSendPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+    						)
                         )
                     )
                 )
@@ -156,7 +190,9 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
+            	.addGap(70, 70, 70)
+        		.addComponent(logoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
                 .addComponent(cookieSwipeLabelLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cookieSwipeTextFieldLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -164,12 +200,15 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
                 .addComponent(cookieSwipeLabelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cookieSwipePasswordFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68)
+                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cookieSwipeButtonSendLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cookieSwipeButtonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cookieSwipeButtonSendPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cookieSwipeButtonInscription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                .addGap(70, 70, 70)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	        		.addComponent(cookieSwipeButtonSendLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addComponent(cookieSwipeButtonSendPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 )
             )
         );
@@ -212,10 +251,11 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private Image logo;
     private view.component.CookieSwipeButton cookieSwipeButtonInscription;
     private view.component.CookieSwipeButton cookieSwipeButtonLogin;
-    private view.component.CookieSwipeButton cookieSwipeButtonSendLogin;
-    private view.component.CookieSwipeButton cookieSwipeButtonSendPassword;
+    private view.component.CookieSwipeButtonAttach cookieSwipeButtonSendLogin; //pour le style souligné du bouton
+    private view.component.CookieSwipeButtonAttach cookieSwipeButtonSendPassword;
     private view.component.CookieSwipeFrame cookieSwipeFrame1;
     private view.component.CookieSwipeFrame cookieSwipeFrame2;
     private view.component.CookieSwipeFrame cookieSwipeFrame3;
@@ -230,5 +270,12 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
     @Override
     public void refresh() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void paintComponents(Graphics g){
+    	super.paintComponents(g);
+    	
+    	g.drawImage(logo, 0, 0, null);
     }
 }
