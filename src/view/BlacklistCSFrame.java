@@ -1,11 +1,15 @@
 package view;
 
-import java.awt.Dimension;
-
 import interfaces.IJFrame;
 
+import java.awt.Dimension;
+
 import javax.swing.DefaultListModel;
+import javax.swing.GroupLayout;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import view.component.CookieSwipeButton;
 import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeFrame;
@@ -15,7 +19,7 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 
 	private JScrollPane scrollBlacklist;
 	
-	private view.component.CookieSwipeList<String> blacklist; // à changer si on veut autre chose qu'une chaîne de caractère
+	private CookieSwipeList<String> blacklist; // à changer si on veut autre chose qu'une chaîne de caractère
 	
 	private CookieSwipeButton cookieSwipeDeleteFromBlacklist;
 	private CookieSwipeButton cookieSwipeAddToBlacklist;
@@ -40,12 +44,15 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 		revalidate();
 	}
 
-        public void setBlacklist(String[] blacklist) {
-            this.blacklist = new CookieSwipeList<>(blacklist);
-        }
+    public void setBlacklist(String[] blacklist) {
+        this.blacklist = new CookieSwipeList<>(blacklist);
+    }
         
-        
-	
+    public void initFrame(){
+    	initComponents();
+    	placeComponents();
+    }
+    
 	public void initComponents(){
 		cookieSwipeDeleteFromBlacklist = new CookieSwipeButtonSprite();
 		cookieSwipeAddToBlacklist = new CookieSwipeButtonSprite();
@@ -59,56 +66,51 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 		scrollBlacklist = new JScrollPane();
 		scrollBlacklist.setViewportView(blacklist);
 		
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+	}
+
+	public void placeComponents(){
+		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setHorizontalGroup(
-			layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+			layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 			.addGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 					.addGroup(layout.createSequentialGroup()
 						.addGap(150, 150, 150)
-						//.addComponent(cookieSwipeAddToBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addComponent(cookieSwipeDeleteFromBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addComponent(cookieSwipeDeleteFromBlacklist, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					)
-					.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(layout.createSequentialGroup()
 							.addGap(15, 15, 15)
-							.addComponent(scrollBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+							.addComponent(scrollBlacklist, GroupLayout.PREFERRED_SIZE, 325, GroupLayout.PREFERRED_SIZE)
 						)
 					)
 				)
 			)
 		);
 		layout.setVerticalGroup(
-			layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-			.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-					//.addComponent(cookieSwipeAddToBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-					.addComponent(cookieSwipeDeleteFromBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+			layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+			.addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(cookieSwipeDeleteFromBlacklist, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 				)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-					.addComponent(scrollBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(scrollBlacklist, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
 				)
 			)
 		);
 	}
-
+	
 	@Override
 	public void refresh() {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	public static void main(String args[]) {
-		/* Set the Nimbus look and feel */
-		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-	        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-		 * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-		 */
 			try {
-			    for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+			    for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 					if ("Nimbus".equals(info.getName())) {
-					    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+					    UIManager.setLookAndFeel(info.getClassName());
 					    break;
 					}
 			    }
@@ -118,17 +120,14 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 			    java.util.logging.Logger.getLogger(MainCSFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 			} catch (IllegalAccessException ex) {
 			    java.util.logging.Logger.getLogger(MainCSFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-			} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+			} catch (UnsupportedLookAndFeelException ex) {
 			    java.util.logging.Logger.getLogger(MainCSFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 			}
-			//</editor-fold>
-	
-			/* Create and display the form */
+
 			java.awt.EventQueue.invokeLater(new Runnable() {
 			    public void run() {
 			    	new BlacklistCSFrame().setVisible(true);
 			    }
 			});
 	    }
-
 }
