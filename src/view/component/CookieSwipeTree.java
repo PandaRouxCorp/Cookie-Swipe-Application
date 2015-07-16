@@ -56,9 +56,10 @@ public class CookieSwipeTree extends JTree {
     public void initComponent() {
 	setCellRenderer(new CookieSwipeTreeCellRenderer());
 
-	setBackground(Color.white);
-	Border thickBorder = new LineBorder(Color.white, 10);
-	setBorder(thickBorder);
+//	Border thickBorder = new LineBorder(CookieSwipeColor.BACKGROUND_FRAME, 10);
+//	setBorder(thickBorder);
+        
+        setBackground(new Color(81, 112, 133));
 
     }
 

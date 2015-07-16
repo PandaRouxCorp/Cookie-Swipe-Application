@@ -25,6 +25,7 @@ import model.MailAccount;
 import module.ihm.MainFrameInitializer;
 import view.component.CookieSwipeButton;
 import view.component.CookieSwipeButtonSprite;
+import view.component.CookieSwipeColor;
 import view.component.CookieSwipeFrame;
 import view.component.CookieSwipeList;
 import view.component.CookieSwipePanel;
