@@ -2,8 +2,6 @@ package view;
 
 import interfaces.IJFrame;
 
-import java.util.HashMap;
-
 import javax.swing.GroupLayout;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -16,7 +14,9 @@ import view.component.CookieSwipeTextField;
 
 public class AccountCSFrame extends CookieSwipeFrame implements IJFrame{
 
-    private CookieSwipeButton cookieSwipeButtonCancel;
+	private static final long serialVersionUID = -1405750467485829551L;
+	
+	private CookieSwipeButton cookieSwipeButtonCancel;
     private CookieSwipeButton cookieSwipeButtonValidate;
    
     private CookieSwipeLabel cookieSwipeLabelBackupMail;
@@ -30,16 +30,37 @@ public class AccountCSFrame extends CookieSwipeFrame implements IJFrame{
 
    
     public AccountCSFrame() {
-    	setTitle("Gestion de compte Cookie Swipe");
     	
         initFrame();
         
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
-        this.setVisible(true);
+    }
+    
+    private void initFrame(){
+    	
+    	initComponents();
+    	placeComponents();
+    	
+    	putComponents();
+    	configFrame();
+    	
+    	refresh();
+    	
+    }
+    
+    private void configFrame(){
+    	
+    	setTitle("Gestion de compte Cookie Swipe");
+    	
+    	setLocationRelativeTo(null);
+    	setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setVisible(true);
         setResizable(false);
         
-        hsJcomponent.put("cookieSwipeButtonCancel", cookieSwipeButtonCancel);
+    }
+    
+    private void putComponents(){
+    	
+   	 	hsJcomponent.put("cookieSwipeButtonCancel", cookieSwipeButtonCancel);
         hsJcomponent.put("cookieSwipeButtonValidate", cookieSwipeButtonValidate);
         hsJcomponent.put("cookieSwipeLabelBackupMail", cookieSwipeLabelBackupMail);
         hsJcomponent.put("cookieSwipeLabelLoginAdressMail", cookieSwipeLabelLoginAdressMail);
@@ -48,15 +69,8 @@ public class AccountCSFrame extends CookieSwipeFrame implements IJFrame{
         hsJcomponent.put("cookieSwipeTextFieldBackupMail", cookieSwipeTextFieldBackupMail);
         hsJcomponent.put("cookieSwipeTextFieldLoginAdressMail", cookieSwipeTextFieldLoginAdressMail);
         
-        this.pack();
-    }
-    
-    private void initFrame(){
-    	initComponents();
-    	placeComponents();
-    }
+   }
 
-    @SuppressWarnings("unchecked")
     private void initComponents() {
 
         cookieSwipeLabelLoginAdressMail = new view.component.CookieSwipeLabel();
@@ -69,9 +83,7 @@ public class AccountCSFrame extends CookieSwipeFrame implements IJFrame{
         cookieSwipeButtonCancel = new view.component.CookieSwipeButton();
 
         cookieSwipeLabelLoginAdressMail.setText("Identifiant CookieSwipe :");
-
         cookieSwipeLabelPassword.setText("Mot de passe :");
-
         cookieSwipeLabelBackupMail.setText("Courriel de secours :");
 
         cookieSwipeButtonValidate.setText("Valider");
@@ -90,7 +102,8 @@ public class AccountCSFrame extends CookieSwipeFrame implements IJFrame{
 
     }
     
-    public void placeComponents(){
+    private void placeComponents(){
+    	
     	GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -101,42 +114,55 @@ public class AccountCSFrame extends CookieSwipeFrame implements IJFrame{
                     .addComponent(cookieSwipeLabelLoginAdressMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(cookieSwipeLabelPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(cookieSwipeLabelBackupMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cookieSwipeButtonValidate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cookieSwipeButtonValidate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                             .addComponent(cookieSwipePasswordFieldPassword, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cookieSwipeTextFieldBackupMail, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                            .addComponent(cookieSwipeTextFieldLoginAdressMail, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(cookieSwipeTextFieldLoginAdressMail, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        )
+                    )
                     .addGroup(layout.createSequentialGroup()
                         .addGap(101, 101, 101)
-                        .addComponent(cookieSwipeButtonCancel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(137, Short.MAX_VALUE))
+                        .addComponent(cookieSwipeButtonCancel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    )
+                )
+                .addContainerGap(137, Short.MAX_VALUE)
+            )
         );
+        
         layout.setVerticalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(70, 70, 70)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(cookieSwipeLabelLoginAdressMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cookieSwipeTextFieldLoginAdressMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cookieSwipeTextFieldLoginAdressMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                )
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(cookieSwipePasswordFieldPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cookieSwipeLabelPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cookieSwipeLabelPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                )
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(cookieSwipeTextFieldBackupMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cookieSwipeLabelBackupMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cookieSwipeLabelBackupMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                )
                 .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(cookieSwipeButtonValidate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cookieSwipeButtonCancel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(84, Short.MAX_VALUE))
+                    .addComponent(cookieSwipeButtonCancel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                )
+                .addContainerGap(84, Short.MAX_VALUE)
+            )
         );
+        
     }
-
+    
     private void cookieSwipeButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
@@ -145,6 +171,7 @@ public class AccountCSFrame extends CookieSwipeFrame implements IJFrame{
     }
 
     public static void main(String args[]) {
+    	
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -167,11 +194,14 @@ public class AccountCSFrame extends CookieSwipeFrame implements IJFrame{
                 new AccountCSFrame().setVisible(true);
             }
         });
+        
     }
 
     @Override
     public void refresh() {
-        this.repaint();
-        this.pack();
+    	
+        repaint();
+        pack();
+        
     }
 }

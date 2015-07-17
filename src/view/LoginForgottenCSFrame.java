@@ -3,7 +3,6 @@ package view;
 import interfaces.IJFrame;
 
 import javax.swing.GroupLayout;
-import javax.swing.JPanel;
 import javax.swing.LayoutStyle;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -15,7 +14,9 @@ import view.component.CookieSwipeTextField;
 
 public class LoginForgottenCSFrame extends CookieSwipeFrame implements IJFrame {
 
-    private CookieSwipeButton cookieSwipeButtonSendLogin;
+	private static final long serialVersionUID = 4729753654116728888L;
+
+	private CookieSwipeButton cookieSwipeButtonSendLogin;
     
     private CookieSwipeLabel cookieSwipeLabelMailAddress;
     
@@ -23,30 +24,43 @@ public class LoginForgottenCSFrame extends CookieSwipeFrame implements IJFrame {
     
 
     public LoginForgottenCSFrame() {
-    	setTitle("Login oublié");
 
         initFrame();
-        setLocationRelativeTo(null);
+        
+    }
+    
+    private void initFrame(){
+    	
+    	initComponents();
+    	placeComponents();
+    	
+    	putComponents();
+    	configFrame();
+    	
+    	refresh();
+    	
+    }
+    
+    private void configFrame(){
+    	
+    	setTitle("Login oublié");
+    	
+    	setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
         setSize(360, 240);
         setResizable(false);
         
-        hsJcomponent.put("cookieSwipeButtonSendLogin", cookieSwipeButtonSendLogin);
+    }
+    
+    private void putComponents(){
+    	
+    	hsJcomponent.put("cookieSwipeButtonSendLogin", cookieSwipeButtonSendLogin);
         hsJcomponent.put("cookieSwipeLabelLogin", cookieSwipeLabelMailAddress);
         hsJcomponent.put("cookieSwipeTextFieldMailAddress", cookieSwipeTextFieldMailAddress);
         
-        validate();
-        repaint();
-        revalidate();
-    }
-    
-    private void initFrame(){
-    	initComponents();
-    	placeComponents();
     }
 
-    @SuppressWarnings("unchecked")
     private void initComponents() {
 
         cookieSwipeTextFieldMailAddress = new view.component.CookieSwipeTextField();
@@ -58,7 +72,8 @@ public class LoginForgottenCSFrame extends CookieSwipeFrame implements IJFrame {
 
     }
     
-    public void placeComponents(){
+    private void placeComponents(){
+    	
     	GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -83,6 +98,7 @@ public class LoginForgottenCSFrame extends CookieSwipeFrame implements IJFrame {
                 )
             )
         );
+        
         layout.setVerticalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -96,12 +112,14 @@ public class LoginForgottenCSFrame extends CookieSwipeFrame implements IJFrame {
                 )
             )
         );
+        
     }
 
     private void cookieSwipeButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {
     }
 
     public static void main(String args[]) {
+    	
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -124,10 +142,16 @@ public class LoginForgottenCSFrame extends CookieSwipeFrame implements IJFrame {
                 new LoginForgottenCSFrame().setVisible(true);
             }
         });
+        
     }
 
     @Override
     public void refresh() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	
+    	validate();
+        repaint();
+        revalidate();
+        
     }
+    
 }

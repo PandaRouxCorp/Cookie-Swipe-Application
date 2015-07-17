@@ -2,8 +2,6 @@ package view;
 
 import interfaces.IJFrame;
 
-import java.awt.Graphics;
-import java.awt.Image;
 import java.io.File;
 
 import javax.swing.GroupLayout;
@@ -22,9 +20,9 @@ import view.component.CookieSwipeTextField;
 
 public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
 
-    private CookieSwipePanel logoPanel;
-    
-    private Image logo;
+	private static final long serialVersionUID = -1283545032999719731L;
+
+	private CookieSwipePanel logoPanel;
     
     private CookieSwipeButton cookieSwipeButtonInscription;
     private CookieSwipeButton cookieSwipeButtonLogin;
@@ -42,16 +40,25 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
     
     public LoginJFrame() {
     	
-    	setTitle("Login");
-
         initFrame();
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
-        setVisible(true);
-        setSize(720, 480);
-        setResizable(false);
         
-        hsJcomponent.put("cookieSwipeButtonLogin", cookieSwipeButtonLogin);
+    }
+
+    private void initFrame(){
+    	
+    	initComponents();
+    	placeComponents();
+    	
+    	putComponents();
+    	configFrame();
+    	
+    	refresh();
+    	
+    }
+    
+    private void putComponents(){
+    	
+    	hsJcomponent.put("cookieSwipeButtonLogin", cookieSwipeButtonLogin);
         hsJcomponent.put("cookieSwipeButtonInscription", cookieSwipeButtonInscription);
         hsJcomponent.put("cookieSwipeButtonSendLogin", cookieSwipeButtonSendLogin);
         hsJcomponent.put("cookieSwipeButtonSendPassword", cookieSwipeButtonSendPassword);
@@ -60,21 +67,22 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponent.put("cookieSwipePasswordFieldPassword", cookieSwipePasswordFieldPassword);
         hsJcomponent.put("cookieSwipeTextFieldLogin", cookieSwipeTextFieldLogin);
         
+    }
+    
+    private void configFrame(){
+    	
+    	setTitle("Login");
+    	
+    	setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setVisible(true);
+        setSize(720, 480);
+        setResizable(false);
+        
         cookieSwipeButtonLogin.setPreferredSize(cookieSwipeButtonInscription.getSize());
-        
-        
-        validate();
-        repaint();
-        revalidate();
-        
+    	
     }
 
-    public void initFrame(){
-    	initComponents();
-    	placeComponents();
-    }
-
-    @SuppressWarnings("unchecked")
     private void initComponents() {
 
         cookieSwipeTextFieldLogin = new view.component.CookieSwipeTextField();
@@ -110,6 +118,7 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
     }
     
     private void placeComponents(){
+    	
     	GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -154,6 +163,7 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
                 )
             )
         );
+        
         layout.setVerticalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -179,6 +189,7 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
                 )
             )
         );
+        
     }
 
     private void cookieSwipeButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {
@@ -186,6 +197,7 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
     }
 
     public static void main(String args[]) {
+    	
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -208,17 +220,16 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
                 new LoginJFrame().setVisible(true);
             }
         });
+        
     }
 
     @Override
     public void refresh() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	
+    	validate();
+        repaint();
+        revalidate();
+        
     }
     
-    @Override
-    public void paintComponents(Graphics g){
-    	super.paintComponents(g);
-    	
-    	g.drawImage(logo, 0, 0, null);
-    }
 }

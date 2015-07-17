@@ -17,6 +17,8 @@ import view.component.CookieSwipeList;
 
 public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 
+	private static final long serialVersionUID = -4844235581189535802L;
+
 	private JScrollPane scrollBlacklist;
 	
 	private CookieSwipeList<String> blacklist; // à changer si on veut autre chose qu'une chaîne de caractère
@@ -26,34 +28,48 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 	
 	
 	public BlacklistCSFrame() {
-		setTitle("Liste des blacklistés");
 		
-		initComponents();
+		initFrame();
 
-		this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        setResizable(false); 
-        setSize(new Dimension(360, 270));
-        
-        hsJcomponent.put("blacklist", blacklist);
-        hsJcomponent.put("cookieSwipeDeleteFromBlacklist", cookieSwipeDeleteFromBlacklist);
-        hsJcomponent.put("cookieSwipeAddToBlacklist", cookieSwipeAddToBlacklist);
-        
-        validate();
-		repaint();
-		revalidate();
 	}
 
     public void setBlacklist(String[] blacklist) {
         this.blacklist = new CookieSwipeList<>(blacklist);
     }
         
-    public void initFrame(){
+    private void initFrame(){
+    	
     	initComponents();
     	placeComponents();
+    	
+    	putComponents();
+    	configFrame();
+    	
+    	refresh();
+    	
     }
     
-	public void initComponents(){
+    private void configFrame(){
+    	
+    	setTitle("Liste des blacklistés");
+    	
+    	setLocationRelativeTo(null);
+        setVisible(true);
+        setResizable(false); 
+        setSize(new Dimension(360, 270));
+        
+    }
+    
+    private void putComponents(){
+    	
+    	hsJcomponent.put("blacklist", blacklist);
+        hsJcomponent.put("cookieSwipeDeleteFromBlacklist", cookieSwipeDeleteFromBlacklist);
+        hsJcomponent.put("cookieSwipeAddToBlacklist", cookieSwipeAddToBlacklist);
+        
+    }
+    
+	private void initComponents(){
+		
 		cookieSwipeDeleteFromBlacklist = new CookieSwipeButtonSprite();
 		cookieSwipeAddToBlacklist = new CookieSwipeButtonSprite();
 		
@@ -68,7 +84,8 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 		
 	}
 
-	public void placeComponents(){
+	private void placeComponents(){
+		
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setHorizontalGroup(
@@ -88,6 +105,7 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 				)
 			)
 		);
+		
 		layout.setVerticalGroup(
 			layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 			.addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -99,14 +117,20 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 				)
 			)
 		);
+		
 	}
 	
 	@Override
 	public void refresh() {
-		// TODO Auto-generated method stub
+		
+		validate();
+		repaint();
+		revalidate();
+		
 	}
 	
 	public static void main(String args[]) {
+		
 		try {
 		    for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -130,4 +154,5 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 		    }
 		});
     }
+	
 }
