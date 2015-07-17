@@ -171,14 +171,14 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 				jListMail.setFixedCellWidth(getWidth() - 45);
 				jListMail.setFixedCellHeight(43);
 				
-				jScrollPane3.setPreferredSize(new Dimension(getWidth() - 258, getHeight() - 135));
-				jScrollPane3.setMinimumSize(new Dimension(getWidth() - 258, getHeight() - 135));
-				jScrollPane3.setMaximumSize(new Dimension(getWidth() - 258, getHeight() - 135));
+				jScrollPane3.setPreferredSize(new Dimension(getWidth() - 258, getHeight() - 140));
+				jScrollPane3.setMinimumSize(new Dimension(getWidth() - 258, getHeight() - 140));
+				jScrollPane3.setMaximumSize(new Dimension(getWidth() - 258, getHeight() - 140));
 				jScrollPane3.setMinimumSize(new Dimension(0, 0));
 				
-				jScrollPane1.setPreferredSize(new Dimension(200, getHeight() - 135));
-				jScrollPane1.setPreferredSize(new Dimension(200, getHeight() - 135));
-				jScrollPane1.setMaximumSize(new Dimension(getWidth() - 258, getHeight() - 135));
+				jScrollPane1.setPreferredSize(new Dimension(200, getHeight() - 140));
+				jScrollPane1.setPreferredSize(new Dimension(200, getHeight() - 140));
+				jScrollPane1.setMaximumSize(new Dimension(getWidth() - 200, getHeight() - 140));
 				jScrollPane1.setMinimumSize(new Dimension(0, 0));
 			
 				refresh();
@@ -301,7 +301,9 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 				)
 				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
 					.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+						.addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					)
 				)
 			)
 		);

@@ -7,11 +7,15 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.GroupLayout;
+import javax.swing.JScrollPane;
 
 import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeColor;
 import view.component.CookieSwipeFrame;
+import view.component.CookieSwipeLabel;
+import view.component.CookieSwipePanel;
 import view.component.CookieSwipeTextArea;
+import view.component.CookieSwipeTextField;
 
 public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
 
@@ -26,18 +30,21 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
     private CookieSwipeButtonSprite cookieSwipeButtonDeleteMail;
     private CookieSwipeButtonSprite cookieSwipeButtonToBlacklist;
     
-    private view.component.CookieSwipePanel csPanel;
+    private CookieSwipePanel csPanel;
 
-    private view.component.CookieSwipeLabel cookieSwipeLabelCc;
-    private view.component.CookieSwipeLabel cookieSwipeLabelTo;
-    private view.component.CookieSwipeLabel cookieSwipeLabelObject;
-    private view.component.CookieSwipeTextField cookieSwipeTextFieldObject;
-    private view.component.CookieSwipeTextField cookieSwipeTextFieldTo;
-    private view.component.CookieSwipeTextField cookieSwipeTextFieldToCc;
+    private CookieSwipeLabel cookieSwipeLabelCc;
+    private CookieSwipeLabel cookieSwipeLabelTo;
+    private CookieSwipeLabel cookieSwipeLabelObject;
+    private CookieSwipeLabel cookieSwipeLabelFrom;
+    
+    private CookieSwipeTextField cookieSwipeTextFieldObject;
+    private CookieSwipeTextField cookieSwipeTextFieldTo;
+    private CookieSwipeTextField cookieSwipeTextFieldToCc;
+    private CookieSwipeTextField cookieSwipeTextFieldFrom;
    
-    private javax.swing.JScrollPane jScrollPane1;
+    private JScrollPane jScrollPane1;
    
-    private view.component.CookieSwipeTextArea jTextAreaMail;
+    private CookieSwipeTextArea jTextAreaMail;
 
     
     public ReadMailCSFrame() {
@@ -136,16 +143,18 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         }
         
         
-        cookieSwipeTextFieldTo = new view.component.CookieSwipeTextField();
-        cookieSwipeTextFieldToCc = new view.component.CookieSwipeTextField();
-        cookieSwipeTextFieldObject = new view.component.CookieSwipeTextField();
+        cookieSwipeTextFieldTo = new CookieSwipeTextField();
+        cookieSwipeTextFieldToCc = new CookieSwipeTextField();
+        cookieSwipeTextFieldObject = new CookieSwipeTextField();
+        cookieSwipeTextFieldFrom = new CookieSwipeTextField();
         
-        cookieSwipeLabelTo = new view.component.CookieSwipeLabel();
-        cookieSwipeLabelCc = new view.component.CookieSwipeLabel();
-        cookieSwipeLabelObject = new view.component.CookieSwipeLabel();
+        cookieSwipeLabelFrom = new CookieSwipeLabel();
+        cookieSwipeLabelTo = new CookieSwipeLabel();
+        cookieSwipeLabelCc = new CookieSwipeLabel();
+        cookieSwipeLabelObject = new CookieSwipeLabel();
         
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextAreaMail = new view.component.CookieSwipeTextArea();
+        jScrollPane1 = new JScrollPane();
+        jTextAreaMail = new CookieSwipeTextArea();
         
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -153,6 +162,7 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         cookieSwipeLabelTo.setText("À :");
         cookieSwipeLabelCc.setText("Cc :");
         cookieSwipeLabelObject.setText("Objet :");
+        cookieSwipeLabelFrom.setText("De :");
 
         jTextAreaMail.setColumns(20);
         jTextAreaMail.setRows(5);
@@ -173,6 +183,7 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
                     .addComponent(cookieSwipeLabelCc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cookieSwipeLabelTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cookieSwipeLabelObject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cookieSwipeLabelFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         		)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,16 +204,20 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
                         .addGap(60, 60, 60)
                     )
                     .addGroup(layout.createSequentialGroup()
-                    		.addComponent(cookieSwipeTextFieldToCc, javax.swing.GroupLayout.DEFAULT_SIZE, 2000, 2000)
+                		.addComponent(cookieSwipeTextFieldToCc, javax.swing.GroupLayout.DEFAULT_SIZE, 2000, 2000)
                         .addGap(60, 60, 60)
                     )
                     .addGroup(layout.createSequentialGroup()
-                    		.addComponent(cookieSwipeTextFieldObject, javax.swing.GroupLayout.DEFAULT_SIZE, 2000, 2000)
-                            .addGap(60, 60, 60)
+                		.addComponent(cookieSwipeTextFieldObject, javax.swing.GroupLayout.DEFAULT_SIZE, 2000, 2000)
+                        .addGap(60, 60, 60)
                     )
                     .addGroup(layout.createSequentialGroup()
-                    		.addComponent(csPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 2000, 2000)
-                            .addGap(60, 60, 60)
+                		.addComponent(cookieSwipeTextFieldFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 2000, 2000)
+                        .addGap(60, 60, 60)
+                    )
+                    .addGroup(layout.createSequentialGroup()
+                		.addComponent(csPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 2000, 2000)
+                        .addGap(60, 60, 60)
                     )
         		)
                 .addContainerGap(103, Short.MAX_VALUE)
@@ -216,13 +231,18 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addGroup(layout.createSequentialGroup()
                 		.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-        						.addComponent(cookieSwipeButtonReply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        						.addComponent(cookieSwipeButtonReplyToAll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        						.addComponent(cookieSwipeButtonForward, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        						.addComponent(cookieSwipeButtonArchive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        						.addComponent(cookieSwipeButtonDeleteMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        						.addComponent(cookieSwipeButtonToBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+    						.addComponent(cookieSwipeButtonReply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+    						.addComponent(cookieSwipeButtonReplyToAll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+    						.addComponent(cookieSwipeButtonForward, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+    						.addComponent(cookieSwipeButtonArchive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+    						.addComponent(cookieSwipeButtonDeleteMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+    						.addComponent(cookieSwipeButtonToBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
     					)
+    					.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cookieSwipeLabelFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cookieSwipeTextFieldFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        )
+                        .addGap(7, 7, 7)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cookieSwipeLabelTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cookieSwipeTextFieldTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -266,10 +286,15 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
 		    	cookieSwipeTextFieldObject.setMaximumSize(new Dimension(getWidth() - 150, 35));
 		    	cookieSwipeTextFieldObject.setMinimumSize(new Dimension(0, 0));
 		    	
-		    	cookieSwipeTextFieldTo.setPreferredSize(new Dimension(getWidth() - 185, 35));
+		    	cookieSwipeTextFieldTo.setPreferredSize(new Dimension(getWidth() - 150, 35));
 		    	cookieSwipeTextFieldTo.setMinimumSize(new Dimension(getWidth() - 150, 35));
 		    	cookieSwipeTextFieldTo.setMaximumSize(new Dimension(getWidth() - 150, 35));
 		    	cookieSwipeTextFieldTo.setMinimumSize(new Dimension(0, 0));
+		    	
+		    	cookieSwipeTextFieldFrom.setPreferredSize(new Dimension(getWidth() - 150, 35));
+		    	cookieSwipeTextFieldFrom.setMinimumSize(new Dimension(getWidth() - 150, 35));
+		    	cookieSwipeTextFieldFrom.setMaximumSize(new Dimension(getWidth() - 150, 35));
+		    	cookieSwipeTextFieldFrom.setMinimumSize(new Dimension(0, 0));
 				
 		    	jScrollPane1.setPreferredSize(new Dimension(getWidth() - 150, getHeight() - 200));
 				jScrollPane1.setMinimumSize(new Dimension(getWidth() - 150, getHeight() - 200));
