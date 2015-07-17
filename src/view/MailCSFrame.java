@@ -7,6 +7,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.GroupLayout;
+import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 import view.component.CookieSwipeButtonAttach;
@@ -15,6 +16,7 @@ import view.component.CookieSwipeColor;
 import view.component.CookieSwipeFrame;
 import view.component.CookieSwipeLabel;
 import view.component.CookieSwipePanel;
+import view.component.CookieSwipeTextArea;
 import view.component.CookieSwipeTextField;
 
 public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
@@ -38,7 +40,7 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
     
     private javax.swing.JScrollPane jScrollPane1;
    
-    private view.component.CookieSwipeTextArea jTextAreaMail;
+    private CookieSwipeTextArea jTextAreaMail;
     
     public MailCSFrame() {
         
@@ -90,19 +92,19 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
     
     private void initComponents() {
 
-        cookieSwipeTextFieldTo = new view.component.CookieSwipeTextField();
-        cookieSwipeTextFieldToCc = new view.component.CookieSwipeTextField();
+        cookieSwipeTextFieldTo = new CookieSwipeTextField();
+        cookieSwipeTextFieldToCc = new CookieSwipeTextField();
         
-        cookieSwipeLabelTo = new view.component.CookieSwipeLabel();
-        cookieSwipeLabelCc = new view.component.CookieSwipeLabel();
+        cookieSwipeLabelTo = new CookieSwipeLabel();
+        cookieSwipeLabelCc = new CookieSwipeLabel();
         
-        jScrollPane1 = new javax.swing.JScrollPane();
-        cookieSwipeTextFieldSubject = new view.component.CookieSwipeTextField();
-        cookieSwipeLabelSubject = new view.component.CookieSwipeLabel();
-        jTextAreaMail = new view.component.CookieSwipeTextArea();
+        jScrollPane1 = new JScrollPane();
+        cookieSwipeTextFieldSubject = new CookieSwipeTextField();
+        cookieSwipeLabelSubject = new CookieSwipeLabel();
+        jTextAreaMail = new CookieSwipeTextArea();
         
-        cookieSwipeButtonSend = new view.component.CookieSwipeButtonSprite();
-        cookieSwipeButtonAttach = new view.component.CookieSwipeButtonSprite();
+        cookieSwipeButtonSend = new CookieSwipeButtonSprite();
+        cookieSwipeButtonAttach = new CookieSwipeButtonSprite();
 
         cookieSwipeLabelTo.setText("À :");
         cookieSwipeLabelCc.setText("Cc :");
@@ -116,9 +118,9 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
         cookieSwipeButtonAttach.setText(CookieSwipeButtonSprite.ATTACH);
         
         /** pour l'exemple **/
-        cookieSwipeButtonAttached = new view.component.CookieSwipeButtonAttach[5];
+        cookieSwipeButtonAttached = new CookieSwipeButtonAttach[5];
         
-        attachedFilesPanel = new view.component.CookieSwipePanel(CookieSwipeColor.BACKGROUND_FRAME);
+        attachedFilesPanel = new CookieSwipePanel(CookieSwipeColor.BACKGROUND_FRAME);
         attachedFilesPanel.setPreferredSize(new Dimension(getWidth() - 150, getHeight() - 35));
 		attachedFilesPanel.setMinimumSize(new Dimension(getWidth() - 150, getHeight() - 35));
 		attachedFilesPanel.setMaximumSize(new Dimension(getWidth() - 150, getHeight() - 35));
