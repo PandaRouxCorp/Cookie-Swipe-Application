@@ -215,7 +215,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.addActionListener(dispatcher);
 
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonBlacklist");
-        button.setActionCommand(ActionName.removeBlacklistSender);
+        button.setActionCommand(ActionName.showBlacklistSender);
         button.addActionListener(dispatcher);
 
         setMailAccountButtonsVisible(false);

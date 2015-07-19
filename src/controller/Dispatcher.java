@@ -49,6 +49,7 @@ import module.backoffice.ForgottenAction;
 import module.backoffice.MailAction;
 import module.backoffice.ReadMailAction;
 import module.backoffice.SendMailAction;
+import module.ihm.BlacklistFrameInitializer;
 import module.ihm.CreateAccountFrameInitializer;
 import module.ihm.LoginForgottenFrameInitializer;
 import module.ihm.PasswordForgottenFrameInitializer;
@@ -167,39 +168,14 @@ public class Dispatcher implements ActionListener {
 
     public void removeBlacklistSenderAction() {
         User usr = CookieSwipeApplication.getApplication().getUser();
+        usr.removeBlackListSender((String) CookieSwipeApplication.getApplication().getParam("blackListedElementSelected"));
+        DAOUser.updateBlackListUser(usr);
+    }
+    
+    public void showBlacklistSenderAction() {
+        User usr = CookieSwipeApplication.getApplication().getUser();
         BlacklistCSFrame frame = new BlacklistCSFrame();
-        frame.addWindowListener(new WindowListener() {
-
-            @Override
-            public void windowOpened(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-                DAOUser.updateBlackListUser(usr);
-            }
-
-            @Override
-            public void windowIconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
-//        System.err.println("NOT IMPLEMENTED");
+        new BlacklistFrameInitializer(frame).execute();
     }
 
     public void addBlackListSenderAction() throws MessagingException {

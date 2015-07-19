@@ -18,7 +18,8 @@ public class ActionName {
                 selectMailAccount = "selectMailAccount", updateMailAccount = "updateMailAccount",
                 deleteMailAccount = "deleteMailAccount", writeMail = "writeMail",
                 readMail = "readMail", selectMail = "selectMail", deleteMail = "deleteMail",
-                addBlackListSender = "addBlackListSender", removeBlacklistSender = "removeBlacklistSender",
+                addBlackListSender = "addBlackListSender", showBlacklistSender = "showBlacklistSender", 
+                removeBlacklistSender = "removeBlacklistSender",
                 replyMail = "answerMail", forwardMail = "forwardMail", sendMail = "sendMail",
                 downloadPicture = "downloadPicture", logout = "logout", createMailAccount = "createMailAccount",
                 refresh = "refresh";  
