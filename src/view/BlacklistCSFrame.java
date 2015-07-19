@@ -1,19 +1,22 @@
 package view;
 
+import cookie.swipe.application.CookieSwipeApplication;
 import interfaces.IJFrame;
 
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
+import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import model.User;
 
 import view.component.CookieSwipeButton;
 import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeFrame;
-import view.component.CookieSwipeList;
 
 public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 
@@ -21,22 +24,20 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 
 	private JScrollPane scrollBlacklist;
 	
-	private CookieSwipeList<String> blacklist; // à changer si on veut autre chose qu'une chaîne de caractère
+	private JList<String> blacklist; // à changer si on veut autre chose qu'une chaîne de caractère
+        private String[] tableBlacklist;
 	
 	private CookieSwipeButton cookieSwipeDeleteFromBlacklist;
 	private CookieSwipeButton cookieSwipeAddToBlacklist;
 	
 	
 	public BlacklistCSFrame() {
-		
+                List<String> bl = CookieSwipeApplication.getApplication().getUser().getBlackList();
+                tableBlacklist = bl.toArray(new String [bl.size()]);
 		initFrame();
 
 	}
 
-    public void setBlacklist(String[] blacklist) {
-        this.blacklist = new CookieSwipeList<>(blacklist);
-    }
-        
     private void initFrame(){
     	
     	initComponents();
@@ -77,7 +78,12 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 		cookieSwipeDeleteFromBlacklist.setText(CookieSwipeButtonSprite.BLACKLIST_DELETE);
 		
 		blacklist = new view.component.CookieSwipeList<String>();
-		blacklist.setModel(new DefaultListModel<String>());
+                
+                DefaultListModel<String> model = new DefaultListModel<>();
+                for(String element : tableBlacklist) {
+                    model.addElement(element);
+                }
+		blacklist.setModel(model);
 		
 		scrollBlacklist = new JScrollPane();
 		scrollBlacklist.setViewportView(blacklist);

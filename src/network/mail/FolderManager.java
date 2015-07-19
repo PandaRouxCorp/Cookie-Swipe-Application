@@ -29,6 +29,10 @@ import network.messageFramework.DeliverySystem;
 import network.messageFramework.FrameworkMessage;
 
 import com.sun.mail.imap.IMAPFolder;
+import cookie.swipe.application.CookieSwipeApplication;
+import javax.mail.Address;
+import javax.mail.Message;
+import model.User;
 
 public class FolderManager {
 

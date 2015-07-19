@@ -522,7 +522,26 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     @Override
     public void messagesAdded(MessageCountEvent event) {
         IMAPFolder f = (IMAPFolder) event.getSource();
-        addToListOfmail(f.getName(), event.getMessages());
+
+        Message[] messages = event.getMessages();
+        User usr = CookieSwipeApplication.getApplication().getUser();
+        for(Message message : messages) {
+            try {
+                boolean addToMail = true;
+                for (Address address : message.getFrom()) {
+                    if (usr.getBlackList().contains(address.toString())) {
+                        addToMail = false;
+                    }
+                }
+                if (addToMail) {
+                    addToListOfmail(f.getName(), message);
+                } else {
+                    removeToListOfmail(f.getName(), message);
+                }
+            } catch (MessagingException ex) {
+                Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @Override

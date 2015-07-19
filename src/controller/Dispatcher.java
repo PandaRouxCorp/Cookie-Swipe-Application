@@ -33,6 +33,8 @@ import view.component.CookieSwipePasswordField;
 import view.component.CookieSwipeTextField;
 import cookie.swipe.application.CookieSwipeApplication;
 import dao.DAOUser;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.List;
 import javax.mail.Address;
@@ -165,26 +167,46 @@ public class Dispatcher implements ActionListener {
 
     public void removeBlacklistSenderAction() {
         User usr = CookieSwipeApplication.getApplication().getUser();
-        List<String> bl = usr.getBlackList();
         BlacklistCSFrame frame = new BlacklistCSFrame();
-//        String[] blackl = bl.toArray(new String [bl.size() + 1]);
-//        blackl[bl.size()] = "my@test.fr";
-//        frame.setBlacklist(blackl);
-        CookieSwipeApplication.getApplication().setFocusFrame(frame);
-        for( String s : bl )
-            System.out.println(s);
-        //
-        
-        DAOUser.updateBlackListUser(usr);
-        System.err.println("NOT IMPLEMENTED");
+        frame.addWindowListener(new WindowListener() {
+
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                DAOUser.updateBlackListUser(usr);
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
+        });
+//        System.err.println("NOT IMPLEMENTED");
     }
 
     public void addBlackListSenderAction() throws MessagingException {
         Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
         User usr = CookieSwipeApplication.getApplication().getUser();
         List<String> bl = usr.getBlackList();
-        Address[] addresses = message.getFrom();
-        for (Address address : addresses) {
+        for (Address address : message.getFrom()) {
             bl.add(address.toString());
         }
         DAOUser.updateBlackListUser(usr);

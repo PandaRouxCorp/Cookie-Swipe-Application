@@ -34,7 +34,6 @@ public class SendMailAction extends AbstractIHMAction {
             mailAccount.addBody( ((JTextArea) hsJcomponent.get("jTextAreaMail")).getText() );
             mailAccount.sendMail();
         }
-//        mailAccount.clearAttachments();
         return false;
     }
 }
