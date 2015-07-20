@@ -93,25 +93,22 @@ public class ReadMailAction implements IAction {
     }
     
     public static String getContentMessageFormMultipart(Message message) throws IOException, MessagingException {
-
         Object mess = message.getContent();
         String content = "";
 
         Multipart multipart = (Multipart) mess;
         for (int i = 0; i < multipart.getCount(); i++) {
-
+            
             BodyPart bodyPart = multipart.getBodyPart(i);
-
             String disposition = bodyPart.getDisposition();
 
             if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
                 System.out.println("Mail have some attachment");
-
                 DataHandler handler = bodyPart.getDataHandler();
                 System.out.println("file name : " + handler.getName());
                 download(bodyPart);
 
-            } else if (bodyPart.getContentType().contains("image/")) {
+            } else if (bodyPart.getContentType().contains("image")) {
                 System.out.println("content type" + bodyPart.getContentType());
 
                 File f = new File("image" + new Date().getTime() + ".jpg");
@@ -140,42 +137,7 @@ public class ReadMailAction implements IAction {
                     }
 
                     if (content.contains("<img")) { // telecharge toutes les image du mail
-                        List<String> urls = getUrls(content);
-                        for (final String src : urls) {
-
-                            AbstractSender<Boolean> s = new AbstractSender<Boolean>() {
-
-                                @Override
-                                public void onMessageReceived(Future<Boolean> receivedMessage) {
-                                    try {
-                                        boolean b = receivedMessage.get();
-                                        if (b) {
-                                            CookieSwipeTextArea area = frame.getjTextAreaMail();
-                                            area.repaint();
-                                            area.revalidate();
-                                        } else {
-
-                                            JOptionPane.showMessageDialog(null, "une image n'a pas été téléchargé",
-                                                    "Telechargement des images", JOptionPane.ERROR_MESSAGE);
-                                        }
-                                    } catch (InterruptedException | ExecutionException ex) {
-                                        Logger.getLogger(ReadMailAction.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                }
-
-                            };
-
-                            s.sendMessage(new FrameworkMessage< Boolean>() {
-
-                                @Override
-                                public Boolean call() throws Exception {
-
-                                    File file = downloadImage(src, "tmp/img/");
-                                    return file != null;
-                                }
-
-                            });
-                        }
+                        downloadImagesOnContentHTML(content);
                     }
                 }
                 if(content != null)
@@ -185,6 +147,38 @@ public class ReadMailAction implements IAction {
         return content;
     }
     
+    private static void downloadImagesOnContentHTML(String content) {
+        List<String> urls = getUrls(content);
+        for (final String src : urls) {
+            AbstractSender<Boolean> s = new AbstractSender<Boolean>() {
+                @Override
+                public void onMessageReceived(Future<Boolean> receivedMessage) {
+                    try {
+                        boolean b = receivedMessage.get();
+                        if (b) {
+                            CookieSwipeTextArea area = frame.getjTextAreaMail();
+                            area.repaint();
+                            area.revalidate();
+                        } else {
+//                            JOptionPane.showMessageDialog(null, "une image n'a pas été téléchargé",
+//                                    "Telechargement des images", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (InterruptedException | ExecutionException ex) {
+                        Logger.getLogger(ReadMailAction.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            };
+
+            s.sendMessage(new FrameworkMessage< Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    File file = downloadImage(src, "tmp/img/");
+                    return file != null;
+                }
+            });
+        }
+    }
+
     private static List<String> getUrls(String html) {
         List<String> urls = new ArrayList<>();
         int start, end = 0;
