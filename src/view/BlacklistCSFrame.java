@@ -2,8 +2,11 @@ package view;
 
 import cookie.swipe.application.CookieSwipeApplication;
 import interfaces.IJFrame;
+import java.awt.Component;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.util.List;
 
@@ -12,6 +15,8 @@ import javax.swing.GroupLayout;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicListUI;
@@ -29,16 +34,16 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 	
 	private CookieSwipeList<String> blacklist; // à changer si on veut autre chose qu'une chaîne de caractère
         private String[] tableBlacklist;
+        DefaultListModel<String> model;
 	
 	private CookieSwipeButton cookieSwipeDeleteFromBlacklist;
 	private CookieSwipeButton cookieSwipeAddToBlacklist;
 	
-	
 	public BlacklistCSFrame() {
                 List<String> bl = CookieSwipeApplication.getApplication().getUser().getBlackList();
                 tableBlacklist = bl.toArray(new String [bl.size()]);
+                
 		initFrame();
-
 	}
 
     public CookieSwipeList<String> getBlacklist() {
@@ -84,13 +89,13 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
 		cookieSwipeAddToBlacklist.setText(CookieSwipeButtonSprite.BLACKLIST_ADD);
 		cookieSwipeDeleteFromBlacklist.setText(CookieSwipeButtonSprite.BLACKLIST_DELETE);
 		
-		blacklist = new CookieSwipeList<>();
                 
-                DefaultListModel<String> model = new DefaultListModel<>();
+                model = new DefaultListModel<>();
                 for(String element : tableBlacklist) {
                     model.addElement(element);
                 }
-		blacklist.setModel(model);
+		blacklist = new CookieSwipeList<>(model);
+                
 		blacklist.addListSelectionListener(new ListSelectionListener() {
 
                     @Override
@@ -98,6 +103,15 @@ public class BlacklistCSFrame extends CookieSwipeFrame implements IJFrame{
                         CookieSwipeApplication.getApplication().setParam("blackListedElementSelected", blacklist.getSelectedValue());
                     }
                 });
+                
+                cookieSwipeDeleteFromBlacklist.addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        model.removeElement(blacklist.getSelectedValue());
+                    }
+                });
+                
 		scrollBlacklist = new JScrollPane();
 		scrollBlacklist.setViewportView(blacklist);
 		

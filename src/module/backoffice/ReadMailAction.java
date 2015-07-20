@@ -178,11 +178,11 @@ public class ReadMailAction implements IAction {
                                 File file = downloadImage(src, "tmp/img/");
                                 if( file == null ) return false;
 
-                                BufferedImage myPicture = ImageIO.read( file );
-                                ImageIcon img = new ImageIcon(myPicture);
-                                JLabel iconLabel = new JLabel(img);
-                                iconLabel.setVisible(true);
-                                CookieSwipeTextArea area = frame.getjTextAreaMail();
+//                                BufferedImage myPicture = ImageIO.read( file );
+//                                ImageIcon img = new ImageIcon(myPicture);
+//                                JLabel iconLabel = new JLabel(img);
+//                                iconLabel.setVisible(true);
+//                                CookieSwipeTextArea area = frame.getjTextAreaMail();
 //                                area.paintImageComponent(img.getImage());
                                 return true;
                             }
@@ -203,6 +203,7 @@ public class ReadMailAction implements IAction {
         String refStart = "src=\"",
                refEnd   = "\"";
         while( (start = html.indexOf(refStart, end)) != -1 ) {
+            start += refStart.length();
             end = html.indexOf(refEnd, start);
             String a = html.substring(start, end);
             if(a != null && !a.isEmpty())

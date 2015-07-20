@@ -173,7 +173,6 @@ public class Dispatcher implements ActionListener {
     }
     
     public void showBlacklistSenderAction() {
-        User usr = CookieSwipeApplication.getApplication().getUser();
         BlacklistCSFrame frame = new BlacklistCSFrame();
         new BlacklistFrameInitializer(frame).execute();
     }

@@ -187,7 +187,7 @@ public class User {
      */
     public boolean blackListSender(String sender) {
         if (blackList == null) {
-            blackList = new ArrayList<String>();
+            blackList = new ArrayList<>();
         }
         return blackList.add(sender);
     }
@@ -248,6 +248,8 @@ public class User {
     }
 
     public List<String> getBlackList() {
+        if(blackList == null)
+            blackList = new ArrayList<>();
         return blackList;
     }
 
