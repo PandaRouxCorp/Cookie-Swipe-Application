@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import model.MailAccount;
@@ -38,7 +39,18 @@ public class MailAction implements IAction {
                 try {
                     if(action.startsWith("reply")) {
                         startSubject = "RE : ";
-                        mailFrame.setCookieSwipeTextFieldTo(Arrays.toString(message.getFrom()));
+                        String to = "";
+                        int i = 0;
+                        for(Address addr : message.getFrom()) {
+                            String a = addr.toString();
+                            if(a.contains("["))
+                                a = a.substring(a.lastIndexOf("[") + 1, a.lastIndexOf("]") + 1);
+                            if(a.contains("<"))
+                                a = a.substring(a.lastIndexOf("<") + 1, a.lastIndexOf(">") + 1);
+                            to += i == 0 ? a : ", " + a;
+                            i++;
+                        }
+                        mailFrame.setCookieSwipeTextFieldTo(to);
                     }
                     mailFrame.setCookieSwipeTextFieldSubject(startSubject + message.getSubject());
                     mailFrame.setjTextAreaMail(mailTranfer(message));
