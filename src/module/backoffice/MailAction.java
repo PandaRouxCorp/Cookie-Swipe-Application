@@ -42,12 +42,12 @@ public class MailAction implements IAction {
                         String to = "";
                         int i = 0;
                         for(Address addr : message.getFrom()) {
-                            String a = addr.toString();
-                            if(a.contains("["))
-                                a = a.substring(a.lastIndexOf("[") + 1, a.lastIndexOf("]") + 1);
-                            if(a.contains("<"))
-                                a = a.substring(a.lastIndexOf("<") + 1, a.lastIndexOf(">") + 1);
-                            to += i == 0 ? a : ", " + a;
+                            String adresse = addr.toString();
+                            if(adresse.contains("["))
+                                adresse = adresse.substring(adresse.lastIndexOf("[") + 1, adresse.lastIndexOf("]") + 1);
+                            if(adresse.contains("<"))
+                                adresse = adresse.substring(adresse.lastIndexOf("<") + 1, adresse.lastIndexOf(">") + 1);
+                            to += i == 0 ? adresse : ", " + adresse;
                             i++;
                         }
                         mailFrame.setCookieSwipeTextFieldTo(to);

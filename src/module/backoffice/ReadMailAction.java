@@ -67,7 +67,6 @@ public class ReadMailAction implements IAction {
             
             frame.setjTextAreaMail(content);
 
-            // then focus it
             application.setFocusFrame(frame);
             return true;
         } catch (MessagingException | IOException ex) {
