@@ -7,6 +7,7 @@ package module.backoffice;
 
 import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.SystemSettings;
+import static cookie.swipe.application.SystemSettings.PATH_HOME;
 import interfaces.IAction;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -66,7 +67,7 @@ public class ReadMailAction implements IAction {
             String content = getContentMessage(message);
             
             frame.setjTextAreaMail(content);
-
+            
             application.setFocusFrame(frame);
             return true;
         } catch (MessagingException | IOException ex) {
@@ -108,6 +109,7 @@ public class ReadMailAction implements IAction {
 
                 DataHandler handler = bodyPart.getDataHandler();
                 System.out.println("file name : " + handler.getName());
+                download(bodyPart);
 
             } else if (bodyPart.getContentType().contains("image/")) {
                 System.out.println("content type" + bodyPart.getContentType());
@@ -247,6 +249,18 @@ public class ReadMailAction implements IAction {
             }
         }
         return null;
+    }
+    
+    public static void download (BodyPart bodyPart) throws IOException, MessagingException {
+        InputStream is = bodyPart.getInputStream();
+        File f = new File(PATH_HOME + "tmp/" + bodyPart.getFileName());
+        FileOutputStream fos = new FileOutputStream(f);
+        byte[] buf = new byte[4096];
+        int bytesRead;
+        while((bytesRead = is.read(buf))!=-1) {
+            fos.write(buf, 0, bytesRead);
+        }
+        fos.close();
     }
     
     public static String getText(Part p) throws MessagingException, IOException {

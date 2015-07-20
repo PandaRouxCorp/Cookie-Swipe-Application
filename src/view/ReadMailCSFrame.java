@@ -8,6 +8,7 @@ import java.awt.event.ComponentListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.JScrollPane;
+import view.component.CookieSwipeButtonAttach;
 
 import view.component.CookieSwipeButtonSprite;
 import view.component.CookieSwipeColor;
@@ -63,6 +64,10 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
 
     public void setCookieSwipeTextFieldToCc(String cookieSwipeTextFieldToCc) {
         this.cookieSwipeTextFieldToCc.setText(cookieSwipeTextFieldToCc);
+    }
+
+    public void setCookieSwipeButtonAttach(CookieSwipeButtonAttach[] cookieSwipeButtonAttach) {
+        this.cookieSwipeButtonAttach = cookieSwipeButtonAttach;
     }
 
     public void setjTextAreaMail(String jTextAreaMail) {
