@@ -64,7 +64,7 @@ public class MailAction implements IAction {
                     break;
             }
             return true;
-        } catch (MessagingException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(MailAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
