@@ -62,7 +62,6 @@ public class ReadMailAction implements IAction {
         try {
             Message message = (Message) object[0];
             CookieSwipeApplication application = CookieSwipeApplication.getApplication();
-            buttons = new ArrayList<>();
             
             frame = new ReadMailCSFrame();
             new ReadMailFrameInitializer(frame).execute();
@@ -103,6 +102,7 @@ public class ReadMailAction implements IAction {
     }
     
     public static String getContentMessageFormMultipart(Message message) throws IOException, MessagingException {
+        buttons = new ArrayList<>();
         Object mess = message.getContent();
         String content = "";
 
@@ -131,7 +131,6 @@ public class ReadMailAction implements IAction {
                     }
                 });
                 buttons.add(b);
-//                download(bodyPart);
 
             } else if (bodyPart.getContentType().contains("image")) {
                 System.out.println("content type" + bodyPart.getContentType());
@@ -184,9 +183,6 @@ public class ReadMailAction implements IAction {
                             CookieSwipeTextArea area = frame.getjTextAreaMail();
                             area.repaint();
                             area.revalidate();
-                        } else {
-//                            JOptionPane.showMessageDialog(null, "une image n'a pas été téléchargé",
-//                                    "Telechargement des images", JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (InterruptedException | ExecutionException ex) {
                         Logger.getLogger(ReadMailAction.class.getName()).log(Level.SEVERE, null, ex);
@@ -278,13 +274,13 @@ public class ReadMailAction implements IAction {
             f.mkdirs();
         
         File file = new File(path + bodyPart.getFileName());
-        FileOutputStream fos = new FileOutputStream(file);
-        byte[] buf = new byte[4096];
-        int bytesRead;
-        while((bytesRead = is.read(buf))!=-1) {
-            fos.write(buf, 0, bytesRead);
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            byte[] buf = new byte[4096];
+            int bytesRead;
+            while((bytesRead = is.read(buf))!=-1) {
+                fos.write(buf, 0, bytesRead);
+            }
         }
-        fos.close();
     }
     
     public static String getText(Part p) throws MessagingException, IOException {

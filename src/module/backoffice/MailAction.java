@@ -60,10 +60,6 @@ public class MailAction implements IAction {
                 break;
             case "addBlackListSender":
                 break;
-            case "archive":
-                // TODO
-                System.err.println("NOT IMPLEMENTED");
-                break;
         }
         return true;
     }

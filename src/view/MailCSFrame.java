@@ -5,6 +5,7 @@ import interfaces.IJFrame;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.JScrollPane;
@@ -90,6 +91,11 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
         
     }
     
+    public void addAttach(String filename) {
+        attachedFilesPanel.add(new CookieSwipeButtonAttach(filename));
+        refresh();
+    }
+    
     private void initComponents() {
 
         cookieSwipeTextFieldTo = new CookieSwipeTextField();
@@ -125,12 +131,12 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
 		attachedFilesPanel.setMinimumSize(new Dimension(getWidth() - 150, getHeight() - 35));
 		attachedFilesPanel.setMaximumSize(new Dimension(getWidth() - 150, getHeight() - 35));
 		attachedFilesPanel.setMinimumSize(new Dimension(0, 0));
-        for(int i = 0; i < cookieSwipeButtonAttached.length; i++){
-        	cookieSwipeButtonAttached[i] = new CookieSwipeButtonAttach("<html><u>image " + i + "</u></html>");
-        }
-        for(int i = 0; i < cookieSwipeButtonAttached.length; i++){
-        	attachedFilesPanel.add(cookieSwipeButtonAttached[i]);
-        }
+//        for(int i = 0; i < cookieSwipeButtonAttached.length; i++){
+//        	cookieSwipeButtonAttached[i] = new CookieSwipeButtonAttach("<html><u>image " + i + "</u></html>");
+//        }
+//        for(int i = 0; i < cookieSwipeButtonAttached.length; i++){
+//        	attachedFilesPanel.add(cookieSwipeButtonAttached[i]);
+//        }
         /*******************/
         
     }

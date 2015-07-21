@@ -219,22 +219,19 @@ public class Dispatcher implements ActionListener {
         if(message != null)
             new MailAction().execute("forward", message);
     }
-    
-    public void archiveAction() {
-        Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
-        if(message != null)
-            new MailAction().execute("archive", message);
-        System.err.println("NOT IMPLEMENTED");
-    }
 
     public void addAttachementAction() {
         MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
         JFileChooser choose = new JFileChooser();
         choose.setMultiSelectionEnabled(true);
-        int val = choose.showOpenDialog(CookieSwipeApplication.getApplication().getFocusFrame());
+        MailCSFrame frame = (MailCSFrame) CookieSwipeApplication.getApplication().getFocusFrame();
+        int val = choose.showOpenDialog(frame);
         File[] files = choose.getSelectedFiles();
-        if(val == JFileChooser.APPROVE_OPTION) 
+        if(val == JFileChooser.APPROVE_OPTION)  {
             mailAccount.addAttachements(files);
+            for(File file : files)
+                frame.addAttach(file.getName());
+        }
     }
     
     public void writeMailAction() {
