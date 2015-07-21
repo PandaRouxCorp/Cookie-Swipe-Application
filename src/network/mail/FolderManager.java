@@ -256,13 +256,8 @@ public class FolderManager {
 	    	}
                 
                 int lastDownloadIndex = 0;
-                try {
-                   lastDownloadIndex = messagesCount.get(folderToLoad);
-                }
-                catch(NullPointerException e) {
-                    e.printStackTrace();
-                    System.out.println("Folder to load: " + folderToLoad);
-                }
+
+                lastDownloadIndex = messagesCount.get(folderToLoad);
 	    	
 	    	Map<IMAPFolder, Integer> lengths = new HashMap<>();
 	    	int maxCount = folderToLoad.getMessageCount();

@@ -353,8 +353,9 @@ public class MainFrameInitializer extends AbstractIHMAction {
                             keyAccount = MailAccount.ALL;
                             keyFolder = MailAccount.ALL;
                         } else {
-                            MailAccount mc = (MailAccount) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
-                            keyAccount = mc.getCSName();
+                            MailAccount mc = (MailAccount) ((DefaultMutableTreeNode) node.getParent()).getUserObject();                            
+                            CookieSwipeApplication.getApplication().setParam("mailAccountSelected",mc);
+                            keyAccount = mc.getCSName();                            
                             keyFolder = (String) node.getUserObject();
                         }
                     }
