@@ -214,7 +214,7 @@ public class DAOUser {
                     String blackList = result.getString(3);
                     if (blackList != null && !blackList.isEmpty()) {
                         for (String mail : blackList.split(";")) {
-                            user.blackListSender(mail);
+                            user.blackListSender(mail.trim());
                         }
                     }
                     error = DAOMailAccount.loadMailAccount(user);
