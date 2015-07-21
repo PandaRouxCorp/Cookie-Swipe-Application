@@ -66,6 +66,10 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         this.cookieSwipeTextFieldToCc.setText(cookieSwipeTextFieldToCc);
     }
 
+    public void setCookieSwipeTextFieldFrom(String cookieSwipeTextFieldFrom) {
+        this.cookieSwipeTextFieldFrom.setText(cookieSwipeTextFieldFrom);
+    }
+
     public void setCookieSwipeButtonAttach(CookieSwipeButtonAttach[] cookieSwipeButtonAttach) {
         this.cookieSwipeButtonAttach = cookieSwipeButtonAttach;
     }

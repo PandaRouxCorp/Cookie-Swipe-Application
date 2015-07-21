@@ -479,20 +479,27 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         return folderListModels.get(folderName).toArray(new Mail[folderListModels.get(folderName).size()]);
     }
 
-    public void addToListOfmail(String folderName, Message message) {
-        folderListModels.get(folderName).add(message);
+    public void addToListOfmail(String folderName, Message message) throws MessagingException {
+        if (!isInBlackList(message)) 
+            folderListModels.get(folderName).add(message);
     }
 
     public void removeToListOfmail(String folderName, Message message) {
         folderListModels.get(folderName).remove(message);
     }
 
-    public void addToListOfmail(String folderName, List<Message> listOfmail) {
-        folderListModels.get(folderName).addAll(listOfmail);
+    public void addToListOfmail(String folderName, List<Message> listOfmail) throws MessagingException {
+        for(Message message : listOfmail) {
+            if(!isInBlackList(message))
+                folderListModels.get(folderName).add(message);
+        }
     }
 
-    public void addToListOfmail(String folderName, Message[] listOfmail) {
-        folderListModels.get(folderName).addAll(Arrays.asList(listOfmail));
+    public void addToListOfmail(String folderName, Message[] listOfmail) throws MessagingException {
+        for(Message message : listOfmail) {
+            if(!isInBlackList(message))
+                folderListModels.get(folderName).add(message);
+        }
     }
 
     public void removeToListOfmail(String folderName, List<Message> listOfmail) {
@@ -542,6 +549,18 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                 Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public boolean isInBlackList(Message message) throws MessagingException {
+        boolean inBlacklist = false;
+        User usr = CookieSwipeApplication.getApplication().getUser();
+        for (Address address : message.getFrom()) {
+            if (usr.getBlackList().contains(address.toString())) {
+                inBlacklist = true;
+                break;
+            }
+        }
+        return inBlacklist;
     }
 
     @Override

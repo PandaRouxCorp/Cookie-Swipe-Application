@@ -31,12 +31,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.imageio.ImageIO;
+import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import module.ihm.ReadMailFrameInitializer;
 import network.messageFramework.AbstractSender;
@@ -62,7 +62,15 @@ public class ReadMailAction implements IAction {
             new ReadMailFrameInitializer(frame).execute();
             // set frame
             frame.setCookieSwipeTextFieldObject(message.getSubject());
-            frame.setCookieSwipeTextFieldTo(Arrays.toString(message.getFrom()));
+            String from = "";
+            int i = 0;
+            for (Address addr : message.getFrom()) {
+                String adresse = parseMail(addr);
+                from += i == 0 ? adresse : ", " + adresse;
+                i++;
+            }
+
+            frame.setCookieSwipeTextFieldFrom(from);
 
             String content = getContentMessage(message);
             
@@ -78,16 +86,11 @@ public class ReadMailAction implements IAction {
 
     public static String getContentMessage(Message message) throws IOException, MessagingException {
         
-        Object mess = message.getContent();
-        String content;
+        String content = "";
         if (message.isMimeType("text/plain")) {
             content = (String) message.getContent();
-        } else if (mess instanceof Multipart) {
+        } else if (message.getContent() instanceof Multipart) {
             content = getContentMessageFormMultipart(message);
-        } else if (message.isMimeType("message/rfc822")) {
-            content = "message/rfc822 to do";
-        } else {
-            content = "others to do";
         }
         return content;
     }
@@ -247,8 +250,13 @@ public class ReadMailAction implements IAction {
     
     public static void download (BodyPart bodyPart) throws IOException, MessagingException {
         InputStream is = bodyPart.getInputStream();
-        File f = new File(PATH_HOME + "tmp/" + bodyPart.getFileName());
-        FileOutputStream fos = new FileOutputStream(f);
+        String path = PATH_HOME + "tmp/";
+        File f = new File(path);
+        if(!f.exists())
+            f.mkdirs();
+        
+        File file = new File(path + bodyPart.getFileName());
+        FileOutputStream fos = new FileOutputStream(file);
         byte[] buf = new byte[4096];
         int bytesRead;
         while((bytesRead = is.read(buf))!=-1) {
@@ -295,6 +303,17 @@ public class ReadMailAction implements IAction {
             }
         }
         return null;
+    }
+    
+    public static String parseMail(Address address) {
+        String adresse = address.toString();
+        if (adresse.contains("[")) {
+            adresse = adresse.substring(adresse.lastIndexOf("[") + 1, adresse.lastIndexOf("]"));
+        }
+        if (adresse.contains("<")) {
+            adresse = adresse.substring(adresse.lastIndexOf("<") + 1, adresse.lastIndexOf(">"));
+        }
+        return adresse;
     }
     
     public static class ImagePanel extends JPanel {

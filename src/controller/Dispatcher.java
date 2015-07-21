@@ -185,7 +185,7 @@ public class Dispatcher implements ActionListener {
             bl.add(address.toString());
         }
         DAOUser.updateBlackListUser(usr);
-        JOptionPane.showMessageDialog(null, "Cet/Ces adresse mail à bien été ajouté a la black list",
+        JOptionPane.showMessageDialog(null, "Cette/Ces adresse(s) mail à bien été ajouté a la black list",
                 "black list", JOptionPane.INFORMATION_MESSAGE);
     }
 

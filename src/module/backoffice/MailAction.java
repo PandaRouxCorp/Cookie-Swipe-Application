@@ -43,10 +43,6 @@ public class MailAction implements IAction {
                         int i = 0;
                         for(Address addr : message.getFrom()) {
                             String adresse = addr.toString();
-                            if(adresse.contains("["))
-                                adresse = adresse.substring(adresse.lastIndexOf("[") + 1, adresse.lastIndexOf("]") + 1);
-                            if(adresse.contains("<"))
-                                adresse = adresse.substring(adresse.lastIndexOf("<") + 1, adresse.lastIndexOf(">") + 1);
                             to += i == 0 ? adresse : ", " + adresse;
                             i++;
                         }
