@@ -29,10 +29,12 @@ import network.messageFramework.DeliverySystem;
 import network.messageFramework.FrameworkMessage;
 
 import com.sun.mail.imap.IMAPFolder;
-import cookie.swipe.application.CookieSwipeApplication;
-import javax.mail.Address;
-import javax.mail.Message;
-import model.User;
+
+/**
+ * Cette classe est responsable de la synchronisation des boites mails avec le serveur mail
+ * @author mickx
+ *
+ */
 
 public class FolderManager {
 
@@ -45,6 +47,10 @@ public class FolderManager {
         this.synchronizer = Executors.newSingleThreadScheduledExecutor();
     }
 
+    /**
+     * Cette methode permet d'ajouter des comptes mail a synchronise
+     * @param mailAccounts
+     */
     public void addMailAccounts(Collection<MailAccount> mailAccounts) {
 
         AbstractSender<Object> sender = new AbstractSender<Object>() {
@@ -79,6 +85,10 @@ public class FolderManager {
         sender.sendMessages(sentMessages);
     }
 
+    /**
+     * Cette methode permet d'ajouter un compte mail a synchronise
+     * @param mc
+     */
     private void addMailAccount(MailAccount mc) {
         try {
             Store store = mc.getClientConnection();
@@ -94,6 +104,13 @@ public class FolderManager {
         }
     }
 
+    /**
+     * Cette methode permet d'ajouter un compte mail a synchronise
+     * et a précharger quelques mails
+     * 
+     * @param mc
+     * @return
+     */
     public boolean addNewMailAccount(MailAccount mc) {
         try {
             addMailAccount(mc);
@@ -105,6 +122,11 @@ public class FolderManager {
         return true;
     }
 
+    /**
+     * Cette methode permet de supprimer un compte mail
+     * On arrete la synchronisation pour celui-ci
+     * @param mc
+     */
     public void removeMailAccount(MailAccount mc) {
         List<IMAPFolder> foldersToRemove = new ArrayList<>();
         for (IMAPFolder f : folders.keySet()) {
@@ -115,6 +137,10 @@ public class FolderManager {
         removeFolders(foldersToRemove);
     }
 
+    /**
+     * Cette methode permet d'arreter la synchronisation d'une collection de dossier IMAP
+     * @param foldersToRemove
+     */
     private void removeFolders(Collection<IMAPFolder> foldersToRemove) {
         removeFolderListener(foldersToRemove);
         closeFolders(foldersToRemove);
@@ -123,12 +149,20 @@ public class FolderManager {
         }
     }
 
+    /**
+     * Cette methode permet de supprimer les listeners des dossiers IMAP passes en parametres
+     * @param foldersToRemove
+     */
     private void removeFolderListener(Collection<IMAPFolder> foldersToRemove) {
         for (IMAPFolder f : foldersToRemove) {
             removeListeners(f, folders.get(f).getValue());
         }
     }
 
+    /**
+     * Cette methode permet de fermer les dossier IMAP passes en parametres
+     * @param foldersToRemove
+     */
     private void closeFolders(Collection<IMAPFolder> foldersToRemove) {
         for (IMAPFolder f : foldersToRemove) {
             try {
@@ -139,11 +173,19 @@ public class FolderManager {
         }
     }
 
+    /**
+     * Cette methode permet de demarrer le FolderManager
+     * On precharge les mails des comptes et on commence la synchronisation
+     */
     private void start() {
         retrieveMails();
         startSync();
     }
 
+    /**
+     * Cette methode permet de recuper les mails d'un compte mail
+     * @param mc
+     */
     private void retrieveMailsFor(MailAccount mc) {
         List<IMAPFolder> newFolders = new ArrayList<>();
         for (Folder f : folders.keySet()) {
@@ -178,6 +220,9 @@ public class FolderManager {
         });
     }
 
+    /**
+     * Cette methode permet de recuper les mails de tous les comptes mail enregistres
+     */
     private void retrieveMails() {
         try {
             Map<IMAPFolder, Integer> lengths = new HashMap<>();
@@ -194,6 +239,11 @@ public class FolderManager {
         }
     }
 
+    /**
+     * Cette classe est responsable du téléchargement des mails des dossiers IMAP
+     * @author mickx
+     *
+     */
     class RetreiveMailMessage extends FrameworkMessage<Object> {
 
         private static final long serialVersionUID = 3123849369769712930L;
@@ -219,15 +269,25 @@ public class FolderManager {
         }
     }
 
+    /**
+     * Cette methode permet d'arreter la synchronisation
+     * et d'effacer les dossiers qui etaient geres
+     */
     public void closeSync() {
         stopSync();
         removeFolders(folders.keySet());
     }
 
+    /**
+     * Cette methode permet d'arret la synchronisation
+     */
     public void stopSync() {
         synchronizer.shutdown();
     }
 
+    /**
+     * Cette methode permet de demarrer la synchronisation
+     */
     public void startSync() {
         synchronizer.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -237,12 +297,21 @@ public class FolderManager {
         }, 0, 60, TimeUnit.SECONDS);
     }
     
+    /**
+     * Cette methode permet de forcer un synchronisation
+     */
     public void refresh() {
         for (IMAPFolder f : folders.keySet()) {
             DeliverySystem.launchTask(new FolderSynchronizationRequest(f));
         }
     }
 
+    /**
+     * Cette methode permet d'ouvrir un dossier IMAP
+     * @param folder
+     * @return
+     * @throws MessagingException
+     */
     private boolean open(Folder folder) throws MessagingException {
         if ((folder.getType() & Folder.HOLDS_MESSAGES) == Folder.HOLDS_MESSAGES) {
             if (!folder.isOpen()) {
@@ -253,6 +322,11 @@ public class FolderManager {
         return false;
     }
 
+    /**
+     * Cette methode permet d'ajout un listener d'evenement a un dossier IMAP
+     * @param folder
+     * @param listener
+     */
     public void addListeners(IMAPFolder folder, Object listener) {
         if (listener instanceof ConnectionListener) {
             folder.addConnectionListener((ConnectionListener) listener);
@@ -268,6 +342,11 @@ public class FolderManager {
         }
     }
 
+    /**
+     * Cette methode permet d'enlever un listener au dossier IMAP passe en parametre
+     * @param folder
+     * @param listener
+     */
     public void removeListeners(IMAPFolder folder, Object listener) {
         if (listener instanceof ConnectionListener) {
             folder.removeConnectionListener((ConnectionListener) listener);
@@ -283,6 +362,12 @@ public class FolderManager {
         }
     }
 
+    /**
+     * Cette classe est reponsable de la demande de notification de changement
+     * auprès du serveur mail
+     * @author mickx
+     *
+     */
     class FolderSynchronizationRequest extends FrameworkMessage<Object> {
 
         private static final long serialVersionUID = 764857642308858407L;
