@@ -40,11 +40,13 @@ public class FolderManager {
 
     private static final int preloadedMessagesCount = 30;
     private Map<IMAPFolder, Entry<Store, MailAccount>> folders;
+    private Map<IMAPFolder, Integer> messagesCount;
     private ScheduledExecutorService synchronizer;
 
     public FolderManager() {
         this.folders = new ConcurrentHashMap<>();
         this.synchronizer = Executors.newSingleThreadScheduledExecutor();
+        messagesCount = new HashMap<>();
     }
 
     /**
@@ -238,6 +240,41 @@ public class FolderManager {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while retreiving mails", e);
         }
     }
+    
+    /**
+     * Cette methode permet de recuperer les mails suivant d'une boite mail
+     * @param mc
+     */
+    public void retrieveNextMailsFor(MailAccount mc, String folderName) {
+    	try {
+	    	IMAPFolder folderToLoad = null;
+	    	for(IMAPFolder f : folders.keySet()) {
+	    		if(f.getName().equals(folderName) && folders.get(f).getValue().equals(mc)) {
+	    			folderToLoad = f;
+	    			break;
+	    		}
+	    	}
+                
+                int lastDownloadIndex = 0;
+                try {
+                   lastDownloadIndex = messagesCount.get(folderToLoad);
+                }
+                catch(NullPointerException e) {
+                    e.printStackTrace();
+                    System.out.println("Folder to load: " + folderToLoad);
+                }
+	    	
+	    	Map<IMAPFolder, Integer> lengths = new HashMap<>();
+	    	int maxCount = folderToLoad.getMessageCount();
+	    	lengths.put(folderToLoad, maxCount);
+	    	
+	    	for(int j = lastDownloadIndex; j < lastDownloadIndex + preloadedMessagesCount && j < maxCount; ++j)
+	    		DeliverySystem.launchTask(new RetreiveMailMessage(lengths,j));
+    	}
+    	catch(MessagingException e) {
+    		Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while retreiving mails", e);
+    	}
+	}
 
     /**
      * Cette classe est responsable du téléchargement des mails des dossiers IMAP
@@ -258,12 +295,13 @@ public class FolderManager {
 
         @Override
         public Object call() throws Exception {
-            for (IMAPFolder f : folders.keySet()) {
+            for (IMAPFolder f : lengths.keySet()) {
                 int index = lengths.get(f) - i;
                 if (index > 0) {
                     MailAccount mc = folders.get(f).getValue();
                     mc.addToListOfmail(f.getName(), f.getMessage(index));
                 }
+                messagesCount.put(f,i);
             }
             return null;
         }

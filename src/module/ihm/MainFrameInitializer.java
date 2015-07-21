@@ -7,15 +7,21 @@ package module.ihm;
 
 import interfaces.AbstractIHMAction;
 
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.mail.Message;
 import javax.swing.JList;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -26,6 +32,7 @@ import model.Mail;
 import model.MailAccount;
 import model.MailComparator;
 import model.User;
+import network.mail.FolderManager;
 import view.component.CookieSwipeButton;
 import view.component.CookieSwipeFrame;
 import view.component.CookieSwipeList;
@@ -34,8 +41,6 @@ import controller.ActionName;
 import controller.Dispatcher;
 import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
-import java.awt.event.MouseListener;
-import java.util.List;
 
 /**
  *
@@ -80,6 +85,25 @@ public class MainFrameInitializer extends AbstractIHMAction {
                 setMailButtonsVisible(true);
             }
         });
+        JScrollPane jScrollPaneMailList = (JScrollPane) hsJcomponent.get("jScrollPaneMailList");
+        JScrollBar vBar = jScrollPaneMailList.getVerticalScrollBar();
+        vBar.addAdjustmentListener(new AdjustmentListener() {	
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				 int extent = jScrollPaneMailList.getVerticalScrollBar().getModel().getExtent();
+			     int currentScrollValue = jScrollPaneMailList.getVerticalScrollBar().getValue() + extent;
+			     int maxScrollValue = jScrollPaneMailList.getVerticalScrollBar().getMaximum();
+                             System.out.println("max = " + maxScrollValue + " current = " + currentScrollValue);
+			     if( maxScrollValue != 0 && currentScrollValue == maxScrollValue ) {
+			    	 FolderManager folderManager = (FolderManager) CookieSwipeApplication.getApplication().getParam("FolderManager");
+			    	 MailAccount mc = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
+			    	 String folderName = (String) CookieSwipeApplication.getApplication().getParam("folderName");
+			    	 if( mc != null && folderName != null && !folderName.equals( mc.getCSName() )) {
+                                     folderManager.retrieveNextMailsFor(mc, folderName);
+			    	 }
+			     }
+			}
+		});
     }
 
     public DefaultMutableTreeNode getRootNode() {
