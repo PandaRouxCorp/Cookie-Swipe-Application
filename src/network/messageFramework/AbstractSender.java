@@ -12,7 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Cette classe represente un sender
+ * C'est en fait un objet qui est capable de demander l'execution de taches asynchrones
  * @author mickx
  * @param <T>
  */
@@ -32,18 +33,36 @@ public abstract class AbstractSender<T> {
         messages = new ConcurrentLinkedQueue<>();
     }
     
+    /**
+     * Cette methode permet d'avoir l'id du sender
+     * @return
+     */
     public final String getSenderId() {
         return id;
     }
     
+    /**
+     * Cette methode correspond a l'action qu'il faut faire en réponse à un message
+     * C'est en fait une callback
+     * 
+     * @param receivedMessage
+     */
     public abstract void onMessageReceived(Future<T> receivedMessage);
     
+    
+    /**
+     * Cette methode est destine override
+     * Elle est appele des que la queue des messages qui ont ete envoye et dont on attend le retour est vide
+     */
     public void onAllMessagesReceived() {
     	
     }
     
     /**
-     *
+     * Cette methode est appele à la reception d'un message retour
+     * Elle permet de caster les objets dans le bon type
+     * Si toutes les taches ont ete executee, elle le notifie egalement
+     *  
      * @param receivedMessage
      * @param frameworkMessage 
      */
@@ -62,12 +81,20 @@ public abstract class AbstractSender<T> {
         }
     }
     
+    /**
+     * Methode qui permet d'envoyer une tache a execute
+     * @param sentMessage
+     */
     public final void sendMessage(FrameworkMessage<?> sentMessage) {
         sentMessage.setSenderId(getSenderId());
         messages.add(sentMessage);
         Postman.sendMessage(sentMessage);
     }
     
+    /**
+     * Methode qui envoie les messages a executes
+     * @param sentMessages
+     */
     public final void sendMessages(List<FrameworkMessage<?>> sentMessages) {
     	messages.addAll(sentMessages);
     	for(FrameworkMessage<?> message : sentMessages) {

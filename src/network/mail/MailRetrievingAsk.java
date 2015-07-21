@@ -9,6 +9,12 @@ import javax.mail.Message;
 import model.Mail;
 import network.messageFramework.FrameworkMessage;
 
+/**
+ * Cette classe represente une tache qui recupere les comptes mails d'une boite
+ * @author mickx
+ *
+ */
+
 public class MailRetrievingAsk extends FrameworkMessage<List<Mail>> {
 	
 	private int begin, end;

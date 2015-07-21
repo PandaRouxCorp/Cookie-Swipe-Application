@@ -19,7 +19,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Cette classe permet de lancer des taches asynchrones.
+ * Ces taches peuvent ou pas notifier la fin de leur executions.
+ * 
+ * Le fonctionnement de la classe est le suivant:
+ * 1) Des taches sont envoyes au singleton
+ * 2) Elles sont stockees dans une queue
+ * 3) Executees par un pool de threads
+ * 4) Lorsqu'une tache executee, on notifie eventuellement l'envoyeur   
  * @author mickx
  */
 public class DeliverySystem {
@@ -47,14 +54,29 @@ public class DeliverySystem {
         matcher = new HashMap<>();
     }
 
+    /**
+     * Cette methode permet de lie la tache a executer à son Future
+     * afin de pouvoir ensuite notifier à l'envoyeur que la tache a ete executee
+     *  
+     * @param callable
+     * @param f
+     */
     private void link(FrameworkMessage<?> callable, Future<?> f) {
         matcher.put(f, callable);
     }
     
+    /**
+     * Ajout d'une tache
+     * @param callable
+     */
     private void addTask(FrameworkMessage<?> callable) {
     	addTask(callable,true);
     }
 
+    /**
+     * Ajout d'une tache
+     * @param callable
+     */
     private void addTask(FrameworkMessage<?> callable, boolean shouldAnswer) {     
     	if(slaveExecutor.isShutdown()) {
             slaveExecutor = Executors.newFixedThreadPool(4);
@@ -75,6 +97,10 @@ public class DeliverySystem {
         INSTANCE.addTask(callable,false);
     }
 
+    /**
+     * Cette methode permet de notifier l'envoyeur quand la tache a ete executee
+     * @param f
+     */
     private void onRecieveResponse(Future<?> f) {
         futures.remove(f);
         if(matcher.get(f) != null) {
@@ -83,6 +109,9 @@ public class DeliverySystem {
         matcher.remove(f);
     }
 
+    /**
+     * Cette methode lance le thread qui repartit les threads entre les threads esclaves
+     */
     private void launchListener() {
         masterExecutor = Executors.newSingleThreadExecutor();
         masterExecutor.execute(new Runnable() {
@@ -128,6 +157,10 @@ public class DeliverySystem {
         shouldStop = true;
     }
 
+    /**
+     * Cette methode permet lors de l'arret du systeme 
+     * de sérialiser le message qui n'ont pas ete traite
+     */
     private void saveState() {
         List<FrameworkMessage<?>> frameworkMessages = new ArrayList<>();
         
@@ -138,6 +171,10 @@ public class DeliverySystem {
         Postman.serializeMessages(frameworkMessages);
     }
 
+    /**
+     * Cette methode permet de deserialiser les messages 
+     * non executes quand le systeme a ete arrete
+     */
     private void retreiveState() {
         Postman.retreiveSavedMessages();
     }
@@ -146,12 +183,18 @@ public class DeliverySystem {
         return INSTANCE.isActived();
     }
 
+    /**
+     * Arret du systeme
+     */
     public static void stop() {
         if (INSTANCE != null) {
             INSTANCE.safeStop();
         }
     }
 
+    /**
+     * Arret brutal du systeme
+     */
     public static void kill() {
         if (INSTANCE != null) {
             INSTANCE.hardStop();
@@ -162,7 +205,11 @@ public class DeliverySystem {
         return INSTANCE.getTaskNumber();
     }
 
-    static void launch(FrameworkMessage<?> message) { // Droit package ... Passer par Postman
+    /**
+     * Ajout d'un message a executer
+     * @param message
+     */
+    static void launch(FrameworkMessage<?> message) {
         if (INSTANCE.isActived() == false) {
             INSTANCE.launchListener();
         }

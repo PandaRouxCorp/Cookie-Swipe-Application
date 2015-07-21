@@ -9,7 +9,11 @@ import java.io.Serializable;
 import java.util.concurrent.Callable;
 
 /**
- *
+ * Cette classe est un enrichissement de la classe Callable
+ * afin qu'elle soit sérialisable et puisse avoir un identifiant
+ * qui correspond a l'objet qui a commandite son execution
+ * 
+ * L'objet en question doit etendre AbstractSender
  * @author mickx
  */
 public abstract class FrameworkMessage<T> implements Callable<T>, Serializable {

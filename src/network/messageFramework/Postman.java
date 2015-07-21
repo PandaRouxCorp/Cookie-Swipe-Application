@@ -19,7 +19,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Cette classe permet de faire le lien entre le sender 
+ * qui envoie des messages au systeme de taches asynchrones
+ * et le resultat de l'execution de la tache 
+ * 
  * @author mickx
  */
 public class Postman {
@@ -34,10 +37,20 @@ public class Postman {
         senders = new HashMap<>();
     }
     
+    /**
+     * Cette methode transmet le message au systeme de taches asynchrones
+     * @param message
+     */
     private void relayMessage(FrameworkMessage<?> message) {
         DeliverySystem.launch(message);
     }
     
+    /**
+     * Cette methode renvoyer au sender sa tache executee 
+     * @param senderID
+     * @param response
+     * @param frameworkMessage
+     */
     private void relayResponse(String senderID, Future<?> response, FrameworkMessage<?> frameworkMessage) {
         AbstractSender s = senders.get(senderID);
         if(s != null) {
@@ -48,17 +61,40 @@ public class Postman {
         }
     }
     
+    /**
+     * Cette methode permet d'enregistrer le sender
+     * c'est à dire de lier un id a un sender
+     * 
+     * @param id
+     * @param sender
+     */
     private void registerSender(String id, AbstractSender sender) {
         senders.put(id, sender);
     }
     
+    /**
+     * Cette methode permet d'effacer le sender 
+     * identifie par l'id passe en parametre
+     * 
+     * @param id
+     */
     private void unregisterSender(String id) {
         senders.remove(id);
     }
     
+    /**
+     * Cette methode permet de savoir si un sender a ete enregistre
+     * @param id
+     * @return
+     */
     private boolean isSenderRegistered(String id) {
         return senders.containsKey(id);
     }
+    
+    /**
+     * Cette methode permet d'enregistrer un sender
+     * @param sender
+     */
     
     public static void registerSender(AbstractSender sender) {
         if(INSTANCE == null) {
@@ -67,6 +103,12 @@ public class Postman {
         INSTANCE.registerSender(sender.getSenderId(), sender);
     }
     
+    /**
+     * Cette methode permet d'effacer le sender
+     * Il n'aura plus de retour sur les messages qu'il enverra 
+     * 
+     * @param sender
+     */
     public static void unregisterSender(AbstractSender sender) {
         if(INSTANCE == null) {
             INSTANCE = new Postman();
@@ -74,6 +116,11 @@ public class Postman {
         INSTANCE.unregisterSender(sender.getSenderId());
     }
     
+    /**
+     * Cette methode permet de savoir si un sender a ete enregistre
+     * @param sender
+     * @return
+     */
     public static boolean isSenderRegistered(AbstractSender sender) {
         if(INSTANCE == null) {
             INSTANCE = new Postman();
@@ -81,6 +128,10 @@ public class Postman {
         return INSTANCE.isSenderRegistered(sender.getSenderId());
     }
     
+    /**
+     * Cette methode permet de lancer une tache asynchrone
+     * @param message
+     */
     public static void sendMessage(FrameworkMessage<?> message) {
         if(INSTANCE == null) {
             INSTANCE = new Postman();
@@ -88,6 +139,12 @@ public class Postman {
         INSTANCE.relayMessage(message);
     }
 
+    /**
+     * Cette methode permet de renvoyer au sender sa tache executee
+     * @param senderID
+     * @param response
+     * @param frameworkMessage
+     */
     static void sendResponse(String senderID, Future<?> response, FrameworkMessage<?> frameworkMessage) {
         if(INSTANCE != null) {
             INSTANCE.relayResponse(senderID, response, frameworkMessage);
@@ -97,6 +154,10 @@ public class Postman {
         }
     }
     
+    /**
+     * Cette methode permet de serialiser les sender et les messages en cours d'execution  
+     * @param frameworkMessages
+     */
     static void serializeMessages(List<FrameworkMessage<?>> frameworkMessages) {
         if(INSTANCE != null) {
             INSTANCE.serialize(frameworkMessages);
@@ -106,6 +167,10 @@ public class Postman {
         }
     }
     
+    /**
+     * Cette methode permet de recupérer l'état des 
+     * messages et des sender au moment de l'arret du systeme
+     */
     static void retreiveSavedMessages() {
         if(INSTANCE == null) {
             INSTANCE = new Postman();
@@ -113,6 +178,11 @@ public class Postman {
         INSTANCE.deserializedMessages();
     }
 
+    /**
+     * Cette methode permet de serialiser les messages qui n'ont pas ete envoyes
+     *
+     * @param frameworkMessages
+     */
     private void serialize(List<FrameworkMessage<?>> frameworkMessages) {
         ObjectOutputStream oos = null;
         try {
@@ -164,6 +234,9 @@ public class Postman {
         }
     }
     
+    /**
+     * Cette methode permet de deserialiser les messages qui n'ont pas ete envoyes
+     */
     private void deserializedMessages() {
         File file = new File(COOKIE_SWIPE_DIR);
         ObjectInputStream ois = null;
