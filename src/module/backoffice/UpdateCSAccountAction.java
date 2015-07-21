@@ -38,7 +38,7 @@ public class UpdateCSAccountAction extends AbstractIHMAction {
         user.setBackupMail(mailAdress);
         String password = new String(((JPasswordField) hsJcomponent.get("cookieSwipePasswordFieldPassword")).getPassword());
         try {
-            user.setPassword(new Encryption().encrypt(password));
+            user.setPassword(password);
         } catch (Exception ex) {
             Logger.getLogger(UpdateMailAccountAction.class.getName()).log(Level.SEVERE, null, ex);
             error = CodeError.ENCRYPTION_FAIL;
