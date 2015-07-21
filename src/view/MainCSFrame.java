@@ -338,15 +338,6 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
     }
 
     @Override
-    public void refresh() {
-    	
-    	validate();
-        repaint();
-        revalidate();
-        
-    }
-
-    @Override
     public void notifyMailAccountDeleted(MailAccount mc) {
         new MainFrameInitializer(this).deleteMailAccountInTree(mc);
     }

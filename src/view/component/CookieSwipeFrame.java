@@ -1,12 +1,12 @@
 package view.component;
 
 
-import java.awt.Dimension;
+import interfaces.IJFrame;
 import java.util.HashMap;
 
 import javax.swing.JFrame;
 
-public class CookieSwipeFrame extends JFrame {
+public class CookieSwipeFrame extends JFrame implements IJFrame{
     
     private static final long serialVersionUID = 1L;
     
@@ -26,5 +26,12 @@ public class CookieSwipeFrame extends JFrame {
     
     public HashMap<String, Object> getJComponent() {
         return hsJcomponent;
+    }
+
+    @Override
+    public void refresh() {
+        validate();
+        repaint();
+        revalidate();
     }
 }
