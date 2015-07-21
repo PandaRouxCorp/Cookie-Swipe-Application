@@ -212,7 +212,7 @@ public class DAOUser {
                 if (result.getInt(1) == 1) {
                     user.setId(result.getInt(2));
                     String blackList = result.getString(3);
-                    if (!blackList.isEmpty()) {
+                    if (blackList != null && !blackList.isEmpty()) {
                         for (String mail : blackList.split(";")) {
                             user.blackListSender(mail);
                         }

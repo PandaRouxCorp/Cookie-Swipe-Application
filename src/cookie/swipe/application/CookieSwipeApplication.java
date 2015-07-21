@@ -43,6 +43,7 @@ public class CookieSwipeApplication {
     
     public void stop() {
         DeliverySystem.stop();
+        System.exit(0);
     }
     
     private void initLookAndFeel() {
