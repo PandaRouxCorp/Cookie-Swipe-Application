@@ -5,6 +5,7 @@ import interfaces.IJFrame;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.JScrollPane;
@@ -70,8 +71,14 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         this.cookieSwipeTextFieldFrom.setText(cookieSwipeTextFieldFrom);
     }
 
-    public void setCookieSwipeButtonAttach(CookieSwipeButtonAttach[] cookieSwipeButtonAttach) {
-        this.cookieSwipeButtonAttach = cookieSwipeButtonAttach;
+    public void setCookieSwipeButtonAttach(List<CookieSwipeButtonAttach> buttons) {
+        this.cookieSwipeButtonAttach = new CookieSwipeButtonAttach[buttons.size()];
+        for(int i = 0; i < buttons.size(); i++)
+            this.cookieSwipeButtonAttach[i] = buttons.get(i);
+        csPanel.removeAll();
+        for(int i = 0; i < buttons.size(); i++){
+        	csPanel.add(buttons.get(i));
+        }
     }
 
     public void setjTextAreaMail(String jTextAreaMail) {
@@ -120,7 +127,7 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         setSize(720, 480);
     	
     }
-
+     
     public CookieSwipeTextArea getjTextAreaMail() {
         return jTextAreaMail;
     }

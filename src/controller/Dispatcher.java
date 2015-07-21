@@ -195,10 +195,6 @@ public class Dispatcher implements ActionListener {
                                         (Message) CookieSwipeApplication.getApplication().getParam("selectedMail"));
     }
 
-    public void selectMailAction() { // ne sert a rien
-        System.err.println("NOT IMPLEMENTED");
-    }
-
     public void readMailAction() {
         Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
         if (message != null) {
@@ -228,7 +224,7 @@ public class Dispatcher implements ActionListener {
         Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
         if(message != null)
             new MailAction().execute("archive", message);
-//        System.err.println("NOT IMPLEMENTED");
+        System.err.println("NOT IMPLEMENTED");
     }
 
     public void addAttachementAction() {
@@ -264,7 +260,7 @@ public class Dispatcher implements ActionListener {
         new UpdateMailAccountFrameInitializer(focusFrame).execute();
     }
 
-    public void createAccountAction() { // compte cookie swipe a créé
+    public void createAccountAction() {
         CookieSwipeApplication application = CookieSwipeApplication.getApplication();
         CookieSwipeFrame frame = application.getFocusFrame();
         String login    = ((CookieSwipeTextField)application.getFocusFrameJComponent("cookieSwipeTextFieldLoginAdressMail")).getText();

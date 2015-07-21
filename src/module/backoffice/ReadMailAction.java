@@ -10,6 +10,8 @@ import cookie.swipe.application.SystemSettings;
 import static cookie.swipe.application.SystemSettings.PATH_HOME;
 import interfaces.IAction;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -37,12 +39,14 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import module.ihm.ReadMailFrameInitializer;
 import network.messageFramework.AbstractSender;
 import network.messageFramework.FrameworkMessage;
 import org.jsoup.Jsoup;
 import view.ReadMailCSFrame;
+import view.component.CookieSwipeButtonAttach;
 import view.component.CookieSwipeTextArea;
 
 /**
@@ -51,12 +55,14 @@ import view.component.CookieSwipeTextArea;
 public class ReadMailAction implements IAction {
     
     private static ReadMailCSFrame frame;
+    private static List<CookieSwipeButtonAttach> buttons;
     
     @Override
     public boolean execute(Object... object) {
         try {
             Message message = (Message) object[0];
             CookieSwipeApplication application = CookieSwipeApplication.getApplication();
+            buttons = new ArrayList<>();
             
             frame = new ReadMailCSFrame();
             new ReadMailFrameInitializer(frame).execute();
@@ -75,7 +81,8 @@ public class ReadMailAction implements IAction {
             String content = getContentMessage(message);
             
             frame.setjTextAreaMail(content);
-            
+            if(buttons.size() > 0)
+                frame.setCookieSwipeButtonAttach(buttons);
             application.setFocusFrame(frame);
             return true;
         } catch (MessagingException | IOException ex) {
@@ -109,7 +116,22 @@ public class ReadMailAction implements IAction {
                 System.out.println("Mail have some attachment");
                 DataHandler handler = bodyPart.getDataHandler();
                 System.out.println("file name : " + handler.getName());
-                download(bodyPart);
+                CookieSwipeButtonAttach b = new CookieSwipeButtonAttach(bodyPart);
+                b.addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            download(b.getBodyPart());
+                            JOptionPane.showMessageDialog(null, "la piece jointe a bien été téléchargé",
+                                    "Telechargement des pieces jointes", JOptionPane.INFORMATION_MESSAGE);
+                        } catch (IOException | MessagingException ex) {
+                            Logger.getLogger(ReadMailAction.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
+                buttons.add(b);
+//                download(bodyPart);
 
             } else if (bodyPart.getContentType().contains("image")) {
                 System.out.println("content type" + bodyPart.getContentType());

@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.swing.JButton;
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
@@ -18,7 +21,13 @@ public class CookieSwipeButtonAttach extends CookieSwipeButton{
 	protected int cell = 0;
 	protected int height, width;
 	protected boolean sizeUpdated = false;
- 
+        protected BodyPart bodyPart;
+
+        public CookieSwipeButtonAttach(BodyPart bodyPart) throws MessagingException {
+            this(bodyPart.getDataHandler().getName());
+            this.bodyPart = bodyPart;
+        }
+
 	public CookieSwipeButtonAttach(String text){
 		super(text);
 		text = text.replace("<html><u>", "");
@@ -37,6 +46,10 @@ public class CookieSwipeButtonAttach extends CookieSwipeButton{
 		buttonColor = background;
 		initComponent();
 	}
+
+        public BodyPart getBodyPart() {
+            return bodyPart;
+        }
  
 	protected void initComponent(){	
 		setForeground(CookieSwipeColor.LETTER);
@@ -54,18 +67,12 @@ public class CookieSwipeButtonAttach extends CookieSwipeButton{
 		
 	}
 	
-	@Override
+    @Override
     protected void paintComponent(Graphics g) {
-//        if (getModel().isPressed()) {
-//            g.setColor(buttonColor.darker().darker());
-//        	
-//        } else if (getModel().isRollover()) {
-//            g.setColor(buttonColor.darker());
-//        } else {
-            g.setColor(buttonColor);
-//        }
+
+        g.setColor(buttonColor);
         g.fillRect(0, 0, getWidth(), getHeight());
-        
+
         if(!sizeUpdated){
         	height = (int) getSize().getHeight() - 20;
         	width = (int) getSize().getWidth() - 20;
