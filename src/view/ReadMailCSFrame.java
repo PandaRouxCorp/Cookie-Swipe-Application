@@ -149,11 +149,7 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         cookieSwipeButtonToBlacklist.setText(CookieSwipeButtonSprite.BLACKLIST_ADD);
         
         csPanel = new view.component.CookieSwipePanel(CookieSwipeColor.BACKGROUND_FRAME);
-        for(int i = 0; i < cookieSwipeButtonAttach.length; i++){
-        	csPanel.add(cookieSwipeButtonAttach[i]);
-        }
-        
-        
+
         cookieSwipeTextFieldTo = new CookieSwipeTextField();
         cookieSwipeTextFieldToCc = new CookieSwipeTextField();
         cookieSwipeTextFieldObject = new CookieSwipeTextField();
