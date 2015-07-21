@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import network.mail.FolderManager;
 import cookie.swipe.application.CookieSwipeApplication;
 import dao.DAOMailAccount;
+import dao.DAOUser;
 import errorMessage.CodeError;
 import network.messageFramework.DeliverySystem;
 import network.messageFramework.FrameworkMessage;
@@ -303,6 +304,10 @@ public class User {
 
     public void retrieveMails() {
     	DAOMailAccount.loadMails(listOfMailAccount);
+    }
+
+    public int update() {
+        return DAOUser.updateUser(this);
     }
 
 }

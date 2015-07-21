@@ -12,7 +12,7 @@ public class ActionName {
                 logAccount = "logAccount", sendMailForgottenLogin = "sendMailForgottenLogin",  
                 sendMailForgottenPassword = "sendMailForgottenPassword", reply = "reply", 
                 replyAll = "replyAll", forward = "forward", archive = "archive", 
-                addAttachement = "addAttachement", 
+                addAttachement = "addAttachement", updateCSAccount = "updateCSAccount", 
                 updateAccount = "updateAccount", forgottenPassword = "forgottenPassword",
                 forgottenLogin = "forgottenLogin", addMailAccount = "addMailAccount",
                 selectMailAccount = "selectMailAccount", updateMailAccount = "updateMailAccount",

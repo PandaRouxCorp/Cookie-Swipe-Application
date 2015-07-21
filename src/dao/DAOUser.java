@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,10 +82,10 @@ public class DAOUser {
         int error;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
-        String request = "UPDATE user "
+        String request = "UPDATE users "
                 + "SET login = ?, "
                 + "password = ?, "
-                + "backupAdr = ?, "
+                + "backupAdr = ? "
                 + "WHERE id = ?;";
 
         try {
@@ -100,6 +102,7 @@ public class DAOUser {
             statementInstance.setString(2, user.getPassword());
             statementInstance.setString(3, user.getBackupMail());
             statementInstance.setInt(4, user.getId());
+//            System.err.println("Requeteuh " + request);
 
             int statut = statementInstance.executeUpdate();
 
@@ -191,7 +194,7 @@ public class DAOUser {
         int error;
         Connection connectionInstance = null;
         PreparedStatement statementInstance = null;
-        String request = "SELECT count(*), id, blacklist FROM users where login = ? and password = ?;";
+        String request = "SELECT count(*), id, backupAdr, blacklist FROM users where login = ? and password = ?;";
 
         try {
             connectionInstance = BDDConnect.getConnection();
@@ -209,7 +212,8 @@ public class DAOUser {
                 result.next();
                 if (result.getInt(1) == 1) {
                     user.setId(result.getInt(2));
-                    String blackList = result.getString(3);
+                    user.setBackupMail(result.getString(3));
+                    String blackList = result.getString(4);
                     if (blackList != null && !blackList.isEmpty()) {
                         for (String mail : blackList.split(";")) {
                             user.blackListSender(mail.trim());

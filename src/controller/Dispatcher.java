@@ -33,8 +33,6 @@ import view.component.CookieSwipePasswordField;
 import view.component.CookieSwipeTextField;
 import cookie.swipe.application.CookieSwipeApplication;
 import dao.DAOUser;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.List;
 import javax.mail.Address;
@@ -49,6 +47,7 @@ import module.backoffice.ForgottenAction;
 import module.backoffice.MailAction;
 import module.backoffice.ReadMailAction;
 import module.backoffice.SendMailAction;
+import module.backoffice.UpdateCSAccountAction;
 import module.ihm.BlacklistFrameInitializer;
 import module.ihm.CreateAccountFrameInitializer;
 import module.ihm.LoginForgottenFrameInitializer;
@@ -107,6 +106,13 @@ public class Dispatcher implements ActionListener {
         new UpdateAccountCSFrameInitializer(focusFrame).execute();
     }
 
+    public void updateCSAccountAction() {
+        CookieSwipeFrame focusFrame = CookieSwipeApplication.getApplication().getFocusFrame();
+        if (new UpdateCSAccountAction(focusFrame).execute()) {
+            focusFrame.dispose();
+        }
+    }
+    
     public void forgottenPasswordAction() {
         PasswordForgottenCSFrame frame = new PasswordForgottenCSFrame();
         CookieSwipeApplication.getApplication().setFocusFrame(frame);
@@ -185,7 +191,7 @@ public class Dispatcher implements ActionListener {
             bl.add(address.toString());
         }
         DAOUser.updateBlackListUser(usr);
-        JOptionPane.showMessageDialog(null, "Cette/Ces adresse(s) mail à bien été ajouté a la black list",
+        JOptionPane.showMessageDialog(null, "Cet/Ces adresse mail à bien été ajouté a la black list",
                 "black list", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -193,6 +199,10 @@ public class Dispatcher implements ActionListener {
         MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
         mailAccount.removeToListOfmail((String)CookieSwipeApplication.getApplication().getParam("folderName"),
                                         (Message) CookieSwipeApplication.getApplication().getParam("selectedMail"));
+    }
+
+    public void selectMailAction() { // ne sert a rien
+        System.err.println("NOT IMPLEMENTED");
     }
 
     public void readMailAction() {
@@ -219,7 +229,7 @@ public class Dispatcher implements ActionListener {
         if(message != null)
             new MailAction().execute("forward", message);
     }
-
+    
     public void addAttachementAction() {
         MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
         JFileChooser choose = new JFileChooser();
@@ -257,7 +267,7 @@ public class Dispatcher implements ActionListener {
         new UpdateMailAccountFrameInitializer(focusFrame).execute();
     }
 
-    public void createAccountAction() {
+    public void createAccountAction() { // compte cookie swipe a créé
         CookieSwipeApplication application = CookieSwipeApplication.getApplication();
         CookieSwipeFrame frame = application.getFocusFrame();
         String login    = ((CookieSwipeTextField)application.getFocusFrameJComponent("cookieSwipeTextFieldLoginAdressMail")).getText();
