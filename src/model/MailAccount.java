@@ -286,7 +286,8 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
             }
-            currentMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(destinataire));
+            for(String dest : destinataire.split(";")) 
+                currentMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(dest.trim()));
         } catch (MessagingException ex) {
             Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
