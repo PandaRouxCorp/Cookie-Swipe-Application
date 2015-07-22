@@ -23,6 +23,8 @@ import view.component.CookieSwipeList;
 import view.component.CookieSwipePanel;
 import view.component.CookieSwipeTree;
 import cookie.swipe.application.CookieSwipeApplication;
+import java.io.File;
+import view.component.CookieSwipeColor;
 
 public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAccountListener {
 
@@ -36,7 +38,6 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
     
     //private boolean isMenuActivated = true;
 
-    private CookieSwipeButton cookieSwipeButtonPseudo;
     private CookieSwipeButton cookieSwipeButtonAddMailAccount;
     private CookieSwipeButton cookieSwipeButtonDeleteMailAccount;
     private CookieSwipeButton cookieSwipeButtonLogout;
@@ -120,7 +121,6 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		cookieSwipeButtonUpdateCSAccount = new CookieSwipeButton();
 		cookieSwipeButtonAddMailAccount = new CookieSwipeButton();
 		cookieSwipeButtonLogout = new CookieSwipeButton();
-		cookieSwipeButtonPseudo = new CookieSwipeButton();
 		cookieSwipeButtonBlacklist = new CookieSwipeButton();
 	
 		cookieSwipeButtonLogout.setText("Deconnexion");
@@ -130,8 +130,6 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		cookieSwipeButtonDeleteMailAccount.setText("Supprimer boite");
 		cookieSwipeButtonBlacklist.setText("Voir la blacklist");
 	
-		cookieSwipeButtonPseudo.setText("Kae"); //Temporaire //TODO
-
 		cookieSwipeButtonForward = new CookieSwipeButtonSprite();
 		cookieSwipeButtonDeleteMail = new CookieSwipeButtonSprite();
 		cookieSwipeButtonNewMail = new CookieSwipeButtonSprite();
@@ -204,7 +202,8 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 	}
     
     private void createMenu(){
-    	
+    	CookieSwipePanel logoPanel = new CookieSwipePanel(new File("cookieSwipe_menu.png"), CookieSwipeColor.BUTTON);
+        
     	spritePanel = new CookieSwipePanel();
 		spritePanel.setPreferredSize(new Dimension((int) spritePanel.getPreferredSize().getWidth() + 2500, 43)); //Lorsque la résolution est petite: 40 grande: 43
 		GroupLayout spriteLayout = new GroupLayout(spritePanel);
@@ -212,9 +211,9 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 		spriteLayout.setHorizontalGroup(
 			spriteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 			.addGroup(spriteLayout.createSequentialGroup()
-				.addGap(80, 80, 80)
-				.addComponent(cookieSwipeButtonPseudo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-				.addGap(102, 102, 102)
+                                .addGap(50, 50, 50)
+				.addComponent(logoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(50, 50, 50)
 				.addComponent(cookieSwipeButtonLogout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 				.addComponent(cookieSwipeButtonUpdateCSAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 				.addComponent(cookieSwipeButtonAddMailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -229,7 +228,10 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
 			.addGroup(spriteLayout.createSequentialGroup()
 				.addGap(2, 2, 2)
 				.addGroup(spriteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-					.addComponent(cookieSwipeButtonPseudo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(spriteLayout.createSequentialGroup()
+                                            .addGap(5, 5, 5)
+                                            .addComponent(logoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        )
 					.addComponent(cookieSwipeButtonLogout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 					.addComponent(cookieSwipeButtonAddMailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 					.addComponent(cookieSwipeButtonUpdateCSAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)

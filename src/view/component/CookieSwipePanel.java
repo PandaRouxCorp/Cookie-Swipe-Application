@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -31,6 +30,16 @@ public class CookieSwipePanel extends JPanel {
     	try {
 			image = ImageIO.read(imageFile);
 			panelColor = CookieSwipeColor.BACKGROUND_FRAME;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    public CookieSwipePanel(File imageFile, Color color){
+    	try {
+			image = ImageIO.read(imageFile);
+			panelColor = color;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,6 +75,7 @@ public class CookieSwipePanel extends JPanel {
     	if(image != null){
 			g2d.drawImage(image, 0, 0, this);
 			setSize(new Dimension(image.getWidth(), image.getHeight()));
+                        setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
 		}
     }
 }
