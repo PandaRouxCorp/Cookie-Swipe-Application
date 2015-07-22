@@ -51,6 +51,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.Address;
+import javax.mail.Flags;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
@@ -485,6 +486,11 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     }
 
     public void removeToListOfmail(String folderName, Message message) {
+        try {
+            message.setFlag(Flags.Flag.DELETED, true);
+        } catch (MessagingException ex) {
+            Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
         folderListModels.get(folderName).remove(message);
     }
 
