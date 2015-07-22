@@ -41,10 +41,6 @@ public class ReadMailFrameInitializer extends AbstractIHMAction {
         forward.setActionCommand(ActionName.forward); // to change
         forward.addActionListener(dispatcher);
         
-        CookieSwipeButton archive = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonArchive");
-        archive.setActionCommand(ActionName.archive); // to change
-        archive.addActionListener(dispatcher);
-        
         return true;
     }
     
