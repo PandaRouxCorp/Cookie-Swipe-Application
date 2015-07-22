@@ -48,6 +48,7 @@ import cookie.swipe.application.utils.LinkedHashSetPriorityQueueObserver;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 import errorMessage.CodeError;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -74,7 +75,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     private Date lastSynch;
     private Session session;
     private Message currentMessage;
-    private HashMap<String, ObservableLinkedHashSetPriorityQueue<Message>> folderListModels;
+    private HashMap<String, ObservableLinkedHashSetPriorityQueue> folderListModels;
     private List<String> folderNames;
     private List<File> attachments;
     private Multipart multipart;
@@ -159,8 +160,8 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     public void createModelFor(String folder) {
         this.folderNames.add(folder);
 
-        ObservableLinkedHashSetPriorityQueue<Message> observableList
-                = new ObservableLinkedHashSetPriorityQueue<>(new MailComparator());
+        ObservableLinkedHashSetPriorityQueue observableList
+                = new ObservableLinkedHashSetPriorityQueue(new MailComparator());
 
         folderListModels.put(folder, observableList);
 
@@ -285,7 +286,8 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
             }
-            currentMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(destinataire));
+            for(String dest : destinataire.split(";")) 
+                currentMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(dest.trim()));
         } catch (MessagingException ex) {
             Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -552,7 +554,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         }
     }
 
-    public ObservableLinkedHashSetPriorityQueue<Message> getListModelFor(String folderName) {
+    public ObservableLinkedHashSetPriorityQueue getListModelFor(String folderName) {
         return this.folderListModels.get(folderName);
     }
 
@@ -672,6 +674,17 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     
     public void setReady(boolean b) {
         this.isReady = b;
+    }
+
+    public void clearMailFrom(String sender) {
+        Collection<ObservableLinkedHashSetPriorityQueue> folders = folderListModels.values();
+        for(ObservableLinkedHashSetPriorityQueue folder : folders) {
+            try {
+                folder.clearMailFrom(sender);
+            } catch (MessagingException ex) {
+                Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 }

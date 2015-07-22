@@ -12,9 +12,9 @@ import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 public class CustomJListModel extends DefaultListModel<Message> implements LinkedHashSetPriorityQueueObserver {
 
 	private static final long serialVersionUID = 8376153077264836337L;
-	private ObservableLinkedHashSetPriorityQueue<Message> list;
+	private ObservableLinkedHashSetPriorityQueue list;
 	
-	public CustomJListModel(ObservableLinkedHashSetPriorityQueue<Message> list) {
+	public CustomJListModel(ObservableLinkedHashSetPriorityQueue list) {
 		this.list = list;
 		list.addObserver(this);
 //		this.addListDataListener(jList);
@@ -37,7 +37,7 @@ public class CustomJListModel extends DefaultListModel<Message> implements Linke
 	}
 
 	@Override
-	public void update(ObservableLinkedHashSetPriorityQueue<?> o, EventData data) {
+	public void update(ObservableLinkedHashSetPriorityQueue o, EventData data) {
 		if(!data.hasIndexes()) throw new IllegalArgumentException("No indexex in EventData");
 		switch(data.getType()) {
 			case REMOVED:

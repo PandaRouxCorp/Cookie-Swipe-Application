@@ -156,10 +156,6 @@ public class Dispatcher implements ActionListener {
         }
     }
 
-    public void downloadPictureAction() {
-        System.err.println("NOT IMPLEMENTED");
-    }
-
     public void forwardMailAction() {
         CookieSwipeFrame focusFrame = new MailCSFrame();
         CookieSwipeApplication.getApplication().setFocusFrame(focusFrame);
@@ -186,11 +182,9 @@ public class Dispatcher implements ActionListener {
     public void addBlackListSenderAction() throws MessagingException {
         Message message = (Message) CookieSwipeApplication.getApplication().getParam("selectedMail");
         User usr = CookieSwipeApplication.getApplication().getUser();
-        List<String> bl = usr.getBlackList();
         for (Address address : message.getFrom()) {
-            bl.add(address.toString());
+            usr.blackListSender(address.toString());
         }
-        DAOUser.updateBlackListUser(usr);
         JOptionPane.showMessageDialog(null, "Cet/Ces adresse mail à bien été ajouté a la black list",
                 "black list", JOptionPane.INFORMATION_MESSAGE);
     }

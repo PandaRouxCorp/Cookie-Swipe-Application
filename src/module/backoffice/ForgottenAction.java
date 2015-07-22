@@ -59,7 +59,10 @@ public class ForgottenAction extends AbstractIHMAction {
         int error = CodeError.SUCESS;
         User usr = new User();
         String mail = ((JTextField) hsJcomponent.get("cookieSwipeTextFieldMailAddress")).getText();
+        String login = ((JTextField) hsJcomponent.get("cookieSwipeTextFieldLogin")).getText();
         usr.setBackupMail(mail);
+        if(login != null)
+            usr.setLoginAdressMail(login);
         int err = DAOUser.getUserByBackupAddress(usr);
         switch(action) {
             case "login":
