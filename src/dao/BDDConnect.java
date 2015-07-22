@@ -57,13 +57,13 @@ public class BDDConnect {
                 String pilote = "com.mysql.jdbc.Driver";
                 Class.forName(pilote);
             } catch (ClassNotFoundException e) {
-                Logger.getLogger("BDDConnect").log(Level.SEVERE, "Where is your MySQL JDBC Driver?", e);
+                Logger.getLogger("BDDConnect").log(Level.SEVERE, "Where is your MySQL JDBC Driver 1?", e);
                 return null;
             }
             try {
                 connexion = DriverManager.getConnection(conf[0] + "/" + conf[1], conf[2], conf[3]);
             } catch (SQLException e) {
-                Logger.getLogger("BDDConnect").log(Level.SEVERE, "Where is your MySQL JDBC Driver?", e);
+                Logger.getLogger("BDDConnect").log(Level.SEVERE, "Where is your MySQL JDBC Driver 2?", e);
                 return null;
             }
             return connexion;

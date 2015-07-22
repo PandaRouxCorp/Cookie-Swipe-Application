@@ -211,7 +211,7 @@ public class DAOUser {
 
                 ResultSet result = statementInstance.executeQuery();
                 result.next();
-                if (result.getInt(1) == 1) {
+                if (result.getInt(1) >= 1) {
                     user.setId(result.getInt(2));
                     user.setBackupMail(result.getString(3));
                     String blackList = result.getString(4);
