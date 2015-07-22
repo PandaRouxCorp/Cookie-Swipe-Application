@@ -274,8 +274,6 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.setVisible(b);
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonReplyToAll");
         button.setVisible(b);
-        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonArchive");
-        button.setVisible(b);
 
         refresh();
     }
