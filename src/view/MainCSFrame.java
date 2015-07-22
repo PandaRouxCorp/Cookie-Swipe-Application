@@ -23,6 +23,7 @@ import view.component.CookieSwipeList;
 import view.component.CookieSwipePanel;
 import view.component.CookieSwipeTree;
 import cookie.swipe.application.CookieSwipeApplication;
+import java.awt.Toolkit;
 import java.io.File;
 import view.component.CookieSwipeColor;
 
@@ -65,11 +66,10 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
     	initComponents();
     	doWhenResized();
     	createMenu();
-    	placeComponents();
-    	
+    	placeComponents();    	
     	putComponents();
     	configFrame();
-    	
+        
     	refresh();
     	
     }

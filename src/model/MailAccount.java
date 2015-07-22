@@ -47,6 +47,7 @@ import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.LinkedHashSetPriorityQueueObserver;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
 import errorMessage.CodeError;
+import java.io.UnsupportedEncodingException;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -216,24 +217,32 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
         return store;
     }
 
-    public Properties getProperties() {
+    public Properties getProperties(int i) {
         Properties props = new Properties();
-
-        props.put("mail.transport.protocol", domain.getStoreProtocol());
+        if(i == 2)            
+            props.setProperty("mail.transport.protocol", "smtp");
+        else
+            props.setProperty("mail.transport.protocol", domain.getStoreProtocol());
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", domain.getServerOut());
-        props.put("mail.smtp.socketFactory.port", domain.getPortOut());
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.smtp.host", domain.getServerOut());
+        props.setProperty("mail.smtp.socketFactory.port", domain.getPortOut());
+        props.put("mail.smtp.socketFactory.fallback", "true");
+        try{
+            if(Integer.parseInt(domain.getPortOut()) == 465)
+                props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        }catch(NumberFormatException e){
+            e.printStackTrace();
+        }
         props.put("mail.smtp.user", address);
         props.put("mail.smtp.port", domain.getPortOut());
         props.put("mail.from", domain.getServerIn());
         return props;
     }
 
-    public Session getSession() {
+    public Session getSession(int i) {
         if (session == null) {
-            session = Session.getDefaultInstance(getProperties(),
+            session = Session.getDefaultInstance(getProperties(i),
                     new javax.mail.Authenticator() {
                         @Override
                         public javax.mail.PasswordAuthentication getPasswordAuthentication() {
@@ -258,7 +267,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
      */
     public void createNewMail() {
         messageBodyPart = new MimeBodyPart();
-        currentMessage = new MimeMessage(getSession());
+        currentMessage = new MimeMessage(getSession(2));
     }
 
     public void addDestinataire(Address[] destinataire) {
@@ -270,7 +279,12 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     }
     
     public void addDestinataire(String destinataire) {
-        try {
+        try {        
+            try {
+                currentMessage.setFrom(new InternetAddress(address, address));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
+            }
             currentMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(destinataire));
         } catch (MessagingException ex) {
             Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
@@ -356,11 +370,11 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                         multipart = getMultiPart();
                         if(multipart != null)
                             currentMessage.setContent(multipart);
-                    }
-
+                    }                    
                     Transport.send(currentMessage);
                     return true;
                 } catch (MessagingException e) {
+                    e.printStackTrace();
                 }
                 return false;
             }

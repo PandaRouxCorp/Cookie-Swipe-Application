@@ -33,6 +33,7 @@ public class SendMailAction extends AbstractIHMAction {
             mailAccount.addSubject(((JTextField) hsJcomponent.get("cookieSwipeTextFieldSubject")).getText() );
             mailAccount.addBody( ((JTextArea) hsJcomponent.get("jTextAreaMail")).getText() );
             mailAccount.sendMail();
+            return true;
         }
         return false;
     }
