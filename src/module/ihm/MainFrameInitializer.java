@@ -162,7 +162,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
         HashMap<String, HashMap<String, CustomJListModel>> models = new HashMap<>();
         CookieSwipeApplication.getApplication().setParam(jListMailModels, models);
         HashMap<String, CustomJListModel> allModel = new HashMap<>();
-        allModel.put(MailAccount.ALL, new CustomJListModel(new ObservableLinkedHashSetPriorityQueue<Message>(new MailComparator())));
+        allModel.put(MailAccount.ALL, new CustomJListModel(new ObservableLinkedHashSetPriorityQueue(new MailComparator())));
         models.put(MailAccount.ALL, allModel);
     }
 

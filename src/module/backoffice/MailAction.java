@@ -15,6 +15,7 @@ import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import model.MailAccount;
+import static module.backoffice.ReadMailAction.getMailFromAddressArray;
 import module.ihm.WriteMailFrameInitializer;
 import view.MailCSFrame;
 
@@ -30,36 +31,28 @@ public class MailAction implements IAction {
         Message message = (Message) object[1];
         MailAccount mailAccount = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
         String startSubject = "";
-        switch(action) {
-            case "forward":
-                startSubject = "FW : ";
-            case "reply":
-            case "replyAll":
-                MailCSFrame mailFrame = new MailCSFrame();
-                try {
-                    if(action.startsWith("reply")) {
+        MailCSFrame mailFrame = new MailCSFrame();
+        try {
+            switch (action) {
+                case "forward":
+                    startSubject = "FW : ";
+                case "replyAll":
+                    mailFrame.setCookieSwipeTextFieldToCc(getMailFromAddressArray(message.getRecipients(Message.RecipientType.CC)));
+                case "reply":
+                    if (action.startsWith("reply")) {
                         startSubject = "RE : ";
-                        String to = "";
-                        int i = 0;
-                        for(Address addr : message.getFrom()) {
-                            String adresse = addr.toString();
-                            to += i == 0 ? adresse : ", " + adresse;
-                            i++;
-                        }
-                        mailFrame.setCookieSwipeTextFieldTo(to);
+                        mailFrame.setCookieSwipeTextFieldTo(getMailFromAddressArray(message.getFrom()));
                     }
                     mailFrame.setCookieSwipeTextFieldSubject(startSubject + message.getSubject());
                     mailFrame.setjTextAreaMail(mailTranfer(message));
-                } catch (MessagingException | IOException ex) {
-                    Logger.getLogger(MailAction.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-                CookieSwipeApplication.getApplication().setFocusFrame(mailFrame);
-                new WriteMailFrameInitializer(mailFrame).execute();
-                
-                break;
-            case "addBlackListSender":
-                break;
+
+                    CookieSwipeApplication.getApplication().setFocusFrame(mailFrame);
+                    new WriteMailFrameInitializer(mailFrame).execute();
+
+                    break;
+            }
+        } catch (MessagingException | IOException ex) {
+            Logger.getLogger(MailAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
     }

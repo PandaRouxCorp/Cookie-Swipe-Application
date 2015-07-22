@@ -190,7 +190,14 @@ public class User {
         if (blackList == null) {
             blackList = new ArrayList<>();
         }
-        return blackList.add(sender);
+       boolean ret = blackList.add(sender);
+        if ( ret )
+            DAOUser.updateBlackListUser(this);
+//        refreshList();
+        for(MailAccount ma : this.getListOfMailAccount()) {
+            ma.clearMailFrom(sender);
+        }
+        return ret;
     }
 
     /**

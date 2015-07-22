@@ -9,22 +9,25 @@ import java.util.Observer;
 import java.util.PriorityQueue;
 import java.util.Vector;
 import java.util.function.Predicate;
+import javax.mail.Address;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 
-public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
+public class ObservableLinkedHashSetPriorityQueue extends PriorityQueue<Message> {
 	
 	private static final long serialVersionUID = 3853067076820469495L;
-	
+
 	public enum ObservableLinkedHashSetPriorityQueueEvent {
 		REMOVED,
 		ADDED,
 		CHANGED
 	}
 	
-	public ObservableLinkedHashSetPriorityQueue(Comparator<? super T> comparator) {
-		this(new Vector<T>(),comparator);
+	public ObservableLinkedHashSetPriorityQueue(Comparator<? super Message> comparator) {
+		this(new Vector<Message>(),comparator);
 	}
 	
-	public ObservableLinkedHashSetPriorityQueue(Collection<T> collection, Comparator<? super T> comparator) {
+	public ObservableLinkedHashSetPriorityQueue(Collection<Message> collection, Comparator<? super Message> comparator) {
 		super(comparator);
 		addAll(collection);
 		obs = new Vector<>();
@@ -93,7 +96,7 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
     		return -1;
     	
     	int index = -1;
-    	Iterator<T> it = iterator();
+    	Iterator<Message> it = iterator();
     	while(it.hasNext()) {
     		if(!it.next().equals(e)) index++;
     		else break;
@@ -114,7 +117,7 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 	}
 	
 	@Override
-	public boolean add(T e) {
+	public boolean add(Message e) {
 		boolean b = false;
 		synchronized (this) {
 			b = super.add(e);
@@ -123,7 +126,7 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 	}
 	
 	@Override
-	public boolean offer(T e) {
+	public boolean offer(Message e) {
 		if (contains(e)) return false;
 		setChanged();
 		EventData data = new EventData(ObservableLinkedHashSetPriorityQueueEvent.ADDED, size(), size(), e);
@@ -132,8 +135,8 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 	}
 	
 	@Override
-	public T poll() {
-		T t = null;
+	public Message poll() {
+		Message t = null;
 		synchronized (this) {
 			t = super.poll();
 			if(t != null) {
@@ -177,7 +180,7 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 	}
 	
 	@Override
-	public boolean removeIf(Predicate<? super T> predic) {
+	public boolean removeIf(Predicate<? super Message> predic) {
 		boolean hasChanged = false;
 		synchronized (this) {
 			List<Object> all = toList();
@@ -227,8 +230,8 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 	}
 	
 	@Override
-	public T remove() {
-		T e = null;
+	public Message remove() {
+		Message e = null;
 		synchronized (this) {
 			if(size() != 0) {
 				setChanged();
@@ -239,5 +242,19 @@ public class ObservableLinkedHashSetPriorityQueue<T> extends PriorityQueue<T> {
 		}
 		return e;
 	}
+        
+        public void clearMailFrom(String sender) throws MessagingException {
+            Iterator<Message> it = iterator();
+            Message message;
+            while(it.hasNext()) {
+                message = it.next();
+                for(Address address : message.getFrom()) {
+                    if(address.toString().contains(sender)) {
+                        it.remove();
+                        break;
+                    }
+                }
+            }
+        }
 	
 }
