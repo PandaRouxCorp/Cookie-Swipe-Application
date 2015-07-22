@@ -147,9 +147,13 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         csPanel = new view.component.CookieSwipePanel(CookieSwipeColor.BACKGROUND_FRAME);
 
         cookieSwipeTextFieldTo = new CookieSwipeTextField();
+	cookieSwipeTextFieldTo.setEditable(false);
         cookieSwipeTextFieldToCc = new CookieSwipeTextField();
+	cookieSwipeTextFieldToCc.setEditable(false);
         cookieSwipeTextFieldObject = new CookieSwipeTextField();
+	cookieSwipeTextFieldObject.setEditable(false);
         cookieSwipeTextFieldFrom = new CookieSwipeTextField();
+	cookieSwipeTextFieldFrom.setEditable(false);
         
         cookieSwipeLabelFrom = new CookieSwipeLabel();
         cookieSwipeLabelTo = new CookieSwipeLabel();
@@ -158,10 +162,8 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         
         jScrollPane1 = new JScrollPane();
         jTextAreaMail = new CookieSwipeTextArea();
+	jTextAreaMail.setEditable(false);
         
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         cookieSwipeLabelTo.setText("À :");
         cookieSwipeLabelCc.setText("Cc :");
         cookieSwipeLabelObject.setText("Objet :");
