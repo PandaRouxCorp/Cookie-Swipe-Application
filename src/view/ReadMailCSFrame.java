@@ -28,7 +28,6 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
     private CookieSwipeButtonSprite cookieSwipeButtonReply;
     private CookieSwipeButtonSprite cookieSwipeButtonReplyToAll;
     private CookieSwipeButtonSprite cookieSwipeButtonForward;
-    private CookieSwipeButtonSprite cookieSwipeButtonArchive;
     private CookieSwipeButtonSprite cookieSwipeButtonDeleteMail;
     private CookieSwipeButtonSprite cookieSwipeButtonToBlacklist;
     
@@ -107,7 +106,6 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponent.put("cookieSwipeButtonReply", cookieSwipeButtonReply);
         hsJcomponent.put("cookieSwipeButtonReplyToAll", cookieSwipeButtonReplyToAll);
         hsJcomponent.put("cookieSwipeButtonForward", cookieSwipeButtonForward);
-        hsJcomponent.put("cookieSwipeButtonArchive", cookieSwipeButtonArchive);
         hsJcomponent.put("cookieSwipeButtonDeleteMail", cookieSwipeButtonDeleteMail);
         hsJcomponent.put("cookieSwipeButtonToBlacklist", cookieSwipeButtonToBlacklist);
         hsJcomponent.put("cookieSwipeLabelObject", cookieSwipeLabelObject);
@@ -137,16 +135,14 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
         cookieSwipeButtonReply = new CookieSwipeButtonSprite();
         cookieSwipeButtonReplyToAll = new CookieSwipeButtonSprite();
         cookieSwipeButtonForward = new CookieSwipeButtonSprite();
-        cookieSwipeButtonArchive = new CookieSwipeButtonSprite();
         cookieSwipeButtonDeleteMail = new CookieSwipeButtonSprite();
         cookieSwipeButtonToBlacklist = new CookieSwipeButtonSprite();
         
         cookieSwipeButtonReply.setText(CookieSwipeButtonSprite.REPLY);
         cookieSwipeButtonReplyToAll.setText(CookieSwipeButtonSprite.REPLY_ALL);
         cookieSwipeButtonForward.setText(CookieSwipeButtonSprite.FORWARD);
-        cookieSwipeButtonArchive.setText(CookieSwipeButtonSprite.ARCHIVE);
         cookieSwipeButtonDeleteMail.setText(CookieSwipeButtonSprite.DELETE);
-        cookieSwipeButtonToBlacklist.setText(CookieSwipeButtonSprite.BLACKLIST_ADD);
+        cookieSwipeButtonToBlacklist.setText(CookieSwipeButtonSprite.TO_BLACKLIST);
         
         csPanel = new view.component.CookieSwipePanel(CookieSwipeColor.BACKGROUND_FRAME);
 
@@ -202,7 +198,6 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
 						.addComponent(cookieSwipeButtonReply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 						.addComponent(cookieSwipeButtonReplyToAll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 						.addComponent(cookieSwipeButtonForward, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addComponent(cookieSwipeButtonArchive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 						.addComponent(cookieSwipeButtonDeleteMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 						.addComponent(cookieSwipeButtonToBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 					)
@@ -241,7 +236,6 @@ public class ReadMailCSFrame extends CookieSwipeFrame implements IJFrame {
     						.addComponent(cookieSwipeButtonReply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
     						.addComponent(cookieSwipeButtonReplyToAll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
     						.addComponent(cookieSwipeButtonForward, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-    						.addComponent(cookieSwipeButtonArchive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
     						.addComponent(cookieSwipeButtonDeleteMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
     						.addComponent(cookieSwipeButtonToBlacklist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
     					)

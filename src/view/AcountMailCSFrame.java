@@ -17,11 +17,10 @@ import view.component.CookieSwipeTextField;
 
 public class AcountMailCSFrame extends CookieSwipeFrame implements IJFrame {
 
-	private static final long serialVersionUID = 8118625098245882006L;
-	private CookieSwipeButton cookieSwipeButtonCancel;
+    private static final long serialVersionUID = 8118625098245882006L;
+    private CookieSwipeButton cookieSwipeButtonCancel;
     private CookieSwipeButton cookieSwipeButtonValidate;
     
-    private CookieSwipeLabel cookieSwipeLabel1;
     private CookieSwipeLabel cookieSwipeLabelMailAddress;
     private CookieSwipeLabel cookieSwipeLabelNameAcountMail;
     private CookieSwipeLabel cookieSwipeLabelPasswordAccountMail;
@@ -31,9 +30,7 @@ public class AcountMailCSFrame extends CookieSwipeFrame implements IJFrame {
     private CookieSwipeTextField cookieSwipeTextFieldMailAddress;
     private CookieSwipeTextField cookieSwipeTextFieldNameAcountMail;
    
-    private JComboBox<String> jComboBoxColor;
-    
-    
+
     public AcountMailCSFrame() {
     	
     	initFrame();
@@ -74,7 +71,6 @@ public class AcountMailCSFrame extends CookieSwipeFrame implements IJFrame {
         hsJcomponent.put("cookieSwipePasswordFieldPasswordAccountMail", cookieSwipePasswordFieldPasswordAccountMail);
         hsJcomponent.put("cookieSwipeTextFieldMailAddress", cookieSwipeTextFieldMailAddress);
         hsJcomponent.put("cookieSwipeTextFieldNameAcountMail", cookieSwipeTextFieldNameAcountMail);
-        hsJcomponent.put("jComboBoxColor", jComboBoxColor);
         
     }
 
@@ -88,16 +84,12 @@ public class AcountMailCSFrame extends CookieSwipeFrame implements IJFrame {
         cookieSwipePasswordFieldPasswordAccountMail = new view.component.CookieSwipePasswordField();
         cookieSwipeButtonValidate = new view.component.CookieSwipeButton();
         cookieSwipeButtonCancel = new view.component.CookieSwipeButton();
-        jComboBoxColor = new JComboBox<String>();
-        cookieSwipeLabel1 = new view.component.CookieSwipeLabel();
 
         cookieSwipeLabelNameAcountMail.setText("Nom de la boite courriel :");
         cookieSwipeLabelMailAddress.setText("Adresse courriel :");
         cookieSwipeLabelPasswordAccountMail.setText("Mot de passe :");
         cookieSwipeButtonValidate.setText("Valider");
         cookieSwipeButtonCancel.setText("Annuler");
-        jComboBoxColor.setModel(new DefaultComboBoxModel<String>(new String[] {"Aucune", "Bleu", "Rouge", "Vert", "Jaune" }));
-        cookieSwipeLabel1.setText("Couleur :");
         
         cookieSwipeTextFieldNameAcountMail.setText("xyz");
         cookieSwipeTextFieldNameAcountMail.addActionListener(new java.awt.event.ActionListener() {
@@ -129,14 +121,12 @@ public class AcountMailCSFrame extends CookieSwipeFrame implements IJFrame {
                             .addComponent(cookieSwipeLabelNameAcountMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(cookieSwipeLabelMailAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(cookieSwipeLabelPasswordAccountMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cookieSwipeLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         )
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                             .addComponent(cookieSwipeTextFieldNameAcountMail, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cookieSwipeTextFieldMailAddress, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cookieSwipePasswordFieldPasswordAccountMail, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                            .addComponent(jComboBoxColor, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         )
                     )
                     .addGroup(layout.createSequentialGroup()
@@ -167,11 +157,6 @@ public class AcountMailCSFrame extends CookieSwipeFrame implements IJFrame {
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(cookieSwipePasswordFieldPasswordAccountMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(cookieSwipeLabelPasswordAccountMail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                )
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBoxColor, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cookieSwipeLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 )
                 .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
