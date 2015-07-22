@@ -103,7 +103,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
      * courriels
      */
     public MailAccount(String CSName, String address, Domain domain,
-            String password, String color) {
+            String password) {
 
         this.CSName = CSName;
         this.address = address;

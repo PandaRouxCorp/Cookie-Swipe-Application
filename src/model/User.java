@@ -121,7 +121,7 @@ public class User {
      * @param newMailAccount compte courriel à ajouter
      * @return Si le compte courriel à bien été ajouté
      */
-    public int addNewMailAccount(String name, String address, String password, String color) {
+    public int addNewMailAccount(String name, String address, String password) {
         String mailDomain = address.substring(address.indexOf('@') + 1);
         Domain domain = null;
         try {
@@ -131,7 +131,7 @@ public class User {
             return CodeError.FAILLURE;
         }
         
-        MailAccount newMailAccount = new MailAccount(name, address, domain, password, color);
+        MailAccount newMailAccount = new MailAccount(name, address, domain, password);
         if(!newMailAccount.connectionIsOk()) {	
         	return CodeError.CONNEXION_FAIL;
         }

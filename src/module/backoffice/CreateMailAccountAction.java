@@ -30,9 +30,9 @@ public class CreateMailAccountAction extends AbstractIHMAction {
         String CSName = ((JTextField) hsJcomponent.get("cookieSwipeTextFieldNameAcountMail")).getText();
         String mailAdress = ((JTextField) hsJcomponent.get("cookieSwipeTextFieldMailAddress")).getText();
         String password = new String(((JPasswordField) hsJcomponent.get("cookieSwipePasswordFieldPasswordAccountMail")).getPassword());
-        String color = (String) ((JComboBox<?>) hsJcomponent.get("jComboBoxColor")).getSelectedItem();
+        //String color = (String) ((JComboBox<?>) hsJcomponent.get("jComboBoxColor")).getSelectedItem();
         User user = CookieSwipeApplication.getApplication().getUser();
-        int error = user.addNewMailAccount(CSName, mailAdress, password, color);
+        int error = user.addNewMailAccount(CSName, mailAdress, password);
         switch (error) {
             case CodeError.SUCESS:
                 JOptionPane.showMessageDialog(null, "Votre compte mail à bien été ajouté",

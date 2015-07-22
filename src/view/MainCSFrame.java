@@ -111,6 +111,9 @@ public class MainCSFrame extends CookieSwipeFrame implements IJFrame, ListMailAc
         
 //        setExtendedState(MAXIMIZED_BOTH); //fullscreen
         setSize(720, 480);
+	
+	Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+	setLocation((dim.width / 2) - (getSize().width/2), (dim.height / 2) - (getSize().height / 2));
         
     }
 
