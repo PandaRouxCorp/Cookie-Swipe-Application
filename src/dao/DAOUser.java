@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Encryption;
 import model.User;
 
 /**
@@ -267,7 +268,8 @@ public class DAOUser {
                 result.next();
                 if (result.getInt(1) == 1) {
                     usr.setLoginAdressMail(result.getString(2));
-                    usr.setPassword(result.getString(3));
+                    String pwd = new Encryption().decrypt( result.getString(3) );
+                    usr.setPassword(pwd);
                 } else {
                     error = CodeError.FAILLURE;
                 }
@@ -275,6 +277,8 @@ public class DAOUser {
         } catch (SQLException ex) {
             Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
             error = CodeError.STATEMENT_EXECUTE_FAIL;
+        } catch (Exception ex) {
+            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (statementInstance != null) {
                 try {

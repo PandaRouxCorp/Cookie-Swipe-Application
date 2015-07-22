@@ -76,7 +76,6 @@ public class ForgottenAction extends AbstractIHMAction {
                     String pwd = "";
                     try { // pourquoi il est encrypté deux fois ??????
                         pwd = new Encryption().decrypt(usr.getPassword());
-                        pwd = new Encryption().decrypt(pwd);
                     } catch (Exception ex) {
                         Logger.getLogger(ForgottenAction.class.getName()).log(Level.SEVERE, null, ex);
                     }
