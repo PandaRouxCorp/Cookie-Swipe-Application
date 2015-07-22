@@ -87,23 +87,31 @@ public class MainFrameInitializer extends AbstractIHMAction {
         });
         JScrollPane jScrollPaneMailList = (JScrollPane) hsJcomponent.get("jScrollPaneMailList");
         JScrollBar vBar = jScrollPaneMailList.getVerticalScrollBar();
-        vBar.addAdjustmentListener(new AdjustmentListener() {	
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
-				 int extent = jScrollPaneMailList.getVerticalScrollBar().getModel().getExtent();
-			     int currentScrollValue = jScrollPaneMailList.getVerticalScrollBar().getValue() + extent;
-			     int maxScrollValue = jScrollPaneMailList.getVerticalScrollBar().getMaximum();
-                             System.out.println("max = " + maxScrollValue + " current = " + currentScrollValue);
-			     if( maxScrollValue != 0 && currentScrollValue == maxScrollValue ) {
-			    	 FolderManager folderManager = (FolderManager) CookieSwipeApplication.getApplication().getParam("FolderManager");
-			    	 MailAccount mc = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
-			    	 String folderName = (String) CookieSwipeApplication.getApplication().getParam("folderName");
-			    	 if( mc != null && folderName != null && !folderName.equals( mc.getCSName() )) {
-                                     folderManager.retrieveNextMailsFor(mc, folderName);
-			    	 }
-			     }
-			}
-		});
+        vBar.addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                CookieSwipeTree myTree = (CookieSwipeTree) hsJcomponent.get("cookieSwipeTreeAccountMail");
+                if (myTree.getLastSelectedPathComponent() == MailAccount.ALL) {
+                    return;
+                }
+                int extent = jScrollPaneMailList.getVerticalScrollBar().getModel().getExtent();
+                int currentScrollValue = jScrollPaneMailList.getVerticalScrollBar().getValue() + extent;
+                int maxScrollValue = jScrollPaneMailList.getVerticalScrollBar().getMaximum();
+                if (maxScrollValue != 0 && currentScrollValue == maxScrollValue) {
+                    FolderManager folderManager = (FolderManager) CookieSwipeApplication.getApplication().getParam("FolderManager");
+                    MailAccount mc = (MailAccount) CookieSwipeApplication.getApplication().getParam("mailAccountSelected");
+                    String folderName = (String) CookieSwipeApplication.getApplication().getParam("folderName");
+                    DefaultMutableTreeNode lastSelection = (DefaultMutableTreeNode) myTree.getLastSelectedPathComponent();
+                    if(lastSelection.getUserObject().equals(mc)) {
+                        folderName = mc.getDefaultFolderName();
+                    }
+                    System.out.println(mc.isReady());
+                    if (mc != null && folderName != null && !folderName.isEmpty() && mc.isReady()) {
+                        folderManager.retrieveNextMailsFor(mc, folderName);
+                    }
+                }
+            }
+        });
     }
 
     public DefaultMutableTreeNode getRootNode() {
@@ -348,13 +356,13 @@ public class MainFrameInitializer extends AbstractIHMAction {
                 } else {
                     setMailAccountButtonsVisible(false);
                     if (node.getUserObject() instanceof String) {
-                        if (node.getParent().equals(node.getRoot())) {
+                        if (node.equals(node.getRoot())) {
                             keyAccount = MailAccount.ALL;
                             keyFolder = MailAccount.ALL;
                         } else {
-                            MailAccount mc = (MailAccount) ((DefaultMutableTreeNode) node.getParent()).getUserObject();                            
-                            CookieSwipeApplication.getApplication().setParam("mailAccountSelected",mc);
-                            keyAccount = mc.getCSName();                            
+                            MailAccount mc = (MailAccount) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
+                            CookieSwipeApplication.getApplication().setParam("mailAccountSelected", mc);
+                            keyAccount = mc.getCSName();
                             keyFolder = (String) node.getUserObject();
                         }
                     }
@@ -370,10 +378,10 @@ public class MainFrameInitializer extends AbstractIHMAction {
             return models.get(keyAccount).get(keyFolder);
         }
     }
-    
-    private void refresh(){
+
+    private void refresh() {
         csFrame.validate();
-	csFrame.repaint();
-	csFrame.revalidate();
+        csFrame.repaint();
+        csFrame.revalidate();
     }
 }

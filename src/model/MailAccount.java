@@ -79,6 +79,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     private Multipart multipart;
     private MimeBodyPart messageBodyPart;
     private String defaultFolderName;
+    private volatile boolean isReady = false;
 
     // Constructeur
     /**
@@ -649,6 +650,14 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     @Override
     public String toString() {
         return CSName;
+    }
+
+    public boolean isReady() {
+        return this.isReady;
+    }
+    
+    public void setReady(boolean b) {
+        this.isReady = b;
     }
 
 }

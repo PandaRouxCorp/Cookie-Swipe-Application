@@ -29,6 +29,7 @@ import network.messageFramework.DeliverySystem;
 import network.messageFramework.FrameworkMessage;
 
 import com.sun.mail.imap.IMAPFolder;
+import cookie.swipe.application.CookieSwipeApplication;
 
 /**
  * Cette classe est responsable de la synchronisation des boites mails avec le serveur mail
@@ -119,6 +120,7 @@ public class FolderManager {
     public boolean addNewMailAccount(MailAccount mc) {
         try {
             addMailAccount(mc);
+            mc.setReady(true);
             retrieveMailsFor(mc);
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while opening store", e);
@@ -236,9 +238,24 @@ public class FolderManager {
                 lengths.put(f, f.getMessageCount());
             }
 
+            List<FrameworkMessage<?>> tasks = new ArrayList<>();
             for (int i = 0; i < preloadedMessagesCount; ++i) {
-                DeliverySystem.launchTask(new RetreiveMailMessage(lengths, i));
+                tasks.add(new RetreiveMailMessage(lengths, i));
             }
+            
+            AbstractSender<Object> sender = new AbstractSender<Object>() {
+                @Override
+                public void onMessageReceived(Future<Object> receivedMessage) {
+                }
+
+                @Override
+                public void onAllMessagesReceived() {
+                    setAccountsReady();
+                }
+            };
+            
+            sender.sendMessages(tasks);
+            
         } catch (MessagingException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while retreiving mails", e);
         }
@@ -273,6 +290,16 @@ public class FolderManager {
     		Logger.getLogger(getClass().getName()).log(Level.SEVERE, "An error occured while retreiving mails", e);
     	}
 	}
+
+    /**
+     * Cette methode permet de notifier que les comptes mails sont près a etre utilisés
+     */
+    private void setAccountsReady() {
+        List<MailAccount> mailAccouts = CookieSwipeApplication.getApplication().getUser().getListOfMailAccount();
+        for(MailAccount ma : mailAccouts) {
+            ma.setReady(true);
+        }
+    }
 
     /**
      * Cette classe est responsable du téléchargement des mails des dossiers IMAP
