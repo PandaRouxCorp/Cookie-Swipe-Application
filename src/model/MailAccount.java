@@ -78,6 +78,8 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     private List<File> attachments;
     private Multipart multipart;
     private MimeBodyPart messageBodyPart;
+    private String defaultFolderName;
+    private volatile boolean isReady = false;
 
     // Constructeur
     /**
@@ -188,6 +190,14 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
             return false;
         }
         return true;
+    }
+    
+    public String getDefaultFolderName() {
+        return defaultFolderName;
+    }
+    
+    public void setDefaultFolderName(String name) {
+        this.defaultFolderName = name;
     }
 
     public Store getClientConnection() throws MessagingException, Exception {
@@ -640,6 +650,14 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     @Override
     public String toString() {
         return CSName;
+    }
+
+    public boolean isReady() {
+        return this.isReady;
+    }
+    
+    public void setReady(boolean b) {
+        this.isReady = b;
     }
 
 }
