@@ -344,8 +344,7 @@ public class MainFrameInitializer extends AbstractIHMAction {
                     CookieSwipeApplication.getApplication().setParam("mailAccountSelected", node.getUserObject());
                     MailAccount ma = (MailAccount) userObject;
                     keyAccount = ma.getCSName();
-                    List<String> folders = ma.getFolderNames();
-                    keyFolder = !folders.isEmpty() ? folders.get(0) : null;
+                    keyFolder = ma.getDefaultFolderName();
                 } else {
                     setMailAccountButtonsVisible(false);
                     if (node.getUserObject() instanceof String) {

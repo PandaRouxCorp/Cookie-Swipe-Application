@@ -95,6 +95,9 @@ public class FolderManager {
         try {
             Store store = mc.getClientConnection();
             for (Folder f : store.getDefaultFolder().list()) {
+                if (f.getName().toUpperCase().equals("INBOX")) {
+                    mc.setDefaultFolderName( f.getName() );
+                }
                 if (open(f)) {
                     folders.put((IMAPFolder) f, new AbstractMap.SimpleEntry<Store, MailAccount>(store, mc));
                     addListeners((IMAPFolder) f, mc);

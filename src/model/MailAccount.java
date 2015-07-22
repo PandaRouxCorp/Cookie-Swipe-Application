@@ -78,6 +78,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
     private List<File> attachments;
     private Multipart multipart;
     private MimeBodyPart messageBodyPart;
+    private String defaultFolderName;
 
     // Constructeur
     /**
@@ -188,6 +189,14 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
             return false;
         }
         return true;
+    }
+    
+    public String getDefaultFolderName() {
+        return defaultFolderName;
+    }
+    
+    public void setDefaultFolderName(String name) {
+        this.defaultFolderName = name;
     }
 
     public Store getClientConnection() throws MessagingException, Exception {
