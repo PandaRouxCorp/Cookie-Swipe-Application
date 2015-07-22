@@ -67,16 +67,11 @@ public class ReadMailAction implements IAction {
             new ReadMailFrameInitializer(frame).execute();
             // set frame
             frame.setCookieSwipeTextFieldObject(message.getSubject());
-            String from = "";
-            int i = 0;
-            for (Address addr : message.getFrom()) {
-                String adresse = parseMail(addr);
-                from += i == 0 ? adresse : ", " + adresse;
-                i++;
-            }
 
-            frame.setCookieSwipeTextFieldFrom(from);
-
+            frame.setCookieSwipeTextFieldFrom(getMailFromAddressArray(message.getFrom()));
+            frame.setCookieSwipeTextFieldTo(getMailFromAddressArray(message.getRecipients(Message.RecipientType.TO)));
+            frame.setCookieSwipeTextFieldToCc(getMailFromAddressArray(message.getRecipients(Message.RecipientType.CC)));
+            
             String content = getContentMessage(message);
             
             frame.setjTextAreaMail(content);
@@ -210,12 +205,8 @@ public class ReadMailAction implements IAction {
             end = html.indexOf(refEnd, start);
             String a = html.substring(start, end);
             System.out.println(a);
-            if ( a != null && !a.isEmpty() && !(a.contains("jpg") || a.contains("png")) )
-                if(a.contains("jpg") && !a.endsWith("jpg"))
-                    a = a.substring(0, a.indexOf(".jpg") + 4);
-                if(a.contains("png") && !a.endsWith("png"))
-                    a = a.substring(0, a.lastIndexOf(".png") + 4);
-                urls.add(a);
+            if ( a != null && !a.isEmpty() && !(a.contains("jpg") || a.contains("png") || a.contains("gif")) )
+                urls.add(getImageString(a, "jpg", "png", "gif"));
         }
         return urls;
     }
@@ -282,7 +273,27 @@ public class ReadMailAction implements IAction {
             }
         }
     }
+
+    public static String getImageString(String str, String ... exts) {
+        for(String ext : exts) {
+            if (str.contains(ext) && !str.endsWith(ext)) 
+                str = str.substring(0, str.lastIndexOf(ext) + ext.length());
+        }
+        return str;
+    }
     
+    public static String getMailFromAddressArray(Address[] address) {
+        if (address == null) return "";
+        String ret = "";
+        int i = 0;
+        for (Address addr : address) {
+            String adresse = parseMail(addr);
+            ret += i == 0 ? adresse : "; " + adresse;
+            i++;
+        }
+        return ret;
+    }
+
     public static String getText(Part p) throws MessagingException, IOException {
         if (p.isMimeType("text/*")) {
             String s = (String) p.getContent();
