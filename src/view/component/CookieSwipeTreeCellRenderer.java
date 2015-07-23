@@ -30,7 +30,7 @@ public class CookieSwipeTreeCellRenderer implements TreeCellRenderer {
 		cellLabel.setPreferredSize(new Dimension(120, 30));
 		cellLabel.setMaximumSize(new Dimension(120, 30));
 		backgroundSelectionColor = CookieSwipeColor.BUTTON;
-		backgroundNonSelectionColor = CookieSwipeColor.BUTTON.brighter();
+		backgroundNonSelectionColor = new Color(91, 122, 143);
 	}
  
 	@Override

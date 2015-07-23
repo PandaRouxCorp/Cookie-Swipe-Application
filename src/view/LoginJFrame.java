@@ -85,7 +85,11 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
 	
 	Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 	setLocation((dim.width / 2) - (getSize().width/2), (dim.height / 2) - (getSize().height / 2));
-    	
+        
+        cookieSwipePasswordFieldPassword.setPreferredSize(new Dimension(cookieSwipeTextFieldLogin.getSize().width + 45, cookieSwipePasswordFieldPassword.getSize().height));
+        cookieSwipePasswordFieldPassword.setSize(new Dimension(cookieSwipeTextFieldLogin.getSize().width + 45, cookieSwipeTextFieldLogin.getSize().height));
+        cookieSwipeTextFieldLogin.setPreferredSize(new Dimension(cookieSwipeTextFieldLogin.getSize().width + 45, cookieSwipeTextFieldLogin.getSize().height));
+                
     }
 
     private void initComponents() {
@@ -135,12 +139,12 @@ public class LoginJFrame extends CookieSwipeFrame implements IJFrame {
         				.addComponent(logoPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
     				)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(280, 280, 280)
+                        .addGap(258, 258, 258)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                             .addComponent(cookieSwipeLabelPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(cookieSwipeLabelLogin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cookieSwipeTextFieldLogin, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cookieSwipePasswordFieldPassword, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cookieSwipeTextFieldLogin, GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                            .addComponent(cookieSwipePasswordFieldPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
                         )
                     )
                     .addGroup(layout.createSequentialGroup()

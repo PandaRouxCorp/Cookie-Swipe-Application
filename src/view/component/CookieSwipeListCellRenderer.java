@@ -1,5 +1,6 @@
 package view.component;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.mail.Message;
@@ -26,9 +27,9 @@ public class CookieSwipeListCellRenderer<T> extends CookieSwipeLabel implements 
 			T value, int index, boolean isSelected, boolean cellHasFocus) {
 		JLabel renderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, hasFocus());
 		if(cellHasFocus){
-			renderer.setBackground(CookieSwipeColor.BUTTON);
+			renderer.setBackground(new Color(139, 155, 197));
 		} else {
-			renderer.setBackground(CookieSwipeColor.BACKGROUND_FRAME);
+			renderer.setBackground(new Color(91, 122, 143));
 		}
 		renderer.setForeground(CookieSwipeColor.LETTER);
                 if(value != null) {
