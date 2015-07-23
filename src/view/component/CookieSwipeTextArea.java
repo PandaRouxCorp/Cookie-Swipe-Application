@@ -29,6 +29,8 @@ public class CookieSwipeTextArea extends JTextArea {
 			Border thickBorder = new LineBorder(Color.white, 5);
 			setBorder(thickBorder);
 			setBackground(new Color(255, 255, 255));
+                        setLineWrap(true);
+                        setWrapStyleWord(true);
 
 	    }
 }

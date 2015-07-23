@@ -149,10 +149,11 @@ public class ReadMailAction implements IAction {
                 content = getText(bodyPart);
                 if(bodyPart.isMimeType("text/html")) {
                     if (content.contains("<br/>")) {
-                        content = content.replaceAll("<br/>", "\n");
+                        content = content.replaceAll("<br/>", "br2n");
                     }
                     if (content.contains("<br>")) {
-                        content = content.replaceAll("<br>", "\n");
+                        content = content.replaceAll("<br>", "\r\n");
+                        content = content.replaceAll("(?!\\r)\\n", "\r\n");
                     }
 
                     if (content.contains("<img")) { // telecharge toutes les image du mail
@@ -160,7 +161,7 @@ public class ReadMailAction implements IAction {
                     }
                 }
                 if(content != null)
-                    content = html2text(content);
+                    content = html2text(content).replaceAll("br2n", "\n");                
             }
         }
         return content;
@@ -212,7 +213,7 @@ public class ReadMailAction implements IAction {
     }
 
     public static String html2text(String html) {
-        return Jsoup.parse(html).text();
+        return Jsoup.parse(html.replaceAll("<br/>", "br2n")).text();
     }
 
     public static File downloadImage(String src) {
