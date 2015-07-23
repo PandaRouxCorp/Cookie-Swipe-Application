@@ -147,21 +147,21 @@ public class ReadMailAction implements IAction {
                 }
             } else {
                 content = getText(bodyPart);
-                if(bodyPart.isMimeType("text/html")) {
+                if(bodyPart.isMimeType("text/html")) {/*
                     if (content.contains("<br/>")) {
                         content = content.replaceAll("<br/>", "br2n");
                     }
                     if (content.contains("<br>")) {
                         content = content.replaceAll("<br>", "\r\n");
                         content = content.replaceAll("(?!\\r)\\n", "\r\n");
-                    }
+                    }*/
 
                     if (content.contains("<img")) { // telecharge toutes les image du mail
                         downloadImagesOnContentHTML(content);
                     }
                 }
                 if(content != null)
-                    content = html2text(content).replaceAll("br2n", "\n");                
+                    content = html2text(content);//.replaceAll("br2n", "\n");                
             }
         }
         return content;
@@ -213,7 +213,7 @@ public class ReadMailAction implements IAction {
     }
 
     public static String html2text(String html) {
-        return Jsoup.parse(html.replaceAll("<br/>", "br2n")).text();
+        return Jsoup.parse(html).toString();
     }
 
     public static File downloadImage(String src) {

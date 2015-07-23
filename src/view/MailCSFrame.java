@@ -116,8 +116,8 @@ public class MailCSFrame extends CookieSwipeFrame implements IJFrame {
         cookieSwipeLabelCc.setText("Cc :");
         cookieSwipeLabelSubject.setText("Objet :");
 
-        jTextAreaMail.setColumns(20);
-        jTextAreaMail.setRows(5);
+//        jTextAreaMail.setColumns(20);
+//        jTextAreaMail.setRows(5);
         jScrollPane1.setViewportView(jTextAreaMail);
 
         cookieSwipeButtonSend.setText(CookieSwipeButtonSprite.SEND);
