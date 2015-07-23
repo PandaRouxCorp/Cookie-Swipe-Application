@@ -35,6 +35,7 @@ import javax.activation.DataHandler;
 import javax.imageio.ImageIO;
 import javax.mail.Address;
 import javax.mail.BodyPart;
+import javax.mail.Flags;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -99,6 +100,8 @@ public class ReadMailAction implements IAction {
     public static String getContentMessageFormMultipart(Message message) throws IOException, MessagingException {
         buttons = new ArrayList<>();
         Object mess = message.getContent();
+        message.setFlag(Flags.Flag.SEEN, true);
+        
         String content = "";
 
         Multipart multipart = (Multipart) mess;

@@ -27,7 +27,6 @@ public class CookieSwipeTextArea extends JEditorPane {
 			Border thickBorder = new LineBorder(Color.white, 5);
 			setBorder(thickBorder);
 			setBackground(new Color(255, 255, 255));
-                        setEditable(false);
                         setContentType("text/html");
 
 	    }

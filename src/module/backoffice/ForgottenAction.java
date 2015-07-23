@@ -59,10 +59,10 @@ public class ForgottenAction extends AbstractIHMAction {
         int error = CodeError.SUCESS;
         User usr = new User();
         String mail = ((JTextField) hsJcomponent.get("cookieSwipeTextFieldMailAddress")).getText();
-        String login = ((JTextField) hsJcomponent.get("cookieSwipeTextFieldLogin")).getText();
+//        String login = ((JTextField) hsJcomponent.get("cookieSwipeTextFieldLogin")).getText();
         usr.setBackupMail(mail);
-        if(login != null)
-            usr.setLoginAdressMail(login);
+//        if(login != null)
+//            usr.setLoginAdressMail(login);
         int err = DAOUser.getUserByBackupAddress(usr);
         switch(action) {
             case "login":
@@ -101,9 +101,6 @@ public class ForgottenAction extends AbstractIHMAction {
                 JOptionPane.showMessageDialog(null, "Problème de connexion \nCode erreur : " + error,
                         "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
                 break;
-            default:
-                JOptionPane.showMessageDialog(null, "Un problème est survenu\nCode erreur : " + error,
-                        "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
 
         }
         return false;
@@ -132,9 +129,6 @@ public class ForgottenAction extends AbstractIHMAction {
                             JOptionPane.showMessageDialog(null, "Problème de connexion \nCode erreur : " + error,
                                     "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
                             break;
-                        default:
-                            JOptionPane.showMessageDialog(null, "Un problème est survenu\nCode erreur : " + error,
-                                    "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
 
                     }
                 } catch (InterruptedException | ExecutionException ex) {

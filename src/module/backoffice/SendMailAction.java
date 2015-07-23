@@ -7,6 +7,7 @@ package module.backoffice;
 
 import cookie.swipe.application.CookieSwipeApplication;
 import interfaces.AbstractIHMAction;
+import javax.swing.JEditorPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import model.Mail;
@@ -31,7 +32,7 @@ public class SendMailAction extends AbstractIHMAction {
             mailAccount.addDestinataire( ((JTextField) hsJcomponent.get("cookieSwipeTextFieldTo")).getText() );
             mailAccount.addCopie( ((JTextField) hsJcomponent.get("cookieSwipeTextFieldToCc")).getText() );
             mailAccount.addSubject(((JTextField) hsJcomponent.get("cookieSwipeTextFieldSubject")).getText() );
-            mailAccount.addBody( ((JTextArea) hsJcomponent.get("jTextAreaMail")).getText() );
+            mailAccount.addBody( ((JEditorPane) hsJcomponent.get("jTextAreaMail")).getText() );
             mailAccount.sendMail();
             return true;
         }

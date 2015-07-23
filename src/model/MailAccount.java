@@ -349,10 +349,7 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
                             JOptionPane.showMessageDialog(null, "Problème de connexion \nCode erreur : " + error,
                                     "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
                             break;
-                        default:
-                            JOptionPane.showMessageDialog(null, "Un problème est survenu\nCode erreur : " + error,
-                                    "Envoi d'un mail", JOptionPane.ERROR_MESSAGE);
-
+                        
                     }
                 } catch (InterruptedException ex) {
                     Logger.getLogger(MailAccount.class.getName()).log(Level.SEVERE, null, ex);
@@ -603,7 +600,8 @@ public class MailAccount implements ConnectionListener, MessageChangedListener, 
 
     @Override
     public void messageChanged(MessageChangedEvent arg0) {
-        System.out.println("messageChanged");
+        Message msg  = arg0.getMessage();
+        CookieSwipeApplication.getApplication().getFocusFrame().refresh();        
     }
 
     @Override
