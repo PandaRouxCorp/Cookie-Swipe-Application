@@ -16,7 +16,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.mail.Message;
 import javax.swing.JList;
@@ -41,6 +40,7 @@ import controller.ActionName;
 import controller.Dispatcher;
 import cookie.swipe.application.CookieSwipeApplication;
 import cookie.swipe.application.utils.ObservableLinkedHashSetPriorityQueue;
+import view.component.CookieSwipeButtonSprite;
 
 /**
  *
@@ -234,6 +234,14 @@ public class MainFrameInitializer extends AbstractIHMAction {
         button.setActionCommand(ActionName.reply);
         button.addActionListener(dispatcher);
 
+        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonReplyToAll");
+        button.setActionCommand(ActionName.replyAll);
+        button.addActionListener(dispatcher);
+        
+        button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonToBlacklist");
+        button.setActionCommand(ActionName.addBlackListSender);
+        button.addActionListener(dispatcher);
+        
         button = (CookieSwipeButton) hsJcomponent.get("cookieSwipeButtonDeleteMail");
         button.setActionCommand(ActionName.deleteMail);
         button.addActionListener(dispatcher);
